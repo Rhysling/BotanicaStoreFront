@@ -1,0 +1,16 @@
+// Set your brand colors
+$main-color: rgb(70,69,5);
+$second-color: rgb(50,67,115);
+$text-color: #333;
+
+$nav-bg-color: #d0d1cd;
+
+$beige-light: #d0d1cd;
+$beige-lighter: #eff0eb;
+
+$bp-small: 450px;
+
+
+$link: $main-color;
+$link-visited: $main-color;
+$link-hover: darken($main-color, 15%);

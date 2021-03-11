@@ -1,38 +1,58 @@
-<script lang="ts">
-	export let name: string;
+<script>
+	// import { onMount } from "svelte";
 
-	let foo = 1;
-	let bar = foo + "moo";
+	import Header from "./components/Header.svelte";
+	import Footer from "./components/Footer.svelte";
+
+	import Home from "./pages/Home.svelte";
+	import GlobalCss from "./components/GlobalCss.svelte";
+
+	// import About from "./pages/About.svelte";
+	// import Contact from "./pages/Contact.svelte";
+
+	// import { currentRoute, navFromUrl } from "./stores/route-store.js";
+
+	// onMount(() => {
+	// 	navFromUrl();
+	// });
+
+	let slug = "/";
+
+	let pages = {
+		Home
+	};
+
+	$: {
+		// slug = $currentRoute?.slug ?? "/";
+		// page = $currentRoute?.page ?? "Home";
+		window.scroll({
+			top: 0,
+			left: 0,
+			behavior: "smooth"
+		});
+	}
+
 </script>
 
+<GlobalCss />
 <main>
-	<h1>Hello {name}!</h1>
-	<p>bar says: { bar }.</p>
-	<p>
-		Visit the
-		<a href="https://svelte.dev/tutorial">Svelte tutorial</a>
-		to learn how to build Svelte apps.
-	</p>
+	<Header {slug} />
+	<svelte:component this={ pages.Home } />
+	<Footer />
+
 </main>
 
-<style>
+<style lang="scss">
+  @import "./styles/_custom-variables.scss";
+
 	main {
-		text-align: center;
+		background-color: #efe;
 		padding: 1em;
-		max-width: 240px;
+		max-width: 800px;
 		margin: 0 auto;
 	}
 
-	h1 {
-		color: #ff3e00;
-		text-transform: uppercase;
-		font-size: 4em;
-		font-weight: 100;
-	}
-
-	@media (min-width: 640px) {
-		main {
-			max-width: none;
-		}
+	@media only screen and (max-width: $bp-small) {
+		
 	}
 </style>
