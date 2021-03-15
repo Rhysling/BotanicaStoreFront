@@ -15,16 +15,33 @@ let scrollToTop = () => {
 </script>
 
 <footer>
-  <div>
+  <div class="f1">
     Remember, plant selections change dramatically throughout the season!
   </div>
-  <NavBar {isFooter} />
-  <div>
+  <div class="f2">
     <a href="/" on:click|preventDefault={scrollToTop}>Top</a> | &copy;2001-{yr} Pamela Harlow
   </div>
+  <br />
 </footer>
 
 
 <style>
-  
+
+  .f1 {
+    font-family: 'Arrus-BT-Bold', 'Times New Roman', Times, serif;
+    font-weight: bold;
+    font-size: 1rem;
+    text-align: center;
+    width: 100%;
+    margin-top: 1rem;
+
+  }
+
+  .f2 {
+    font-size: 0.75rem;
+    text-align: center;
+    width: 100%;
+    margin-top: 0.5rem;
+  }
+
 </style>

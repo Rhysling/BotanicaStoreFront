@@ -1,5 +1,19 @@
 <script>
-  let user = {};
+  import { text } from "svelte/internal";
+
+  let resetUser = () => {
+    return {
+      id: "",
+      name: "",
+      imageUrl: "", 
+      email: "",
+      id_token: "",
+      apiKey: null,
+      isAdmin: false 
+    };
+  };
+
+  let user = resetUser();
   let isLoggedIn = false;
   let isShowModal = false;
 
@@ -53,8 +67,50 @@
     auth2.signOut().then(() => {
       // User is now signed out
       isLoggedIn = false;
+      user = resetUser();
     });
   };
+
+
+  let email = "";
+  let isValidEmail = null; // true / false
+  let emailValidationMessage = "";
+
+  let validateEmail = function() {
+    emailValidationMessage = "";
+    email = email.trim();
+
+    if (email == "") {
+      emailValidationMessage = "Email required.";
+      isValidEmail = false;
+      return;
+    }
+
+    isValidEmail = /^([a-zA-Z0-9_\-\.]+)@([a-zA-Z0-9_\-\.]+)\.([a-zA-Z]{2,5})$/.test(email);
+
+    if (!isValidEmail)
+      emailValidationMessage = "Email address doesn't look right.";
+  };
+
+  let resetEmail = function() {
+    email = "";
+    isValidEmail = null;
+    emailValidationMessage = "";
+  };
+
+  let submitEmail = function() {
+    validateEmail();
+
+    if (!isValidEmail) return;
+
+    user.email = email;
+    isLoggedIn = true;
+    isShowModal = false;
+    showModal(false);
+    resetEmail();
+
+    console.log(user);
+  }
 
 </script>
 
@@ -62,20 +118,52 @@
   <script src="https://apis.google.com/js/platform.js?onload=renderButton" async defer></script>
 </svelte:head>
 
+<div class="user-bar">
+  {#if isLoggedIn}
+    {user.name || user.email} <a href="/" on:click|preventDefault={signOut}>Sign out</a>
+  {:else}
+    <a href="/" on:click|preventDefault={() => showModal(true)}>Sign in</a>
+  {/if}
+</div>
+
 <div class="modal" on:click={() => showModal(false)} style="display:{isShowModal ? "block" : "none"}">
-  <div class="modal-content">
-    <span class="close">&times;</span>
-    <div id="g-signin" style="display:{isLoggedIn ? "none" : "block"}" />
+  <div class="modal-content" on:click={(e) => e.stopPropagation()}>
+    <i class="close fas fa-times" on:click={() => showModal(false)}></i>
+    <div id="g-signin" class="g-signin" style="display:{isLoggedIn ? "none" : "block"}" ><div></div></div>
+    <div class="or">
+      ~ or ~<br>
+      Provide your email address to save your plant wish list.
+    </div>
+    <div class="email">
+      <input
+        type="text"
+        placeholder="Email"
+        bind:value={email}
+        on:blur={validateEmail} />
+      <button on:click={submitEmail} disabled={isValidEmail === false}>Save</button>
+    </div>
+    <div class="email-error">{emailValidationMessage}</div>
   </div>
 </div>
 
-{#if isLoggedIn}
-  {user.name} <button on:click={signOut}>Sign out</button>
-{:else}
-  <button on:click={() => showModal(true)}>Sign in</button>
-{/if}
+<style lang="scss">
+  @import "../styles/_custom-variables.scss";
 
-<style>
+  
+  :global(.g-signin > div) {
+    margin: 0 auto;
+  }
+
+  .user-bar {
+    margin: 0;
+    padding: 0.25rem 1rem;
+    color: $second-color;
+    font-size: 0.75rem;
+    background-color: $beige-lighter;
+    width: 100%;
+    text-align: right;
+  }
+
   .modal {
     position: fixed;
     z-index: 100;
@@ -89,16 +177,46 @@
   }
 
   .modal-content {
+    position: relative;
     background-color: #fefefe;
     margin: 15% auto;
-    padding: 20px;
+    padding: 40px 20px 30px;
     border: 1px solid #888;
     width: 80%;
   }
 
+  .or {
+    font-size: 1.25rem;
+    font-weight: bold;
+    text-align: center;
+    width : 100%;
+    margin-top: 1.25rem;
+  }
+
+  .email {
+    text-align: center;
+    width : 100%;
+    margin-top: 1.25rem;
+
+    input {
+      width: 200px;
+    }
+  }
+
+  .email-error {
+    text-align: center;
+    width : 100%;
+    margin-top: 0.25rem;
+    height: 1rem;
+    color: red;
+    font-size: 0.75rem;
+  }
+
   .close {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
     color: #aaa;
-    float: right;
     font-size: 28px;
     font-weight: bold;
   }

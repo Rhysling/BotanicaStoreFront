@@ -28,6 +28,26 @@ const r = {
 			page: "Contact",
 			slug: "/contact",
 			children: []
+		},
+		{
+			title: "Admin",
+			page: "Admin",
+			slug: "/admin",
+			isAdmin: true,
+			children: [
+				{
+					title: "Plant Admin",
+					page: "Plant Admin",
+					slug: "/plant-admin",
+					isAdmin: true
+				},
+				{
+					title: "Calendar Admin",
+					page: "Calendar Admin",
+					slug: "/calendar-admin",
+					isAdmin: true
+				}
+			]
 		}
 	]
 };
@@ -95,7 +115,7 @@ export const navTo = function (e) {
 
 	let r = findRoute(get(routes), pathName);
 
-	if (r) document.title = "ARC - " + r.title;
+	if (r) document.title = "Botanica - " + r.title;
 };
 
 // Back Button

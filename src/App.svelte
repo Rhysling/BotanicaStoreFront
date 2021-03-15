@@ -16,7 +16,7 @@
 	// 	navFromUrl();
 	// });
 
-	let slug = "/";
+	let slug = "/plants";
 
 	let pages = {
 		Home
@@ -46,7 +46,7 @@
   @import "./styles/_custom-variables.scss";
 
 	main {
-		background-color: #efe;
+		background-color: #fff;
 		padding: 1em;
 		max-width: 800px;
 		margin: 0 auto;

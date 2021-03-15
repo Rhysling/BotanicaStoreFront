@@ -1,8 +1,9 @@
 <script>
   import Headroom from "./Headroom.svelte"; // Thanks to "svelte-headroom"
+  import GoogleSignIn from "./GoogleSignIn.svelte";	
   import Nav from "./Nav.svelte";
 
-  //export let slug = "/";
+  export let slug = "/";
 </script>
 
 <div class="page-head subpage">
@@ -14,8 +15,14 @@
   <img class="logo" src="./assets/img/botanica-logo-512x512.png" alt="Botanica" />
 </div>
 
+<div class="subtitle">
+  A specialty nursery featuring rare, choice, and unusual perennials...<br>
+  as well as many old favorites.
+</div>
+
+<GoogleSignIn />
 <Headroom offset={ 110 }>
-  <Nav isFooter={ false } />
+  <Nav { slug } />
 </Headroom>
 
 <style lang="scss">
@@ -25,7 +32,6 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    border: 1px solid red;
   }
 
   .logo {
@@ -68,6 +74,14 @@
       font-size: clamp(30px, 13vw - 50px, 45px);
       color: darken($main-color, 10%);
     }
+  }
+
+  .subtitle {
+    font-weight: bold;
+    font-style: italic;
+    font-size: 0.75rem;
+    width:100%;
+    text-align: center;
   }
 
   @media screen and (max-width: $bp-small) {

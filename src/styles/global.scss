@@ -25,7 +25,7 @@ html, body {
 }
 
 body {
-	color: #333;
+	color: $text-color;
 	margin: 0;
 	padding: 0;
 	font-family: Verdana, Arial, Helvetica, sans-serif;
@@ -61,7 +61,7 @@ input:disabled {
 }
 
 button {
-	color: #333;
+	color: $text-color;
 	background-color: #f4f4f4;
 	outline: none;
 }
@@ -74,10 +74,16 @@ button:not(:disabled):active {
 	background-color: #ddd;
 }
 
-button:focus {
-	border-color: #666;
+button:focus {	
+	border: 1px solid $second-color;
 }
 
+button:not(:disabled):hover {
+	border-color: #666;
+	background-color: $second-color;
+	color: $text-reverse-color;
+	cursor: pointer;
+}
 
 
 // Custom Classes

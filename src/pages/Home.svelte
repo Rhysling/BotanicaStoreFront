@@ -16,73 +16,40 @@
   }
 </script>
 
-<p>Home Here</p>
-<p>
-  <a href="/" on:click={navTo} data-dest="/how-arc-works">
-    NavTo Link here
-  </a>
-</p>
-
-<h1>The Title</h1>
-<p>bar says: { bar }.</p>
-
-<p>
-  <button on:click={getWeather}>Get Weather</button>
-</p>
-
-<p>
-	Bars-solid: <i class="fas fa-bars" style="font-size: 3rem;"></i>
-</p>
-
-<br />
-<br />
-<br />
-<p>
-	Lorem ipsum dolor sit, amet consectetur adipisicing elit. Placeat voluptate quia beatae. Optio nostrum aperiam totam id consequuntur, ipsam repudiandae, eveniet illum ullam voluptatibus provident, dolore nemo quis quisquam porro unde quia obcaecati minima. Aspernatur modi quas nostrum dolores inventore, ea ipsam explicabo commodi, est accusantium, reprehenderit velit id facere?
-</p>
-
-<br />
-<br />
-<br />
-<p>
-	Lorem ipsum dolor sit, amet consectetur adipisicing elit. Placeat voluptate quia beatae. Optio nostrum aperiam totam id consequuntur, ipsam repudiandae, eveniet illum ullam voluptatibus provident, dolore nemo quis quisquam porro unde quia obcaecati minima. Aspernatur modi quas nostrum dolores inventore, ea ipsam explicabo commodi, est accusantium, reprehenderit velit id facere?
-</p>
-
-<br />
-<br />
-<br />
-<p>
-	Lorem ipsum dolor sit, amet consectetur adipisicing elit. Placeat voluptate quia beatae. Optio nostrum aperiam totam id consequuntur, ipsam repudiandae, eveniet illum ullam voluptatibus provident, dolore nemo quis quisquam porro unde quia obcaecati minima. Aspernatur modi quas nostrum dolores inventore, ea ipsam explicabo commodi, est accusantium, reprehenderit velit id facere?
-</p>
-<br />
-
-<br />
-<br />
-<br />
-<br />
-<br />
-<br />
-<br />
-
-<p>
-	Lorem ipsum dolor sit, amet consectetur adipisicing elit. Placeat voluptate quia beatae. Optio nostrum aperiam totam id consequuntur, ipsam repudiandae, eveniet illum ullam voluptatibus provident, dolore nemo quis quisquam porro unde quia obcaecati minima. Aspernatur modi quas nostrum dolores inventore, ea ipsam explicabo commodi, est accusantium, reprehenderit velit id facere?
-</p>
-
-{#each wx as w, i}
-<p>{ i+1 }. { w.date }</p>
-{/each}
+<div class="content">
+	<div class="left">
+		<div>
+			Foo
+		</div>
+		<div>
+			Foo
+		</div>
+		<div>
+			Foo
+		</div>
+	</div>
+	<div class="right">
+		<div>
+			Foo
+		</div>
+		<div>
+			Foo
+		</div>
+	</div>
+</div>
 
 <style lang="scss">
 	@import "../styles/_custom-variables.scss";
 
-	h1 {
-		color: $main-color;
-		font-size: 2rem;
-		font-weight: 800;
+	.content {
+		display: flex;
+		border: 1px solid black;
 	}
 
-  .tile img {
-    display: block;
-    margin: 0 auto;
-  }
+	.left, .right {
+		display: flex;
+		flex-flow: column nowrap;
+		flex: 1 1 auto;
+	}
+
 </style>
