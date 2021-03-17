@@ -1,30 +1,40 @@
 <script>
-	// import { onMount } from "svelte";
+	import { onMount } from "svelte";
 
+	import GlobalCss from "./components/GlobalCss.svelte";
 	import Header from "./components/Header.svelte";
 	import Footer from "./components/Footer.svelte";
 
 	import Home from "./pages/Home.svelte";
-	import GlobalCss from "./components/GlobalCss.svelte";
+	import Calendar from "./pages/Calendar.svelte";
+	import Contact from "./pages/Contact.svelte";
+	import About from "./pages/About.svelte";
 
 	// import About from "./pages/About.svelte";
 	// import Contact from "./pages/Contact.svelte";
 
-	// import { currentRoute, navFromUrl } from "./stores/route-store.js";
+	import { currentRoute, navFromUrl } from "./stores/route-store.js";
+	
+	let slug = "/";
+	let page = "Home";
 
-	// onMount(() => {
-	// 	navFromUrl();
-	// });
+	onMount(() => {
+		navFromUrl();
+	});
 
-	let slug = "/plants";
 
 	let pages = {
-		Home
+		Home,
+		Calendar,
+		Contact,
+		About
 	};
 
 	$: {
-		// slug = $currentRoute?.slug ?? "/";
-		// page = $currentRoute?.page ?? "Home";
+		slug = $currentRoute.slug;
+		page = $currentRoute?.page ?? "Home";
+		console.log({currentRoute: $currentRoute});
+
 		window.scroll({
 			top: 0,
 			left: 0,
@@ -36,9 +46,9 @@
 
 <GlobalCss />
 <main>
-	<Header {slug} />
-	<svelte:component this={ pages.Home } />
-	<Footer />
+	<Header />
+	<svelte:component this={ pages[page] } />
+	<Footer {slug} />
 
 </main>
 

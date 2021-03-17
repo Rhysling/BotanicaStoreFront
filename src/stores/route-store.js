@@ -6,25 +6,25 @@ const r = {
 	slug: "/",
 	children: [
 		{
-			title: "Plants",
+			title: "Plants Available",
 			page: "Plants",
 			slug: "/plants",
 			children: []
 		},
 		{
-			title: "Calendar",
+			title: "Plant Sale Calendar",
 			page: "Calendar",
 			slug: "/calendar",
 			children: []
 		},
 		{
-			title: "About",
+			title: "About Botanica",
 			page: "About",
 			slug: "/about",
 			children: []
 		},
 		{
-			title: "Contact",
+			title: "Contact Us",
 			page: "Contact",
 			slug: "/contact",
 			children: []
@@ -86,7 +86,7 @@ export const routes = readable(r, function start(set) {
 	};
 });
 
-export const currentSlug = writable("");
+export const currentSlug = writable("/");
 
 export const currentRoute = derived([routes, currentSlug], ([$routes, $currentSlug]) =>
 	findRoute($routes, $currentSlug)
@@ -100,7 +100,7 @@ export const navFromUrl = function () {
 
 	if (r) {
 		currentSlug.set(pathName);
-		document.title = "ARC - " + r.title;
+		document.title = `Botanica - ${r.title}`;
 	} else {
 		window.location.replace(window.location.origin);
 	}

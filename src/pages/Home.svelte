@@ -1,5 +1,4 @@
 <script>
-  // import Summary from "../components/Summary.svelte";
   import { navTo } from "../stores/route-store.js";
   
   let bar = "This is bar";
@@ -18,22 +17,63 @@
 
 <div class="content">
 	<div class="left">
-		<div>
-			Foo
+		<div class="card-oldfriend">
+			<img src="./assets/img/bench-350x230.jpg" alt="Hello, old friend" />
+			<div class="small">An old friend..</div>
 		</div>
-		<div>
-			Foo
-		</div>
-		<div>
-			Foo
+		<div class="card-special">
+			<div class="title">
+				Now Available at<br />
+				Seattle Audubon
+			</div>
+			<div>
+				<img src="https://picsum.photos/100/75" alt="placeholder" />
+				Lorem ipsum, dolor sit amet consectetur adipisicing elit. Velit, fugiat, dolor pariatur, voluptate quo mollitia
+				error odit cupiditate perspiciatis sequi quas nobis quae aut sit deserunt harum fuga recusandae ab.
+			</div>
 		</div>
 	</div>
 	<div class="right">
-		<div>
-			Foo
+		<div class="card-shop">
+			<div class="t1">Shop Online!</div>
+			<div class="t2">
+				<strong>Botanica Plants</strong> are now available for pickup in the Wallingford neighborhood (Seattle, WA).
+			</div>
+			<div>
+				Create your "wish list" here. We will prepare your order, cooridnate with
+				you on any changes or adjustments, and let you know when it is ready for pickup.
+			</div>
+			<a href="/">Start your plant wish list...</a>
 		</div>
-		<div>
-			Foo
+		<div class="card-plants">
+			<div class="title">
+				Featured Plant
+			</div>
+			<div class="plant">
+				<img src="https://picsum.photos/150/150" alt="plant pic" />
+				<div class="t1">
+					Helleborus x hybridus
+				</div>
+				<div class="t2">
+					Lenten Rose
+				</div>
+				<div>
+					A classic perennial with outstanding performance in our area, the Lenten Rose offers evergreen foliage and mid-winter to early spring bloom. Colors range from pristine white to slaty blue-black, with yellows, pinks, plums, and every intergrade between, often with attractive markings. Best in part shade and well-drained soil. A Great Plant Pick.
+					<span class="plant-habit">Two feet. Perennial. Zone 6.</span>
+				</div>
+				<a href="/">
+					See List of Available Plants
+				</a>
+			</div>
+		</div>
+		<div class="card-calendar">
+			<div class="title">Next Plant Sale</div>
+			<div class="t2">No Events Posted</div>
+			<div>Please check back again as plant sale season approaches.</div>
+			<a
+				href="/"
+				on:click={navTo}
+				data-dest="/calendar">See Calendar of Upcoming Plant Sales</a>
 		</div>
 	</div>
 </div>
@@ -43,13 +83,157 @@
 
 	.content {
 		display: flex;
-		border: 1px solid black;
+		// border: 1px solid black;
+		// padding: 1px;
+		margin-top: 2px;
+		font-size: 0.9rem;
 	}
 
 	.left, .right {
 		display: flex;
 		flex-flow: column nowrap;
-		flex: 1 1 auto;
+	}
+
+	.left {
+		flex: 1 1 40%;
+
+		& > div {
+			margin: 0 2px 2px 0;
+			padding: 0.3rem;
+		}
+	}
+
+	.right {
+		flex: 1 1 60%;
+
+		& > div {
+			margin: 0 0 2px 2px;
+			padding: 0.3rem;
+		}
+	}
+
+	.title {
+		font-weight: bold;
+		color: $main-color;
+		text-align: center;
+		width: 100%;
+		margin: 0.5rem 0;
+	}
+
+	.card-oldfriend {
+		flex: 0 0 auto;
+
+		img {
+			display: block;
+			max-width: 100%;
+			height: auto;
+			margin: 0 auto;
+		}
+		
+		.small {
+			font-size: 0.7rem;
+			text-align: center;
+			margin-top: 0.5rem;
+		}
+	}
+
+	.card-special {
+		flex: 1 0 auto;
+		border: 1px solid black;
+
+		img {
+			display: block;
+			float: right;
+			margin: 0 0 0.3rem 0.3rem;
+		}
+	}
+
+	.card-shop {
+		flex: 0 0 auto;
+		border: 1px solid black;
+
+		div {
+			margin-bottom: 0.5rem;
+		}
+
+		.t1 {
+			font-size: 1.1rem;
+			font-weight: bold;
+			text-align: center;
+			width: 100%;
+			margin: 0.5rem 0;
+		}
+
+		.t2 {
+			color: $second-color;
+		}
+
+		a {
+			display: block;
+		}
+	}
+
+	.card-plants {
+		flex: 1 0 auto;
+		border: 1px solid black;
+
+		div {
+			margin-bottom: 0.5rem;
+		}
+
+		img {
+			display: block;
+			float: left;
+			margin: 0 0.3rem 0.3rem 0;
+		}
+
+		.title {
+			background-color: $beige-lighter;
+		}
+
+		.plant {
+			margin-top: 0.5rem;
+		}
+
+		.t1 {
+			font-size: 1rem;
+			font-weight: bold;
+			margin-bottom: 0;
+		}
+
+		.t2 {
+			font-size: 0.9rem;
+			font-style: italic;
+		}
+
+		.plant-habit {
+			color: #8B4513;
+		}
+
+		a {
+			display: block;
+		}
+	}
+
+	.card-calendar {
+		flex: 0 0 auto;
+		border: 1px solid black;
+
+		div {
+			margin-bottom: 0.5rem;
+		}
+
+		.t2 {
+			font-size: 1.1rem;
+			font-weight: bold;
+			text-align: center;
+			width: 100%;
+			margin: 0.5rem 0;
+		}
+
+		a {
+			display: block;
+		}
 	}
 
 </style>

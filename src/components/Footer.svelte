@@ -1,22 +1,27 @@
 <script>
-  import NavBar from "./NavBar.svelte";
+
+  export let slug = "/";
 
   let yr = new Date().getFullYear() - 2000;
   let isFooter = true;
 
-let scrollToTop = () => {
-  window.scroll({
-			top: 0,
-			left: 0,
-			behavior: "smooth"
-	});
-};
+  let scrollToTop = () => {
+    window.scroll({
+        top: 0,
+        left: 0,
+        behavior: "smooth"
+    });
+  };
 
 </script>
 
 <footer>
   <div class="f1">
-    Remember, plant selections change dramatically throughout the season!
+    {#if slug == "/"}
+    Remember, plant selections change throughout the season!
+    {:else}
+    <hr style="width:100%" />
+    {/if}
   </div>
   <div class="f2">
     <a href="/" on:click|preventDefault={scrollToTop}>Top</a> | &copy;2001-{yr} Pamela Harlow
