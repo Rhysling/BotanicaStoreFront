@@ -33,7 +33,7 @@
 	$: {
 		slug = $currentRoute.slug;
 		page = $currentRoute?.page ?? "Home";
-		console.log({currentRoute: $currentRoute});
+		//console.log({currentRoute: $currentRoute});
 
 		window.scroll({
 			top: 0,

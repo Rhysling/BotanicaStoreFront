@@ -2,4 +2,7 @@
 /public/build/
 /public-busted/
 
+public/plantpics/
+tools/
+
 .DS_Store

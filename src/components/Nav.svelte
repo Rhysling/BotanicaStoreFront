@@ -1,5 +1,4 @@
-<script>
-  import GoogleSignIn from "./GoogleSignIn.svelte";	
+<script>	
   import { routes, navTo } from "../stores/route-store.js";
 
   export let slug = "/";

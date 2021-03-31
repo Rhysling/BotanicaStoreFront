@@ -60,31 +60,7 @@ input:disabled {
 	color: #ccc;
 }
 
-button {
-	color: $text-color;
-	background-color: #f4f4f4;
-	outline: none;
-}
-
-button:disabled {
-	color: #999;
-}
-
-button:not(:disabled):active {
-	background-color: #ddd;
-}
-
-button:focus {	
-	border: 1px solid $second-color;
-}
-
-button:not(:disabled):hover {
-	border-color: #666;
-	background-color: $second-color;
-	color: $text-reverse-color;
-	cursor: pointer;
-}
-
+@import "_buttons.scss";
 
 // Custom Classes
 

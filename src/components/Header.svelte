@@ -1,7 +1,7 @@
 <script>
   import { currentRoute } from "../stores/route-store.js";
   import Headroom from "./Headroom.svelte"; // Thanks to "svelte-headroom"
-  import GoogleSignIn from "./GoogleSignIn.svelte";	
+  import SignIn from "./SignIn.svelte";	
   import Nav from "./Nav.svelte";
 
   $: slug = $currentRoute.slug;
@@ -23,7 +23,7 @@
   </div>
 {/if}
 
-<GoogleSignIn />
+<SignIn />
 <Headroom offset={ 110 }>
   <Nav { slug } />
 </Headroom>
