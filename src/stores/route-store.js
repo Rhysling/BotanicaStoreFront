@@ -37,13 +37,13 @@ const r = {
 			children: [
 				{
 					title: "Plant Admin",
-					page: "Plant Admin",
+					page: "PlantAdmin",
 					slug: "/plant-admin",
 					isAdmin: true
 				},
 				{
 					title: "Calendar Admin",
-					page: "Calendar Admin",
+					page: "CalendarAdmin",
 					slug: "/calendar-admin",
 					isAdmin: true
 				}

@@ -6,9 +6,11 @@
 	import Footer from "./components/Footer.svelte";
 
 	import Home from "./pages/Home.svelte";
+	import Plants from "./pages/Plants.svelte";
 	import Calendar from "./pages/Calendar.svelte";
 	import Contact from "./pages/Contact.svelte";
 	import About from "./pages/About.svelte";
+	import PlantAdmin from "./pages/Admin/PlantAdmin.svelte";
 
 	// import About from "./pages/About.svelte";
 	// import Contact from "./pages/Contact.svelte";
@@ -25,9 +27,11 @@
 
 	let pages = {
 		Home,
+		Plants,
 		Calendar,
 		Contact,
-		About
+		About,
+		PlantAdmin
 	};
 
 	$: {

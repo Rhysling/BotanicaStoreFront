@@ -1,13 +1,14 @@
 <script lang="ts">
-  import axios from "axios";
+  import type { AxiosResponse } from "axios";
   import Modal from "./Modal.svelte";
   import { user, isLoggedIn } from "../stores/user-store";
+  import { httpClient as ax } from "../stores/httpclient-store";
   
   $: isShowModal = false;
   let showModal = (val: boolean) => isShowModal = val;
   let setModal = (e: any) => isShowModal = e.detail.val;
   
-  let userLogin: UserLogin;
+  let userLogin: IUserLogin;
 
   let isValidEmail: boolean | null = null; // null / true / false
   let emailValidationMessage = "";
@@ -15,19 +16,11 @@
   let isShowName = false;
   let isShowPw = false;
 
-  let resetUser = () => {
-    $user = {
-      email: "",
-      fullName: "",
-      token: "",
-      isAdmin: false 
-    };
-  };
-
   let resetUserLogin = () => {
     
     isValidEmail = null;
     emailValidationMessage = "";
+    submitErrorMessage = "";
 
     isShowName = false;
     isShowPw = false;
@@ -43,7 +36,7 @@
 
 
   let signOut = () => {
-    resetUser();
+    user.logOut();
   };
 
 
@@ -74,16 +67,22 @@
 
     if (!isValidEmail) return;
 
-    axios.post("http://localhost:54151/api/Login", userLogin)
-    .then(function (response) {
+    $ax.post("/api/Login", userLogin)
+    .then(function (response: AxiosResponse<UserClient>) {
       $user = response.data;
       resetUserLogin();
       isShowModal = false;
       let userLoginInfo = $user;
-      console.log({userLoginInfo});
+      //console.log({userLoginInfo});
     })
     .catch(function (error) {
-      console.log(error);
+      if (error?.response?.status){
+        let s = +error.response.status;
+        submitErrorMessage = (s >= 400 && s < 500) ? "Email/password incorrect." : "Something went wrong.";
+      }
+      else {
+        submitErrorMessage = "Something went wrong.";
+      }
     });
     
   }
@@ -163,7 +162,7 @@
     padding-left: 35%;
     
     input {
-      margin: 1rem 1rem 0 0;
+      margin: 1rem 0 0;
       width: 200px;
     }
 
@@ -181,7 +180,7 @@
 
   .error {
     display: inline-block;
-    margin: 0;
+    margin: 0 0 0 0.75rem;
     height: 1rem;
     color: red;
     font-size: 0.75rem;

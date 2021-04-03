@@ -1,5 +1,5 @@
 // Using MSBuild ver. 16.9.31129.286 to load projects.
-// Generated - 2021/03/31-13:55:01
+// Generated - 2021/04/01-14:02:15
 
 // SOLUTION: Single Project
 
@@ -43,6 +43,24 @@ interface IPlant {
 	isSoldOut: boolean;
 	isFeatured: boolean;
 	showDescription: boolean;
+	lastUpdate: any;
+	flag: string;
+}
+
+interface IvwListedPlant {
+	plantId: number;
+	genus: string;
+	species: string;
+	common: string;
+	description: string;
+	plantSize: string;
+	plantType: string;
+	plantZone: string;
+	hasSmallPic: boolean;
+	bigPicIds: string;
+	offered: string;
+	isListed: boolean;
+	isFeatured: boolean;
 	lastUpdate: any;
 	flag: string;
 }
