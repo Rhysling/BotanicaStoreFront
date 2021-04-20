@@ -1,21 +1,19 @@
-<script>
+<script lang="ts">
   import { createEventDispatcher } from 'svelte';
 
   export let isShowModal = false;
 
   const dispatch = createEventDispatcher();
 
-  function setModal(val) {
-		dispatch('setmodal', { val });
+  function setModal(val: boolean) {
+		dispatch("setmodal", { val });
   }
 
 </script>
 
 <div class="modal" on:click={() => setModal(false)} style="display:{isShowModal ? "block" : "none"}">
-  <div class="modal-content" on:click={(e) => e.stopPropagation()}>
-    <i class="close fas fa-times" on:click={() => setModal(false)}></i>
-    <slot />
-  </div>
+  <i class="close fas fa-times" on:click={() => setModal(false)}></i>
+  <slot />
 </div>
 
 <style lang="scss">
@@ -31,15 +29,6 @@
     overflow: auto;
     background-color: rgb(0,0,0);
     background-color: rgba(0,0,0,0.4);
-  }
-
-  .modal-content {
-    position: relative;
-    background-color: #fefefe;
-    margin: 15% auto;
-    padding: 40px 20px 30px;
-    border: 1px solid #888;
-    width: 80%;
   }
 
   .close {

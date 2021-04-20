@@ -32,7 +32,8 @@ fs.readFile(".\\public\\index.html", "utf8")
 	.then((a) => {
 		return a
 			.replace(/bundle\.css/g, bundleName + ".css")
-			.replace(/bundle\.js/g, bundleName + ".js");
+			.replace(/bundle\.js/g, bundleName + ".js")
+			.replace(/(<script>\s*var\sbaseURL\s=\s")[^"]+([^<]*<\/script>)/gm, "$1$2");
 	})
 	.then((a) => {
 		fs.writeFile(".\\public-busted\\index.html", a, "utf8");
@@ -52,7 +53,8 @@ fs.readFile(".\\public\\build\\bundle.css.map", "utf8")
 	})
 	.then((a) => {
 		fs.writeFile(".\\public-busted\\build\\" + bundleName + ".css.map", a, "utf8");
-	});
+	})
+	.catch((e) => console.log({bundleCssMapErr: e}));
 
 fs.readFile(".\\public\\build\\bundle.js", "utf8")
 	.then((a) => {

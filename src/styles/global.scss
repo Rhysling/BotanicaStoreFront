@@ -57,7 +57,7 @@ input, button, select, textarea {
 }
 
 input:disabled {
-	color: #ccc;
+	color: $text-disabled;
 }
 
 @import "_buttons.scss";

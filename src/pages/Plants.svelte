@@ -1,32 +1,14 @@
 <script lang="ts">
-   import App from "../App.svelte";
-import Pager from "../components/Pager.svelte";
+  import Pager from "../components/Pager.svelte";
+  import DisplayPlant from "../components/DisplayPlant.svelte";
+  import PlantBigPicModal from "../components/PlantBigPicModal.svelte";
   import { listedPlants } from "../stores/listedplants-store";
-import About from "./About.svelte";
-import Calendar from "./Calendar.svelte";
   
-  let itemsPerPage = 25
-  let itemCount = $listedPlants.length;
-  let currentPage = 1;
-
+  
   let filteredList = $listedPlants;
-  let pagedList: IvwListedPlant[] = [];
-
-  let setPage = (pageNum: number) =>{
-    let startIndex = (pageNum - 1) * itemsPerPage;
-    let endIndex = Math.min(startIndex + itemsPerPage, filteredList.length);
-    pagedList = filteredList.slice(startIndex, endIndex);
-    //console.log({startIndex, endIndex});
-  };
-
-  let handlePageChanged = (event: any) => {
-		currentPage = event.detail.currentPage;
-    //console.log(event);
-    setPage(currentPage);
-	};
-
-  setPage(currentPage);
-
+  let itemCount = filteredList.length;
+  let pagedList = filteredList.slice(0, 25);
+  
   let filterGenus = "";
   let filterDescription = "";
 
@@ -38,15 +20,42 @@ import Calendar from "./Calendar.svelte";
 
     filteredList = $listedPlants.filter(f);
     itemCount = filteredList.length;
-    currentPage = 1;
-    //console.log({ filteredList });
-    setPage(currentPage);
   };
 
   let clearFilter = () => {
     filterGenus = "";
     filterDescription = "";
     filterPlants();
+  };
+  
+  let handlePageChanged = (event: CustomEvent<PageState>) => {
+    let ps = event.detail;
+    pagedList = filteredList.slice(ps.startIndex, ps.endIndex);
+    // console.log({pagedList});
+
+    window.scroll({
+			top: 0,
+			left: 0,
+			behavior: "smooth"
+		});
+	};
+
+  let bigPics = {
+    plantId: 0,
+    bigPicIds: "",
+    isShowModal: false
+  };
+
+  let showBigPics = (e: CustomEvent<{plantId: number, bigPicIds: string}>) => {
+    //console.log({e});
+    bigPics = { ...e.detail, ...{isShowModal: true} };
+    //console.log({bigPics});
+  };
+
+  let handleSetModal = (e: CustomEvent<{val: boolean}>) => {
+    //console.log({e});
+    bigPics = { ...bigPics, ...{isShowModal: e.detail.val} };
+    //console.log({bigPics});
   };
 
 </script>
@@ -56,18 +65,32 @@ import Calendar from "./Calendar.svelte";
   <input type="text" class="genus-box" bind:value={filterGenus} placeholder="Genus" />
   <input type="text" class="description-box" bind:value={filterDescription} placeholder="Description" />
   <a href="/" on:click|preventDefault={filterPlants}>Go</a>
+  <div class="sep">-</div>
   <a href="/" on:click|preventDefault={clearFilter}>Cancel</a>
   <div class="pager">
-    <Pager { ...{ itemsPerPage, itemCount, currentPage } } on:pageChanged={handlePageChanged} />
+    <Pager { itemCount } on:pageChanged={handlePageChanged} />
   </div>
 </div>
 
 <div>
   {#each pagedList as p (p.plantId)}
-    <div>{p.genus} - {p.species}</div>
-    <hr />
+    <DisplayPlant {...p} on:showBigPics={showBigPics} />
   {/each}
 </div>
+
+<div class="search">
+  Search:
+  <input type="text" class="genus-box" bind:value={filterGenus} placeholder="Genus" />
+  <input type="text" class="description-box" bind:value={filterDescription} placeholder="Description" />
+  <a href="/" on:click|preventDefault={filterPlants}>Go</a>
+  <div class="sep">-</div>
+  <a href="/" on:click|preventDefault={clearFilter}>Cancel</a>
+  <div class="pager">
+    <Pager { itemCount } on:pageChanged={handlePageChanged} />
+  </div>
+</div>
+
+<PlantBigPicModal {...bigPics} on:setmodal={handleSetModal} />
 
 <style lang="scss">
 	@import "../styles/_custom-variables.scss";
@@ -85,6 +108,11 @@ import Calendar from "./Calendar.svelte";
     }
 
     a {
+      display: inline-block;
+      margin-left: 0.5em;
+    }
+
+    .sep {
       display: inline-block;
       margin-left: 0.5em;
     }

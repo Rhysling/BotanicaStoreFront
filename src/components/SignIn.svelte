@@ -103,41 +103,52 @@
 </div>
 
 <Modal { isShowModal } on:setmodal={setModal}>
-  <div class="title">
-    Provide your email address to save your plant wish list.
-  </div>
-  <div class="content">
-    <input
-      type="text"
-      class="signin"
-      placeholder="Email"
-      bind:value={userLogin.email}
-      on:blur={validateEmail} />
-    <div class="error">{emailValidationMessage}</div>
+  <div class="modal-content" on:click={(e) => e.stopPropagation()}>
+    <div class="title">
+      Provide your email address to save your plant wish list.
+    </div>
+    <div class="content">
+      <input
+        type="text"
+        class="signin"
+        placeholder="Email"
+        bind:value={userLogin.email}
+        on:blur={validateEmail} />
+      <div class="error">{emailValidationMessage}</div>
 
-    <a href="/" on:click|preventDefault={showName} style="display:{isShowName ? "none" : "block"}">Optional: Include your name</a>
-    <input
-      type="text"
-      class="signin"
-      style="display:{isShowName ? "block" : "none"}"
-      placeholder="Your Name"
-      bind:value={userLogin.fullName} />
+      <a href="/" on:click|preventDefault={showName} style="display:{isShowName ? "none" : "block"}">Optional: Include your name</a>
+      <input
+        type="text"
+        class="signin"
+        style="display:{isShowName ? "block" : "none"}"
+        placeholder="Your Name"
+        bind:value={userLogin.fullName} />
 
-    <input
-      type="password"
-      class="signin"
-      style="display:{isShowPw ? "block" : "none"}"
-      placeholder="Password"
-      bind:value={userLogin.pw} />
+      <input
+        type="password"
+        class="signin"
+        style="display:{isShowPw ? "block" : "none"}"
+        placeholder="Password"
+        bind:value={userLogin.pw} />
 
-    <button on:click={signIn} class="primary" disabled={isValidEmail === false}>Save</button>
-    <button on:click={cancel} >Cancel</button>
-    <div class="error">{submitErrorMessage}</div>
+      <button on:click={signIn} class="primary" disabled={isValidEmail === false}>Save</button>
+      <button on:click={cancel} >Cancel</button>
+      <div class="error">{submitErrorMessage}</div>
+    </div>
   </div>
 </Modal>
 
 <style lang="scss">
   @import "../styles/_custom-variables.scss";
+
+  .modal-content {
+    position: relative;
+    background-color: #fefefe;
+    margin: 15% auto;
+    padding: 40px 20px 30px;
+    border: 1px solid #888;
+    width: 80%;
+  }
 
   .user-bar {
     margin: 0;

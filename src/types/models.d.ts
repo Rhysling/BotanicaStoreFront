@@ -38,13 +38,16 @@ interface IPlant {
 	plantZone: string;
 	hasSmallPic: boolean;
 	bigPicIds: string;
-	offered: string;
-	isAvailable: boolean;
-	isSoldOut: boolean;
+	isListed: boolean;
 	isFeatured: boolean;
-	showDescription: boolean;
 	lastUpdate: any;
 	flag: string;
+	lastUpdateFormatted: string;
+}
+
+interface IPlantPicId {
+	plantId: number;
+	picId: string;
 }
 
 interface IvwListedPlant {
@@ -58,11 +61,7 @@ interface IvwListedPlant {
 	plantZone: string;
 	hasSmallPic: boolean;
 	bigPicIds: string;
-	offered: string;
-	isListed: boolean;
 	isFeatured: boolean;
-	lastUpdate: any;
-	flag: string;
 }
 
 // NAMESPACE: BotanicaStoreBack.Models.Core

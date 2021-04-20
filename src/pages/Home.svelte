@@ -1,18 +1,14 @@
 <script>
+  import HomeFeaturedPlant from "../components/HomeFeaturedPlant.svelte";
   import { navTo } from "../stores/route-store.js";
   
-  let bar = "This is bar";
-
-	let gettingWx = false;
-	let wx = [];
-
-	async function getWeather() {
-		gettingWx = true;
-		const res = await fetch("https://localhost:44370/WeatherForecast");
-		wx = await res.json();
-		console.log(wx);
-		gettingWx = false;
-  }
+  // async function getWeather() {
+	// 	gettingWx = true;
+	// 	const res = await fetch("https://localhost:44370/WeatherForecast");
+	// 	wx = await res.json();
+	// 	console.log(wx);
+	// 	gettingWx = false;
+  // }
 </script>
 
 <div class="content">
@@ -45,27 +41,7 @@
 			</div>
 			<a href="/">Start your plant wish list...</a>
 		</div>
-		<div class="card-plants">
-			<div class="title">
-				Featured Plant
-			</div>
-			<div class="plant">
-				<img src="https://picsum.photos/150/150" alt="plant pic" />
-				<div class="t1">
-					Helleborus x hybridus
-				</div>
-				<div class="t2">
-					Lenten Rose
-				</div>
-				<div>
-					A classic perennial with outstanding performance in our area, the Lenten Rose offers evergreen foliage and mid-winter to early spring bloom. Colors range from pristine white to slaty blue-black, with yellows, pinks, plums, and every intergrade between, often with attractive markings. Best in part shade and well-drained soil. A Great Plant Pick.
-					<span class="plant-habit">Two feet. Perennial. Zone 6.</span>
-				</div>
-				<a href="/">
-					See List of Available Plants
-				</a>
-			</div>
-		</div>
+		<HomeFeaturedPlant />
 		<div class="card-calendar">
 			<div class="title">Next Plant Sale</div>
 			<div class="t2">No Events Posted</div>
@@ -166,48 +142,6 @@
 
 		.t2 {
 			color: $second-color;
-		}
-
-		a {
-			display: block;
-		}
-	}
-
-	.card-plants {
-		flex: 1 0 auto;
-		border: 1px solid black;
-
-		div {
-			margin-bottom: 0.5rem;
-		}
-
-		img {
-			display: block;
-			float: left;
-			margin: 0 0.3rem 0.3rem 0;
-		}
-
-		.title {
-			background-color: $beige-lighter;
-		}
-
-		.plant {
-			margin-top: 0.5rem;
-		}
-
-		.t1 {
-			font-size: 1rem;
-			font-weight: bold;
-			margin-bottom: 0;
-		}
-
-		.t2 {
-			font-size: 0.9rem;
-			font-style: italic;
-		}
-
-		.plant-habit {
-			color: #8B4513;
 		}
 
 		a {

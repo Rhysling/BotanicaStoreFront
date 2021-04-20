@@ -6,7 +6,7 @@ const r = {
 	slug: "/",
 	children: [
 		{
-			title: "Plants Available",
+			title: "Botanica Plants",
 			page: "Plants",
 			slug: "/plants",
 			children: []
@@ -39,6 +39,11 @@ const r = {
 					title: "Plant Admin",
 					page: "PlantAdmin",
 					slug: "/plant-admin",
+					isAdmin: true
+				},{
+					title: "Plant Availability",
+					page: "PlantAvailability",
+					slug: "/plant-availability",
 					isAdmin: true
 				},
 				{

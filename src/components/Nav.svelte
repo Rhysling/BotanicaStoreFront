@@ -57,14 +57,15 @@
 
     a {
       display: block;
-      box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+      box-shadow: 0px 6px 12px 0px rgba(0,0,0,0.2);
+      border-radius: 5px;
       padding: 0.5em;
       margin: 0.5em;
     }
 
-    a:first-child {
-      margin: 0.5em 0.5em 0.5em 0;
-    }
+    // a:first-child {
+    //   margin: 0.5em 0.5em 0.5em 0.25rem;
+    // }
 
     a:hover {
       background-color: darken($nav-bg-color, 10%);
@@ -72,6 +73,7 @@
 
     a.selected {
       color: #eee;
+      box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.6);
       background-color: $main-color;
       cursor: default;
 

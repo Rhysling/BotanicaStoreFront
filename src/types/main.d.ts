@@ -7,3 +7,17 @@ type UserClient = {
 };
 
 type JsonValue = string | number | boolean | null | JsonValue[] | { [key: string]: JsonValue };
+
+type PageState = {
+  itemsPerPage: number;
+  itemCount: number;
+  currentPage: number;
+  startIndex?: number;
+  endIndex?: number;
+};
+
+type PlantToggle = {
+  plantId: number;
+  val: boolean;
+  column?: "isListed" | "isFeatured"
+};

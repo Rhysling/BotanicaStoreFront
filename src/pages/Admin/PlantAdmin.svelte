@@ -1,19 +1,224 @@
 <script lang="ts">
-  // import type { AxiosResponse } from "axios";
-  import { listedPlants } from "../../stores/listedplants-store";
-  
-  let genus = "", species = "", count = 0;
+  import type { AxiosError, AxiosResponse } from "axios";
+  import { httpClient as ax } from "../../stores/httpclient-store";
+  import PlantFilterAdmin from "../../components/admin/PlantFilterAdmin.svelte";
+  import DisplayPlantAdmin from "../../components/admin/DisplayPlantAdmin.svelte";
+  import EditPlantAdmin from "../../components/admin/EditPlantAdmin.svelte";
+  import PlantPicsAdmin from "../../components/admin/PlantPicsAdmin.svelte";
+  import { newPlant } from "../../stores/newobjects-store";
 
-  $: {
-    count = $listedPlants.length;
-    if (count) {
-      genus = $listedPlants[0].genus;
-      species = $listedPlants[0].species;
+  let plants: IPlant[] = [];
+  let filteredList: IPlant[] = [];
+  let pagedList: IPlant[] = [];
+
+  let editedPlant: IPlant | null;
+  let editError = "";
+
+  let plantForPics: IPlant | null;
+
+  let loadPlants = () => {
+    $ax.get("/api/admin/Plants")
+    .then(function (response: AxiosResponse<IPlant[]>) {
+      plants = response.data;
+    })
+    .catch(function (e) {
+      console.log(e);
+    });
+
+  };
+
+  loadPlants();
+
+  let addPlant = () => {
+    editedPlant = {...$newPlant};
+  };
+
+  // Db Ops
+
+  let savePlant = (p: IPlant) => {
+    editError = "";
+    let isNew = p.plantId === 0;
+    // delete p.lastUpdate;
+
+    $ax.post("/api/admin/Plants", p)
+    .then(function (response: AxiosResponse<number>) {
+      let pid = response.data;
+
+      if (isNew) {
+        p.plantId = pid;
+        plants = [p, ...plants].sort((a, b) => ((a.genus < b.genus) ? -10 : 0) + ((a.species < b.species) ? -1 : 0));
+        filteredList = [p, ...filteredList].sort((a, b) => ((a.genus < b.genus) ? -10 : 0) + ((a.species < b.species) ? -1 : 0));
+        pagedList = [p, ...pagedList];
+      }
+      else {
+        plants = plants.map(a => (a.plantId === pid) ? p : a);
+        filteredList = filteredList.map(a => (a.plantId === pid) ? p : a);
+        pagedList = pagedList.map(a => (a.plantId === pid) ? p : a);
+      }
+
+      editedPlant = null;
+    })
+    .catch(function (e: AxiosError) {
+      editError = e.response?.data?.title || "No title provided.";
+      console.log(e);
+    });
+  };
+
+  // Component handlers ***
+
+  let handleChangePage = (event: CustomEvent<PageState>) => {
+    let ps = event.detail;
+    pagedList = filteredList.slice(ps.startIndex, ps.endIndex);
+
+    window.scroll({
+			top: 0,
+			left: 0,
+			behavior: "smooth"
+		});
+  };
+
+  let handleFilterPlants = (event: CustomEvent<{filteredList: IPlant[]}>) => {
+		filteredList = event.detail.filteredList;
+	};
+
+  let handleUpdatePlantToggle = (e: CustomEvent<PlantToggle>) => {
+    let pt = e.detail;
+
+    if (pt.column) {
+
+      if (pt.column === "isFeatured") {
+        plants = plants.map((p) => (p.plantId === pt.plantId) ? {...p, isFeatured: pt.val} : {...p, isFeatured: false});
+        pagedList = pagedList.map((p) => (p.plantId === pt.plantId) ? {...p, isFeatured: pt.val} : {...p, isFeatured: false});
+      }
+
+      if (pt.column === "isListed") {
+        plants = plants.map((p) => (p.plantId === pt.plantId) ? {...p, isListed: pt.val} : p);
+        pagedList = pagedList.map((p) => (p.plantId === pt.plantId) ? {...p, isListed: pt.val} : p);
+      }
     }
-  }
+    else {
+      console.log({handleUpdatePlantToggle: "Item not found", pt});
+    }
+  };
+
+  let handleEditPlant = (e: CustomEvent<number>) => {
+    let plantId = e.detail;
+    editedPlant = {...plants.find(p => p.plantId === plantId) || $newPlant};
+    editError = "";
+
+  };
+
+  let handleEditPlantModal = (e: CustomEvent<{val: boolean}>) => {
+    if (!e.detail.val)
+      editedPlant = null;
+  };
+
+  let handleFinishEdit = (e: CustomEvent<IPlant>) => {
+    if (e.detail.plantId < 0) {
+      editedPlant = null;
+      return;
+    }
+
+    savePlant(e.detail);
+  };
+
+  // Plant pics
+
+  let handleEditPictures = (e: CustomEvent<number>) => {
+    let plantId = e.detail;
+    plantForPics = plants.find(p => p.plantId === plantId) || $newPlant;
+  };
+
+  let handleCloseEditPictures = (e: CustomEvent<{val: boolean}>) => {
+    if (!e.detail.val)
+      plantForPics = null;
+  };
+
+  let handleSavePicture = (e: CustomEvent<FormData>) => {
+    //console.log({fd: e.detail});
+    $ax.post("/api/admin/Pictures/SavePicture", e.detail, {
+      headers: {
+        "Content-Type": "multipart/form-data"
+    }})
+    .then((response: AxiosResponse<IPlantPicId>) => {
+      let ppid = response.data;
+      if (plantForPics) {
+        if (ppid.picId =="sm")
+          plantForPics.hasSmallPic = true;
+        else {
+          plantForPics.bigPicIds = plantForPics.bigPicIds ?
+            plantForPics.bigPicIds + "," + ppid.picId : ppid.picId;
+        }
+      }
+      plantForPics = plantForPics;
+    })
+    .catch((e: AxiosError) => {
+      console.log(e);
+    });
+  };
+
+  let handleDeletePicture = (e: CustomEvent<IPlantPicId>) => {
+    //console.log({fd: e.detail});
+    let ppid = e.detail;
+    $ax.post("/api/admin/Pictures/DeletePicture", ppid)
+    .then(() => {
+      if (plantForPics) {
+        if (ppid.picId =="sm")
+          plantForPics.hasSmallPic = false;
+        else {
+          plantForPics.bigPicIds = plantForPics.bigPicIds.split(",").filter(a => a !== ppid.picId).join(",");
+        }
+      }
+      plantForPics = plantForPics;
+    })
+    .catch((e: AxiosError) => {
+      console.log(e);
+    });
+  };
+
 
 </script>
 
-<h1>Claims:</h1>
-<p>Listed plant count: {count}</p>
-<p>Genus: {genus}, Species: {species}</p>
+<div class="add-plant">
+  <i class="fas fa-caret-right"></i>
+  <a href="/" on:click|preventDefault={addPlant}>Add Plant</a>
+</div>
+<PlantFilterAdmin { plants }
+  on:filterPlants={handleFilterPlants}
+  on:pageChanged={handleChangePage}
+/>
+<div>
+  {#each pagedList as p (p.plantId)}
+    <div>
+      <DisplayPlantAdmin { ...p }
+        on:updatePlantToggle={handleUpdatePlantToggle}
+        on:editPlant={handleEditPlant}
+        on:editPictures={handleEditPictures}
+      />
+    </div>
+  {/each}
+</div>
+{#if editedPlant}
+  <EditPlantAdmin
+    plant={editedPlant}
+    {editError}
+    on:setmodal={handleEditPlantModal}
+    on:finishEdit = {handleFinishEdit}
+  />
+{/if}
+{#if plantForPics}
+  <PlantPicsAdmin
+    plant={plantForPics}
+    on:setmodal={handleCloseEditPictures}
+    on:savePic={handleSavePicture}
+    on:deletePic={handleDeletePicture}
+  />
+{/if}
+<style lang="scss">
+	@import "../../styles/_custom-variables.scss";
+
+  .add-plant {
+    margin-top: 0.5em;
+    padding-left: 0.25em;
+  }
+</style>

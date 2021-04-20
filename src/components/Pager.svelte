@@ -8,38 +8,52 @@
   
   export let itemsPerPage = 25;
   export let itemCount = 0;
-  export let currentPage = 1;
-  
+
+  let currentPage = 1;
+  let startIndex = 0;
+  let endIndex = 0;
+
+  let prevItemsPerPage = 0;
+  let prevItemCount = 0;
+  let isBuilt = false;
+
   const dispatch = createEventDispatcher();
 
   let pages = 1;
-  let currentPageDisp = currentPage;
-
   let pagelist: kvp[];
   let selectedPage: number;
 
-  let notify = () => {
-		dispatch("pageChanged", {
-			currentPage
-		});
-	}
+  let buildList = () => {
+    pages = Math.max(Math.ceil(itemCount / itemsPerPage), 1);
+    pagelist = [];
+    for (let i = 0; i < pages; i +=1) {
+      pagelist.push({label: `Page ${i + 1}`, value: i + 1})
+    }
+    selectedPage = currentPage;
+  };
 
   let changePage = (n: number) => {
     //selected = {label: `Page ${n}`, value: n};
     currentPage = Math.min(Math.max(n, 1), pages);
-    notify();
-    //console.log({currentPage: paging.currentPage});
+    startIndex = (currentPage - 1) * itemsPerPage;
+    endIndex = Math.min(startIndex + itemsPerPage, itemCount);
+    // console.log({n, pages, currentPage, startIndex, endIndex});
+    dispatch("pageChanged", {
+      itemsPerPage,
+      itemCount,
+			currentPage,
+      startIndex,
+      endIndex
+		});
   };
 
-  $:{
-    pages = Math.max(Math.ceil(itemCount / itemsPerPage), 1);
-    pagelist = [];
-    currentPageDisp = currentPage;
-    for (let i = 0; i < pages; i +=1) {
-      pagelist.push({label: `Page ${i + 1}`, value: i + 1})
-    }
-    selectedPage = currentPageDisp;
-    //console.log({currentPageDisp});
+  $: if (!isBuilt || (prevItemCount !== itemCount) || (prevItemsPerPage !== itemsPerPage)) {
+    buildList();
+
+    prevItemCount = itemCount;
+    prevItemsPerPage = itemsPerPage;
+    isBuilt = true;
+    changePage(currentPage);
   }
 
   $: isFirst = currentPage === 1;
@@ -53,7 +67,7 @@
   <a href="/" on:click|preventDefault={(e) => changePage(currentPage - 1)} class:disabled={isFirst} disabled={isFirst || undefined} title="previous"><i class="fas fa-angle-left"></i></a>
   <select bind:value={selectedPage} on:change={(e) => changePage(selectedPage)}>
 		{#each pagelist as p}
-			<option value={p.value} selected={p.value == currentPageDisp}>
+			<option value={p.value} selected={p.value == currentPage}>
 				{p.label}
 			</option>
 		{/each}
