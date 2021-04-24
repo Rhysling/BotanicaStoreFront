@@ -3,8 +3,11 @@
 
   export let slug = "/";
 
-  let allRoutes = [{...$routes}, ...($routes.children || [])];
-  allRoutes[0].children = [];
+  let allRoutes;
+  $: {
+    allRoutes = [{...$routes}, ...($routes.children || [])];
+    allRoutes[0].children = [];
+  }
 
 </script>
 

@@ -1,18 +1,20 @@
 import { localStore } from './localstorage-store';
 import { derived } from 'svelte/store';
 
-const emptyUser = {
-  email: "",
-  fullName: "",
-  token: "",
-  isAdmin: false 
+const getEmptyUser = () => {
+  return {
+    email: "",
+    fullName: "",
+    token: "",
+    isAdmin: false 
+  }
 };
 
-const u = localStore<UserClient>("user", emptyUser);
+const u = localStore<UserClient>("user", getEmptyUser());
 
 export const user = {
   ...u,
-  logOut: () => u.update(a => emptyUser)
+  logOut: () => u.set(getEmptyUser())
 };
 
 export const isLoggedIn = derived(

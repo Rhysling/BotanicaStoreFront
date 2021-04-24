@@ -1,3 +1,11 @@
+type Route = {
+  title: string;
+  page: string;
+  slug: string;
+  isAdmin?: boolean;
+  children?: Route[];
+};
+
 
 type UserClient = {
   email: string;
