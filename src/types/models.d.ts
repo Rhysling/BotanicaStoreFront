@@ -1,5 +1,5 @@
-// Using MSBuild ver. 16.9.31129.286 to load projects.
-// Generated - 2021/04/01-14:02:15
+// Using MSBuild ver. 16.9.31205.134 to load projects.
+// Generated - 2021/04/25-12:30:37
 
 // SOLUTION: Single Project
 
@@ -45,9 +45,18 @@ interface IPlant {
 	lastUpdateFormatted: string;
 }
 
-interface IPlantPicId {
+interface IPlantPrice {
 	plantId: number;
-	picId: string;
+	potSizeId: number;
+	price: number;
+	isAvailable: boolean;
+}
+
+interface IPotSize {
+	id: number;
+	potDescription: string;
+	potShorthand: string;
+	sortOrder: number;
 }
 
 interface IvwListedPlant {
@@ -64,11 +73,39 @@ interface IvwListedPlant {
 	isFeatured: boolean;
 }
 
+interface IvwPlantPriceMatrix {
+	potSizeId: number;
+	potDescription: string;
+	potShorthand: string;
+	sortOrder: number;
+	plantId: INullable<number>;
+	price: INullable<number>;
+	isAvailable: INullable<boolean>;
+}
+
+interface IvwPlantPriceSummary {
+	plantId: number;
+	genus: string;
+	species: string;
+	available: string;
+	notAvailable: string;
+}
+
 // NAMESPACE: BotanicaStoreBack.Models.Core
 
 interface INameValueItem {
 	name: string;
 	value: string;
+}
+
+interface IPlantPicId {
+	plantId: number;
+	picId: string;
+}
+
+interface IPlantToggle {
+	plantId: number;
+	val: boolean;
 }
 
 interface IUserClient {

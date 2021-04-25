@@ -15,7 +15,7 @@
 	<div class="left">
 		<div class="card-oldfriend">
 			<img src="./assets/img/bench-350x230.jpg" alt="Hello, old friend" />
-			<div class="small">An old friend..</div>
+			<div class="small">An old friend...</div>
 		</div>
 		<div class="card-special">
 			<div class="title">

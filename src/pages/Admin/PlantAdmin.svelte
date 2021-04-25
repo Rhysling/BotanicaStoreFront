@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { onMount } from 'svelte';
   import type { AxiosError, AxiosResponse } from "axios";
   import { httpClient as ax } from "../../stores/httpclient-store";
   import PlantFilterAdmin from "../../components/admin/PlantFilterAdmin.svelte";
@@ -27,7 +28,7 @@
 
   };
 
-  loadPlants();
+  onMount(loadPlants);
 
   let addPlant = () => {
     editedPlant = {...$newPlant};
