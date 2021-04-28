@@ -1,5 +1,5 @@
 // Using MSBuild ver. 16.9.31205.134 to load projects.
-// Generated - 2021/04/25-12:30:37
+// Generated - 2021/04/28-11:23:05
 
 // SOLUTION: Single Project
 
@@ -48,7 +48,7 @@ interface IPlant {
 interface IPlantPrice {
 	plantId: number;
 	potSizeId: number;
-	price: number;
+	price: INullable<number>;
 	isAvailable: boolean;
 }
 
@@ -71,6 +71,7 @@ interface IvwListedPlant {
 	hasSmallPic: boolean;
 	bigPicIds: string;
 	isFeatured: boolean;
+	availability: string;
 }
 
 interface IvwPlantPriceMatrix {
@@ -78,9 +79,9 @@ interface IvwPlantPriceMatrix {
 	potDescription: string;
 	potShorthand: string;
 	sortOrder: number;
-	plantId: INullable<number>;
+	plantId: number;
 	price: INullable<number>;
-	isAvailable: INullable<boolean>;
+	isAvailable: boolean;
 }
 
 interface IvwPlantPriceSummary {
@@ -89,6 +90,41 @@ interface IvwPlantPriceSummary {
 	species: string;
 	available: string;
 	notAvailable: string;
+}
+
+interface IvwWishListFlat {
+	userId: number;
+	createdDate: any;
+	lastUpdateDate: any;
+	emailedDate: any;
+	isClosed: boolean;
+	wlId: number;
+	plantId: number;
+	potSizeId: number;
+	price: number;
+	qty: number;
+	currentPrice: INullable<number>;
+	isCurrentlyAvailable: INullable<boolean>;
+}
+
+interface IWishList {
+	wlId: number;
+	userId: number;
+	createdDate: any;
+	lastUpdateDate: any;
+	emailedDate: any;
+	isClosed: boolean;
+	createdDateFormatted: string;
+	lastUpdateDateFormatted: string;
+	emailedDateFormatted: string;
+}
+
+interface IWishListItem {
+	wlId: number;
+	plantId: number;
+	potSizeId: number;
+	price: number;
+	qty: number;
 }
 
 // NAMESPACE: BotanicaStoreBack.Models.Core

@@ -9,13 +9,21 @@
   let itemCount = filteredList.length;
   let pagedList = filteredList.slice(0, 25);
   
-  let filterGenus = "";
-  let filterDescription = "";
+  let filterText = "";
+  let isAvailableOnly = false;
 
   let filterPlants = () => {
     let f = (p: IvwListedPlant) => {
-      return (filterGenus === "" || p.genus.toLowerCase().startsWith(filterGenus.toLowerCase())) &&
-        (filterDescription === "" || p.description.toLowerCase().includes(filterDescription.toLowerCase()));
+      let passesText = 
+        filterText === "" ||
+        p.genus.toLowerCase().startsWith(filterText.toLowerCase()) ||
+        p.species.toLowerCase().startsWith(filterText.toLowerCase()) ||
+        (p.common || "").toLowerCase().includes(filterText.toLowerCase()) ||
+        p.description.toLowerCase().includes(filterText.toLowerCase());
+
+      let passesAvailable = !isAvailableOnly || (p.availability.length > 1);
+
+      return passesText && passesAvailable;
     };
 
     filteredList = $listedPlants.filter(f);
@@ -23,8 +31,8 @@
   };
 
   let clearFilter = () => {
-    filterGenus = "";
-    filterDescription = "";
+    filterText = "";
+    isAvailableOnly = false;
     filterPlants();
   };
   
@@ -61,9 +69,11 @@
 </script>
 
 <div class="search">
-  Search:
-  <input type="text" class="genus-box" bind:value={filterGenus} placeholder="Genus" />
-  <input type="text" class="description-box" bind:value={filterDescription} placeholder="Description" />
+  <div class="sep">Search:</div>
+  <input type="text" class="search-box" bind:value={filterText} placeholder="Name or Description" />
+  <div class="sep">Available:</div>
+  <input type="checkbox" bind:checked={isAvailableOnly} />
+  <div class="sep"><i class="fas fa-caret-left"></i><i class="fas fa-caret-right"></i></div>
   <a href="/" on:click|preventDefault={filterPlants}>Go</a>
   <div class="sep">-</div>
   <a href="/" on:click|preventDefault={clearFilter}>Cancel</a>
@@ -79,9 +89,11 @@
 </div>
 
 <div class="search">
-  Search:
-  <input type="text" class="genus-box" bind:value={filterGenus} placeholder="Genus" />
-  <input type="text" class="description-box" bind:value={filterDescription} placeholder="Description" />
+  <div class="sep">Search:</div>
+  <input type="text" class="search-box" bind:value={filterText} placeholder="Name or Description" />
+  <div class="sep">Available:</div>
+  <input type="checkbox" bind:checked={isAvailableOnly} />
+  <div class="sep"><i class="fas fa-caret-left"></i><i class="fas fa-caret-right"></i></div>
   <a href="/" on:click|preventDefault={filterPlants}>Go</a>
   <div class="sep">-</div>
   <a href="/" on:click|preventDefault={clearFilter}>Cancel</a>
@@ -105,6 +117,11 @@
 
     input {
       margin-left: 0.5em;
+
+      &[type="checkbox"] {
+        position: relative;
+        top: 1px;
+      }
     }
 
     a {
@@ -117,11 +134,7 @@
       margin-left: 0.5em;
     }
 
-    .genus-box {
-      width: 8em;
-    }
-
-    .description-box {
+    .search-box {
       width: 12em;
     }
   }

@@ -94,13 +94,11 @@
 
 </script>
 
-<div class="user-bar">
-  {#if $isLoggedIn}
-    {$user.fullName || $user.email} <a href="/" on:click|preventDefault={signOut}>Sign out</a>
-  {:else}
-    <a href="/" on:click|preventDefault={() => showModal(true)}>Sign in</a>
-  {/if}
-</div>
+{#if $isLoggedIn}
+  {$user.fullName || $user.email} <a href="/" on:click|preventDefault={signOut}>Sign out</a>
+{:else}
+  <a href="/" on:click|preventDefault={() => showModal(true)}>Sign in</a>
+{/if}
 
 <Modal { isShowModal } on:setmodal={setModal}>
   <div class="modal-content" on:click={(e) => e.stopPropagation()}>
@@ -148,16 +146,6 @@
     padding: 40px 20px 30px;
     border: 1px solid #888;
     width: 80%;
-  }
-
-  .user-bar {
-    margin: 0;
-    padding: 0.25rem 1rem;
-    color: $second-color;
-    font-size: 0.75rem;
-    background-color: $beige-lighter;
-    width: 100%;
-    text-align: right;
   }
 
   .title {

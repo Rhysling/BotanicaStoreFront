@@ -1,7 +1,7 @@
 <script>
-  import { currentRoute } from "../stores/route-store.js";
+  import { currentRoute, navTo } from "../stores/route-store.js";
   import Headroom from "./Headroom.svelte"; // Thanks to "svelte-headroom"
-  import SignIn from "./SignIn.svelte";	
+  import UserBar from "./UserBar.svelte";	
   import Nav from "./Nav.svelte";
 
   $: slug = $currentRoute.slug;
@@ -9,7 +9,9 @@
 </script>
 
 <div class="page-head" class:subpage={slug != "/"}>
-  <img class="logo" src="./assets/img/botanica-logo-512x512.png" alt="Botanica" />
+  <a href="/" on:click={navTo} data-dest={"/"}>
+    <img class="logo" src="./assets/img/botanica-logo-512x512.png" alt="Botanica" />
+  </a>
   <div class="page-title">
     <div class="botanica">Botanica</div>
     <div class="page-name">{$currentRoute.title || $currentRoute.page}</div>
@@ -23,7 +25,7 @@
   </div>
 {/if}
 
-<SignIn />
+<UserBar />
 <Headroom offset={ 110 }>
   <Nav { slug } />
 </Headroom>

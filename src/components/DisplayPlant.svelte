@@ -1,5 +1,6 @@
 <script lang="ts">
   import { createEventDispatcher } from 'svelte';
+  import { isLoggedIn } from "../stores/user-store";
 
   export let plantId: number;
   export let genus: string;
@@ -12,6 +13,7 @@
 	export let hasSmallPic: boolean;
 	export let bigPicIds: string;
 	export let isFeatured: boolean;
+	export let availability: string;
 
   const dispatch = createEventDispatcher();
 
@@ -23,6 +25,10 @@
 			plantId,
       bigPicIds
 		});
+  };
+
+  let editWishList = (plantId: number) => {
+    alert("Editing wish list for user on plantId: " + plantId);
   };
 
 </script>
@@ -42,10 +48,23 @@
     <div class="details">
       {plantZone || ""} {plantSize || ""} {plantType || ""}
     </div>
+    {#if availability}
+    <div class="availability">
+      <span>Availability:</span>
+      {#if $isLoggedIn}
+      <a href="/"
+        on:click|preventDefault={() => editWishList(plantId)}
+        title="Go to Wish List">{availability}</a>
+      {:else}
+      {availability}
+      {/if}
+    </div>
+    {/if}
   </div>
 </div>
 
 <style lang="scss">
+  @import "../styles/_custom-variables.scss";
   $pad: 0.25rem;
 
   .plant {
@@ -76,13 +95,24 @@
     }
 
     .description {
-      margin: 0.5rem 0;
+      margin: 0.5rem 0 0;
       font-size: 0.85rem;
     }
 
     .details {
+      margin: 0.5rem 0 0;
       color: #8b4513;
       font-size: 0.85rem;
+    }
+
+    .availability {
+      margin: 0.5rem 0 0;
+      color: $main-color;
+      font-size: 0.85rem;
+
+      span {
+        font-weight: bold;
+      }
     }
   }
 

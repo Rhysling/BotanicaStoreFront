@@ -29,3 +29,12 @@ type PlantToggle = {
   val: boolean;
   column?: "isListed" | "isFeatured"
 };
+
+type PlantPriceMatrix = {
+	potSizeId: number;
+	potDescription: string;
+	potShorthand: string;
+	plantId: number;
+	price: string | null;
+	isAvailable: boolean;
+}

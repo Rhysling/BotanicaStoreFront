@@ -1,19 +1,20 @@
 <script lang="ts">
-import { onMount } from 'svelte';
-  import type { AxiosError, AxiosResponse } from "axios";
+  import { onMount } from 'svelte';
+  import type { AxiosResponse } from "axios";
   import { httpClient as ax } from "../../stores/httpclient-store";
   import AvailabilityFilter from "../../components/admin/AvailabilityFilter.svelte";
-  // import EditAvailability from "../../components/admin/EditAvailability.svelte";
+  import EditAvailability from "../../components/admin/EditAvailability.svelte";
 
   let plants: IvwPlantPriceSummary[] = [];
   let filteredList: IvwPlantPriceSummary[] = [];
   let pagedList: IvwPlantPriceSummary[] = [];
 
   let editPlantId = 0;
-  let editError = "";
+  let editPlantGenus = "";
+  let editPlantSpecies = "";
 
   let loadPlants = () => {
-    $ax.get("/api/admin/PlantPriceSummary")
+    $ax.get("/api/admin/PlantPriceSummary/GetSummary")
     .then(function (response: AxiosResponse<IvwPlantPriceSummary[]>) {
       plants = response.data;
     })
@@ -25,25 +26,12 @@ import { onMount } from 'svelte';
 
   onMount(loadPlants);
 
- 
-
-  // Db Ops
-
-  let saveAvailability = (pp: IPlantPrice[]) => {
-    editError = "";
-    
-    $ax.post("/api/admin/xxx", pp)
-    .then(function (response: AxiosResponse<number>) {
-      let pid = response.data;
-
-
-      editPlantId = 0;
-    })
-    .catch(function (e: AxiosError) {
-      editError = e.response?.data?.title || "No title provided.";
-      console.log(e);
-    });
+  let editPlant = (plantId: number, genus: string, species: string) => {
+    editPlantId = plantId;
+    editPlantGenus = genus;
+    editPlantSpecies = species;
   };
+
 
   // Component handlers ***
 
@@ -62,20 +50,28 @@ import { onMount } from 'svelte';
 		filteredList = event.detail.filteredList;
 	};
 
- 
+  let handleFinishEdit = (e: CustomEvent<{plantId: number, summaryAvailable: string, summaryPriced: string}>) => {
+    let d = e.detail;
 
-  let handleEditPlantModal = (e: CustomEvent<{val: boolean}>) => {
-    if (!e.detail.val)
-    editPlantId = 0;
-  };
-
-  let handleFinishEdit = (e: CustomEvent<IPlantPrice[]>) => {
-    if (e.detail.length == 0) {
+    if (d.plantId == 0) {
       editPlantId = 0;
       return;
     }
 
-    saveAvailability(e.detail);
+    //Update summaries;
+    plants = plants.map(a => (a.plantId === d.plantId)
+      ? {...a, available: d.summaryAvailable, notAvailable: d.summaryPriced }
+      : a);
+
+    filteredList = filteredList.map(a => (a.plantId === d.plantId)
+      ? {...a, available: d.summaryAvailable, notAvailable: d.summaryPriced }
+      : a);
+
+    pagedList = pagedList.map(a => (a.plantId === d.plantId)
+      ? {...a, available: d.summaryAvailable, notAvailable: d.summaryPriced }
+      : a);
+
+    editPlantId = 0;
   };
 
 </script>
@@ -86,22 +82,55 @@ import { onMount } from 'svelte';
 />
 <div>
   {#each pagedList as p (p.plantId)}
-    <div>
-      {p.genus} {p.species} {p.available} {p.notAvailable}
+    <div class="item">
+      <div class="description">
+        <a href="/" on:click|preventDefault={() => editPlant(p.plantId, p.genus, p.species)}>{p.genus} {p.species}</a>
+      </div>
+      <div class="value">
+        <div class="available">{p.available}</div>
+        <div class="not-available">{p.notAvailable}</div>
+      </div>
+        
     </div>
   {/each}
 </div>
 {#if editPlantId}
-<!--  
   <EditAvailability
-    plant={editedPlant}
-    {editError}
-    on:setmodal={handleEditPlantModal}
+    {editPlantId}
+    {editPlantGenus}
+    {editPlantSpecies}
     on:finishEdit = {handleFinishEdit}
   />
-  -->
 {/if}
 
 <style lang="scss">
+  @import "../../styles/_custom-variables.scss";
+
+  .item {
+    display: flex;
+    flex-flow: row nowrap;
+    font-size: 0.9rem;
+    border-top: 1px solid black;
+    margin: 0.3rem 0 0;
+
+    .description {
+      flex: 1 1 100%;
+    }
+
+    .value {
+      flex: 1 1 100%;
+    }
+
+    .available {
+      font-size: 0.8rem;
+      font-weight: bold;
+    }
+
+    .not-available {
+      padding: 0 0 0 1rem;
+      font-size: 0.8rem;
+      color: $text-disabled;
+    }
+  }
 
 </style>
