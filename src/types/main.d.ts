@@ -3,11 +3,13 @@ type Route = {
   page: string;
   slug: string;
   isAdmin?: boolean;
+  isHidden?: boolean;
   children?: Route[];
 };
 
 
 type UserClient = {
+  userId: number;
   email: string;
   fullName: string;
   token: string;
@@ -37,4 +39,9 @@ type PlantPriceMatrix = {
 	plantId: number;
 	price: string | null;
 	isAvailable: boolean;
-}
+};
+
+type WishListStore = {
+  wlList: IvwWishListFlat[];
+  availPlants: IvwPlantsAvailable[];
+};

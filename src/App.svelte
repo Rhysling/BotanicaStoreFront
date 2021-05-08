@@ -10,6 +10,7 @@
 	import Calendar from "./pages/Calendar.svelte";
 	import Contact from "./pages/Contact.svelte";
 	import About from "./pages/About.svelte";
+	import WishList from "./pages/WishList.svelte";
 	import PlantAdmin from "./pages/admin/PlantAdmin.svelte";
 	import PlantAvailability from "./pages/admin/PlantAvailability.svelte";
 	import CalendarAdmin from "./pages/admin/CalendarAdmin.svelte";
@@ -30,6 +31,7 @@
 		Calendar,
 		Contact,
 		About,
+		WishList,
 		PlantAdmin,
 		PlantAvailability,
 		CalendarAdmin

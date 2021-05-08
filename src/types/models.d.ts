@@ -1,5 +1,5 @@
 // Using MSBuild ver. 16.9.31205.134 to load projects.
-// Generated - 2021/04/28-11:23:05
+// Generated - 2021/04/29-10:37:08
 
 // SOLUTION: Single Project
 
@@ -92,6 +92,16 @@ interface IvwPlantPriceSummary {
 	notAvailable: string;
 }
 
+interface IvwPlantsAvailable {
+	plantId: number;
+	plantName: string;
+	potSizeId: number;
+	potDescription: string;
+	potShorthand: string;
+	sortOrder: number;
+	price: number;
+}
+
 interface IvwWishListFlat {
 	userId: number;
 	createdDate: any;
@@ -100,11 +110,14 @@ interface IvwWishListFlat {
 	isClosed: boolean;
 	wlId: number;
 	plantId: number;
+	plantName: string;
 	potSizeId: number;
+	potDescription: string;
 	price: number;
 	qty: number;
 	currentPrice: INullable<number>;
 	isCurrentlyAvailable: INullable<boolean>;
+	isEditMode: boolean;
 }
 
 interface IWishList {
@@ -134,6 +147,11 @@ interface INameValueItem {
 	value: string;
 }
 
+interface IPlantIdName {
+	plantId: number;
+	plantName: string;
+}
+
 interface IPlantPicId {
 	plantId: number;
 	picId: string;
@@ -145,6 +163,7 @@ interface IPlantToggle {
 }
 
 interface IUserClient {
+	userId: number;
 	email: string;
 	fullName: string;
 	token: string;

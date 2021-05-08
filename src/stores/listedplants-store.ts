@@ -8,7 +8,7 @@ export const listedPlants = writable<IvwListedPlant[]>([]);
 
 ax.get("/api/ListedPlants")
   .then((resp: AxiosResponse<IvwListedPlant[]>) =>{
-		listedPlants.update(a => resp.data);
+		listedPlants.update(() => resp.data);
   })
   .catch((err: AxiosError) => console.log(err.response));
 

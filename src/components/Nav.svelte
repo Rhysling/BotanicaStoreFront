@@ -1,11 +1,11 @@
-<script>	
+<script>
   import { routes, navTo } from "../stores/route-store.js";
 
   export let slug = "/";
 
   let allRoutes;
   $: {
-    allRoutes = [{...$routes}, ...($routes.children || [])];
+    allRoutes = [{...$routes}, ...($routes.children.filter(a => !a.isHidden) || [])];
     allRoutes[0].children = [];
   }
 
@@ -22,7 +22,7 @@
         class="dropdown" >
         <span class="icon">{r.page}</span>
         <div class="dropdown-content">
-          {#each r.children as c}
+          {#each r.children.filter(a => !a.isHidden) as c}
             <a
               href="/"
               on:click={navTo}

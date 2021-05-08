@@ -3,6 +3,7 @@ import { derived } from 'svelte/store';
 
 const getEmptyUser = () => {
   return {
+    userId: 0,
     email: "",
     fullName: "",
     token: "",

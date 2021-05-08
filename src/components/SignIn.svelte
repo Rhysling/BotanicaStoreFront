@@ -72,8 +72,6 @@
       $user = response.data;
       resetUserLogin();
       isShowModal = false;
-      let userLoginInfo = $user;
-      //console.log({userLoginInfo});
     })
     .catch(function (error) {
       if (error?.response?.status){

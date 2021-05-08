@@ -1,11 +1,12 @@
 <script lang="ts">
+  import WishListSummary from "./WishListSummary.svelte";
   import SignIn from "./SignIn.svelte";
 
 </script>
 
 <div class="user-bar">
   <div>
-    Wishlist Placeholder
+    <WishListSummary />
   </div>
   <div>
     <SignIn />

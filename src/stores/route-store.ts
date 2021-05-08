@@ -31,6 +31,12 @@ let getBaseRoutes = (): Route => {
 				page: "Contact",
 				slug: "/contact",
 				children: []
+			},{
+				title: "Wish List",
+				page: "WishList",
+				slug: "/wish-list",
+				isHidden: true,
+				children: []
 			},
 			{
 				title: "Admin",
