@@ -16,9 +16,17 @@
 	import CalendarAdmin from "./pages/admin/CalendarAdmin.svelte";
 
 	import { currentRoute, navFromUrl } from "./stores/route-store.js";
+	import { user } from "./stores/user-store.js";
+	import { wishListStore as wls } from "./stores/wishlist-store.js";
+  import { availablePlantsStore as aps } from "./stores/availableplants-store";
 	
 	let slug = "/";
 	let page = "Home";
+
+	if ($user.userId)
+		wls.init();
+
+	aps.init();
 
 	onMount(() => {
 		navFromUrl();

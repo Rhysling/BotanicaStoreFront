@@ -40,8 +40,3 @@ type PlantPriceMatrix = {
 	price: string | null;
 	isAvailable: boolean;
 };
-
-type WishListStore = {
-  wlList: IvwWishListFlat[];
-  availPlants: IvwPlantsAvailable[];
-};

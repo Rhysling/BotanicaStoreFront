@@ -100,6 +100,8 @@ interface IvwPlantsAvailable {
 	potShorthand: string;
 	sortOrder: number;
 	price: number;
+	qtyEntered: string;
+	isValid?: boolean;
 }
 
 interface IvwWishListFlat {

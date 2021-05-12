@@ -1,11 +1,7 @@
 <script lang="ts">
-  import { wishListStore } from "../stores/wishlist-store";
-  import { user, isLoggedIn } from "../stores/user-store";
-
-  let wl: IvwWishListFlat[] = [];
-  let wlp: IPlantIdName[] = [];
-  let ap: IvwPlantsAvailable[] = [];
-  let app: IPlantIdName[] = [];
+  import { wishListStore as wls, wlPlantNames as wlp } from "../stores/wishlist-store";
+  import { availablePlantsStore as aps, availablePlantNames as apn } from "../stores/availableplants-store";
+  import { user } from "../stores/user-store";
 
   let editError = "";
   let isEditMode = false;
@@ -15,49 +11,119 @@
   let wlSubtotal = 0;
   let stashQty = 0;
   
+  // *** Validations
 
-  let save = () => {
-    //   Make and save details to db
-    
+  let validateQty = (inp: string| number | null) => {
+    if (inp === undefined || inp === null || inp === "") return false;
 
-    
+    let val = Number(inp);
+    if (isNaN(val)) return false;
+    if (!Number.isInteger(val)) return false;
+    return (val < 99 && val >= 0);
   };
 
-  
-  // *** Local handlers
-
+  let validateQtyInput = (inp: string| number | null) => {
+    isValid = validateQty(inp);
+  };
   
 
   // *** WishList Edits
 
   let editItem = (plantId: number, potSizeId: number, qty: number) => {
+    if (!isValid || isEditMode) return;
+
     wls.setEditMode(plantId, potSizeId);
     stashQty = qty;
-    isEditMode = false;
+    isEditMode = true;
   };
 
   let removeItem = (plantId: number, potSizeId: number) => {
-
+    if (!isValid || isEditMode) return;
+    wls.updateQty(plantId, potSizeId, 0);
   };
 
   let saveItem = (plantId: number, potSizeId: number, qty: number) => {
+    if (!isValid) return;
+
     wls.updateQty(plantId, potSizeId, qty);
     wls.setEditMode(0, 0);
+    isValid = true;
     isEditMode = false;
   };
 
-  let noop = () => {};
+  let revertItem = (plantId: number, potSizeId: number) => {
+    isValid = true;
+    saveItem(plantId, potSizeId, stashQty);
+  };
 
   // *** Reactivity
 
-  $: wls = wishListStore($user.userId);
-  $: wlSubtotal = wl.reduce((tot, cv) => tot += cv.qty * cv.price, 0);
+  $: wlSubtotal = $wls.reduce((tot, cv) => tot += cv.qty * cv.price, 0);
+
+
+// Add ***
+
+  let plantToAdd: IPlantIdName = {
+    plantId: 0,
+    plantName: "[select plant to add]"
+  };
+
+  let apsFiltered: IvwPlantsAvailable[] = [];
+  let apnAll: IPlantIdName[] = [plantToAdd, ...$apn];
+
+
+  $: apsFiltered = plantToAdd.plantId ? $aps.filter(a => a.plantId === plantToAdd.plantId) : [];
+
+
+  let validateAddQty = (qty: string) => {
+    let val = Number(qty);
+    if (isNaN(val)) return false;
+    if (!Number.isInteger(val)) return false;
+    return (val <= 99 && val > 0);
+  };
+
+  let calcExt = (price: number, qty:string) => {
+    if (!qty) return "";
+
+    return validateQty(qty) ? (price * +qty).toFixed(2) : "Error";
+  };
+
+  let addItem = (plantId: number, potSizeId: number, qtyEntered: string) => {
+    let ap =apsFiltered.find(a => a.plantId === plantId && a.potSizeId == potSizeId);
+
+    if (ap) {
+      if (!validateAddQty(qtyEntered)) {
+        ap.isValid = false;
+        apsFiltered = apsFiltered;
+        return;
+      }
+
+      // Add the item
+      wls.addItem(ap, +qtyEntered);
+
+      ap.qtyEntered = "";
+      ap.isValid = undefined;
+      apsFiltered = apsFiltered;
+    }
+
+  };
+
+  let cancelAddItem = (plantId: number, potSizeId: number) => {
+    let ap =apsFiltered.find(a => a.plantId === plantId && a.potSizeId == potSizeId);
+
+    if (ap) {
+      ap.qtyEntered = "";
+      ap.isValid = undefined;
+      apsFiltered = apsFiltered;
+    }
+  };
+
+
+  let noop = () => {};
+
   
   // Init
-  $:{
-    wl = [...$wls.wlList];
-    wlp = [...wls.getWlPlantNames()];
-  }
+  //wls.init();
   
 
 </script>
@@ -81,16 +147,19 @@
       <div class="edit">&nbsp;</div>
     </div>
 
-    {#each wlp as p (p.plantId)}
+    {#each $wlp as p (p.plantId)}
     <div class="wl-name">
       {p.plantName}
     </div>
-      {#each wl.filter(a => a.plantId === p.plantId) as w (w.potSizeId)}
+      {#each $wls.filter(a => a.plantId === p.plantId) as w (w.potSizeId)}
       <div class="wl-item">
         <div class="description">{w.potDescription}</div>
         <div class="qty">
           {#if w.isEditMode}
-          <input type="text" bind:value={w.qty} class:error-input={false} />
+          <input type="text"
+            bind:value={w.qty}
+            on:keyup={(e) => validateQtyInput(e.currentTarget.value)} 
+            class:error-input={!isValid} />
           {:else}
           {w.qty}
           {/if}
@@ -101,18 +170,19 @@
           {#if !w.isEditMode}
             <a href="/"
               on:click|preventDefault={() => editItem(w.plantId, w.potSizeId, w.qty)}
-              disabled={isEditMode}
+              disabled={isEditMode ? true : undefined}
               title="Edit quantity"><i class="fas fa-edit"></i></a>
             <a href="/"
               on:click|preventDefault={() => removeItem(w.plantId, w.potSizeId)}
-              disabled={isEditMode}
+              disabled={isEditMode ? true : undefined}
               title="Remove"><i class="fas fa-trash"></i></a>
           {:else}
               <a href="/"
               on:click|preventDefault={() => saveItem(w.plantId, w.potSizeId, w.qty)}
+              disabled={!isValid ? true : undefined}
               title="Save new quantity"><i class="fas fa-save"></i></a>
             <a href="/"
-              on:click|preventDefault={() => saveItem(w.plantId, w.potSizeId, stashQty)}
+              on:click|preventDefault={() => revertItem(w.plantId, w.potSizeId)}
               title="Cancel"><i class="fas fa-undo"></i></a>
           {/if}
         </div>
@@ -123,7 +193,7 @@
 
     <div class="wl-footer">
       <div class="description">Subtotal</div>
-      <div class="total">{wlSubtotal}</div>
+      <div class="total">{wlSubtotal.toFixed(2)}</div>
       <div class="edit">&nbsp;</div>
     </div>
 
@@ -139,10 +209,51 @@
       <div class="edit">&nbsp;</div>
     </div>
 
+    <div class="wl-add">
+      <div class="wl-add-title">
+        Add a Plant
+      </div>
+      <div class="wl-add-name">
+        <select bind:value={plantToAdd}>
+          {#each apnAll as p (p.plantId)}
+            <option value={p}>
+              {p.plantName}
+            </option>
+          {/each}
+        </select>
+      </div>
+    
+      {#each apsFiltered as a (a.potSizeId)}
+      <div class="wl-add-item">
+        <div class="description">{a.potDescription}</div>
+        <div class="qty">
+          <input type="text"
+            bind:value={a.qtyEntered}
+            class:error-input={a.isValid === false} />
+        </div>
+        <div class="price">{a.price.toFixed(2)}</div>
+        <div class="ext">{calcExt(a.price, a.qtyEntered)}</div>
+        <div class="edit">
+          <a href="/"
+            on:click|preventDefault={() => addItem(a.plantId, a.potSizeId, a.qtyEntered)}
+            disabled={validateAddQty(a.qtyEntered) ? undefined : true}
+            title="Add plant"><i class="fas fa-save"></i></a>
+          <a href="/"
+            on:click|preventDefault={() => cancelAddItem(a.plantId, a.potSizeId)}
+            title="Reset"><i class="fas fa-undo"></i></a>
+        </div>
+      </div>
+
+      {/each}
+    </div>
+
     <div class="buttons">
-      <button on:click={noop} class="primary" disabled={isValid === false}>Save</button>
-      <button on:click={noop} >Cancel</button>
-    </div>  
+      <button on:click={noop} class="primary" disabled={!isValid || isEditMode}>Send My Wish List</button>
+    </div>
+    <div>
+      This emails the list to you and Pamela.
+      You can always make changes later when you coordinate on the final details.
+    </div>
   </div>
 </div>
 
@@ -225,6 +336,16 @@
       .qty {
         flex: 0 0 40px;
         text-align: right;
+        position: relative;
+        min-height: 0.8rem;
+
+        input {
+          width: 35px;
+          text-align: right;
+          position: absolute;
+          top: -0.4rem;
+          right: -0.4rem;
+        }
       }
 
       .price {
@@ -245,6 +366,11 @@
           display: inline-block;
           color: $main-color;
           margin-left: 0.35rem;
+
+          &[disabled] {
+            color: $text-disabled;
+            cursor: default;
+          }
         }
       }
     }
@@ -266,6 +392,84 @@
       .edit {
         flex: 0 0 50px;
         margin-left: 0.35rem;
+      }
+    }
+
+    .wl-add {
+      border: 1pz solid $main-color;
+      border-radius: 5px;
+      background-color: #eeffee;
+      padding: 0.4rem;
+
+      .wl-add-title {
+        font-weight: bold;
+        font-size: 0.9rem;
+        margin-bottom: 0.8rem;
+      }
+      .wl-add-name {
+        font-size: 0.8rem;
+        margin-bottom: 0.8rem;
+
+        select {
+          min-width: 70%;
+          max-width: 100%;
+          padding: 0.2rem;
+        }
+      }
+
+      .wl-add-item {
+        display: flex;
+        align-items: baseline;
+        margin-bottom:0.8rem;
+        font-weight: normal;
+        font-size: 0.8rem;
+
+        .description {
+          flex: 0 1 1500px;
+          margin-left: 0.5rem;
+        }
+
+        .qty {
+          flex: 0 0 40px;
+          text-align: right;
+          position: relative;
+          min-height: 0.8rem;
+
+          input {
+            width: 35px;
+            text-align: right;
+            position: absolute;
+            top: -0.2rem;
+            right: -0.2rem;
+            padding: 0.2rem;
+          }
+        }
+
+        .price {
+          flex: 0 0 50px;
+          text-align: right;
+        }
+
+        .ext {
+          flex: 0 0 70px;
+          text-align: right;
+        }
+
+        .edit {
+          flex: 0 0 50px;
+          margin-left: 0.35rem;
+          
+          a {
+            display: inline-block;
+            color: $main-color;
+            margin-left: 0.35rem;
+
+            &[disabled] {
+              color: $text-disabled;
+              cursor: default;
+            }
+          }
+        }
       }
     }
 

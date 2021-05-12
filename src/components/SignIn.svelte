@@ -2,6 +2,7 @@
   import type { AxiosResponse } from "axios";
   import Modal from "./Modal.svelte";
   import { user, isLoggedIn } from "../stores/user-store";
+	import { wishListStore as wls } from "../stores/wishlist-store.js";
   import { httpClient as ax } from "../stores/httpclient-store";
   
   $: isShowModal = false;
@@ -37,6 +38,7 @@
 
   let signOut = () => {
     user.logOut();
+    $wls = [];
   };
 
 
@@ -70,6 +72,7 @@
     $ax.post("/api/Login", userLogin)
     .then(function (response: AxiosResponse<UserClient>) {
       $user = response.data;
+      wls.init();
       resetUserLogin();
       isShowModal = false;
     })

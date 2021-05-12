@@ -1,20 +1,22 @@
 <script lang="ts">
-  import { wishListStore } from "../stores/wishlist-store";
+  import { wishListStore as wls, wlItemCount } from "../stores/wishlist-store";
   import { user, isLoggedIn } from "../stores/user-store";
   import { navTo } from "../stores/route-store.js";
   import Modal from "./Modal.svelte";
 
   let isShowIntro = false;
   let isShowModal = false;
-  let itemCount = 0;
   let linkText = "";
 
+  if ($isLoggedIn)
+    wls.init();
+
+  // *** Local handlers
 
   let cancel = () => {
     isShowIntro = false;
     isShowModal = false;
   };
-  // *** Local handlers
 
   let showIntro = () => {
     isShowIntro = true;
@@ -23,14 +25,10 @@
 
   // *** Reactivity
 
-  $: wls = wishListStore($user.userId);
-
   $: {
-    if ($user.userId > 0 && $wls.wlList) {
-      itemCount = wls.getItemCount();
-
-      linkText = (itemCount > 0)
-        ? `Your Wish List has ${itemCount} item${(itemCount !== 1) ? "s" : ""}`
+    if ($user.userId > 0) {
+      linkText = ($wlItemCount > 0)
+        ? `Your Wish List has ${$wlItemCount} item${($wlItemCount !== 1) ? "s" : ""}`
         : "Start your Wish List";
     }
     else {
