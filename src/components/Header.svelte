@@ -9,7 +9,7 @@
 </script>
 
 <div class="page-head" class:subpage={slug != "/"}>
-  <a href="/" on:click={navTo} data-dest={"/"}>
+  <a href="/" on:click={(e) => navTo(e, "/")}>
     <img class="logo" src="./assets/img/botanica-logo-512x512.png" alt="Botanica" />
   </a>
   <div class="page-title">

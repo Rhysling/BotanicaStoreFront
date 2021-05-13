@@ -48,8 +48,7 @@
 			<div>Please check back again as plant sale season approaches.</div>
 			<a
 				href="/"
-				on:click={navTo}
-				data-dest="/calendar">See Calendar of Upcoming Plant Sales</a>
+				on:click={(e) => navTo(e, "/calendar")}>See Calendar of Upcoming Plant Sales</a>
 		</div>
 	</div>
 </div>

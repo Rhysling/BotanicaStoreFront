@@ -1,6 +1,8 @@
 <script lang="ts">
   import { createEventDispatcher } from 'svelte';
   import { isLoggedIn } from "../stores/user-store";
+  import { navTo } from "../stores/route-store.js";
+import Nav from './Nav.svelte';
 
   export let plantId: number;
   export let genus: string;
@@ -27,10 +29,6 @@
 		});
   };
 
-  let editWishList = (plantId: number) => {
-    alert("Editing wish list for user on plantId: " + plantId);
-  };
-
 </script>
 
 <div class="plant">
@@ -53,7 +51,7 @@
       <span>Availability:</span>
       {#if $isLoggedIn}
       <a href="/"
-        on:click|preventDefault={() => editWishList(plantId)}
+        on:click|preventDefault={(e) => navTo(e, "/wish-list", {plantId})}
         title="Go to Wish List">{availability}</a>
       {:else}
       {availability}

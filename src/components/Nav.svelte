@@ -25,8 +25,7 @@
           {#each r.children.filter(a => !a.isHidden) as c}
             <a
               href="/"
-              on:click={navTo}
-              data-dest={c.slug}
+              on:click={(e) => navTo(e, c.slug)}
               class:selected="{c.slug === slug}">{c.page}</a>
           {/each}
         </div>
@@ -34,8 +33,7 @@
     {:else}
       <a
         href="/"
-        on:click={navTo}
-        data-dest={r.slug}
+        on:click={(e) => navTo(e, r.slug)}
         class:selected="{r.slug === slug}">{r.page}</a>
     {/if}
     {/each}

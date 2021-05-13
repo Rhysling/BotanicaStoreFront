@@ -36,7 +36,7 @@
       {fp.description}
       <span class="plant-habit">{fp.plantSize || ""} {fp.plantType || ""} {fp.plantZone || ""}</span>
     </div>
-    <a href="/" on:click={navTo} data-dest="/plants">
+    <a href="/" on:click={(e) => navTo(e, "/plants")}>
       See List of Available Plants
     </a>
   </div>

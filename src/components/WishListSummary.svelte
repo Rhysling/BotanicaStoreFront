@@ -42,8 +42,7 @@
 
 {#if $isLoggedIn}
   <a href="/"
-    on:click={navTo}
-    data-dest={"/wish-list"}>{linkText}</a>
+  on:click={(e) => navTo(e, "/wish-list")}>{linkText}</a>
 {:else}
   Shop online for pickup. <a href="/" on:click|preventDefault={showIntro}>Learn more...</a>
 {/if}

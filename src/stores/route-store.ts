@@ -114,6 +114,7 @@ export const routes = derived(user, ($user) => {
 });
 
 export const currentSlug = writable("/");
+export const currentParams = writable<any>({});
 
 export const currentRoute = derived([routes, currentSlug], ([$routes, $currentSlug]) => {
 	let r = findRoute($routes, $currentSlug);
@@ -123,29 +124,62 @@ export const currentRoute = derived([routes, currentSlug], ([$routes, $currentSl
 	return $routes;
 });
 
+// Param functions
+
+let paramStringToObj = (inp: string) => {
+	let entries = (new URLSearchParams(inp)).entries();
+	let p: any = {};
+	for(let [key, val] of entries) { 
+		p[key] = val; 
+	}
+	return p;
+};
+
+let objToParamString = (inp: any) => {
+	if (!inp) return "";
+
+	let entries = Object.entries(inp);
+
+	if (!entries.length) return "";
+
+	let p = new URLSearchParams();
+	for(let [key, val] of entries)
+		p.append(key, <string>val); 
+
+	return "?" + p.toString();
+};
+
 // Public Functions
 
 export const navFromUrl = function () {
 	let pathName = window.location.pathname;
 	let r = findRoute(get(routes), pathName);
 
+	let p= paramStringToObj(window.location.search);
+
 	if (r) {
 		currentSlug.set(pathName);
+		currentParams.set(p);
 		document.title = `Botanica - ${r.title}`;
 	} else {
 		window.location.replace(window.location.origin);
 	}
 };
 
-export const navTo = function (e: any) {
+export const navTo = function (e: MouseEvent, path: string, params?: any) {
 	e.preventDefault();
 
-	let pathName = e.currentTarget.dataset.dest;
-	window.history.pushState({}, pathName, window.location.origin + pathName);
-	currentSlug.set(pathName);
+	//let pathName = e.currentTarget.dataset.dest;
+	let url = window.location.origin + path;
 
-	let r = findRoute(get(routes), pathName);
+	if (params)
+		url += objToParamString(params);
 
+	window.history.pushState({}, path, url);
+	currentSlug.set(path);
+	currentParams.set(params || {});
+
+	let r = findRoute(get(routes), path);
 	if (r) document.title = "Botanica - " + r.title;
 };
 

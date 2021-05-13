@@ -2,6 +2,7 @@
   import { wishListStore as wls, wlPlantNames as wlp } from "../stores/wishlist-store";
   import { availablePlantsStore as aps, availablePlantNames as apn } from "../stores/availableplants-store";
   import { user } from "../stores/user-store";
+  import { currentParams } from "../stores/route-store";
 
   let editError = "";
   let isEditMode = false;
@@ -71,6 +72,11 @@
   let apsFiltered: IvwPlantsAvailable[] = [];
   let apnAll: IPlantIdName[] = [plantToAdd, ...$apn];
 
+  if ($currentParams && $currentParams.plantId) {
+    let p = apnAll.find(a => a.plantId === $currentParams.plantId);
+    if (p)
+      plantToAdd = p;
+  }
 
   $: apsFiltered = plantToAdd.plantId ? $aps.filter(a => a.plantId === plantToAdd.plantId) : [];
 
