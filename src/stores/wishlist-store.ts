@@ -1,10 +1,10 @@
-import type { AxiosError, AxiosResponse } from "axios";
+import type { AxiosError, AxiosInstance, AxiosResponse } from "axios";
 import { writable, derived, get } from "svelte/store";
 import { httpClient } from "./httpclient-store";
 
 // *** Private ***
 
-const ax = get(httpClient);
+let ax: AxiosInstance;
 
 let wlId = 0;
 let wl = writable<IvwWishListFlat[]>([]);
@@ -40,6 +40,8 @@ let addUpdateItemDb = (item: IWishListItem) => {
 // *** Init ***
 
 let init = () => {
+  ax = get(httpClient);
+
   ax.get("/api/WishList/GetCurrentList")
   .then((resp: AxiosResponse<IvwWishListFlat[]>) => {
     wl.set(resp.data);

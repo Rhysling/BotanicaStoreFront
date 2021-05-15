@@ -18,7 +18,9 @@ interface ICalendar {
 	title: string;
 	location: string;
 	description: string;
-	isSpecial: INullable<boolean>;
+	isSpecial: boolean;
+	beginDateFormatted: string;
+	endDateFormatted: string;
 }
 
 interface IKey {

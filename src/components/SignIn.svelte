@@ -72,9 +72,11 @@
     $ax.post("/api/Login", userLogin)
     .then(function (response: AxiosResponse<UserClient>) {
       $user = response.data;
-      wls.init();
       resetUserLogin();
       isShowModal = false;
+    })
+    .then(() => {
+      wls.init();
     })
     .catch(function (error) {
       if (error?.response?.status){
