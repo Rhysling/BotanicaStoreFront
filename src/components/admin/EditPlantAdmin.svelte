@@ -50,11 +50,11 @@
         <div>{ep.lastUpdateFormatted}</div>
       </div>
     </div>
-    <div class="validated">
+    <div class="wrapped">
       <input type="text" bind:value={ep.genus} on:change={validate} placeholder="Genus" />
       {#if !isValidGenus}<span class="error">Required</span>{/if}
     </div>
-    <div class="validated">
+    <div class="wrapped">
       <input type="text" bind:value={ep.species} on:change={validate} placeholder="Species" />
       {#if !isValidSpecies}<span class="error">Required</span>{/if}
     </div>
@@ -64,6 +64,10 @@
     <input class="sm" type="text" bind:value={ep.plantSize} placeholder="Size" />
     <input class="sm" type="text" bind:value={ep.plantType} placeholder="Type" />
     <input class="sm" type="text" bind:value={ep.plantZone} placeholder="Zone" />
+    <div class="wrapped">
+      <span class="label">Is NW Native</span>
+      <input type="checkbox" bind:checked={ep.isNwNative} />
+    </div>
     <input class="xs" type="text" bind:value={ep.flag} on:keyup={() => {if (ep.flag && ep.flag.length > 2) ep.flag = ep.flag.substring(0,2)}} placeholder="Flag" />
     <div class="buttons">
       <button on:click={save} class="primary" disabled={isValid === false}>Save</button>
@@ -97,8 +101,16 @@
       }
     }
 
-    .validated > input {
+    .wrapped > input {
       display: inline-block;
+      width: auto;
+    }
+
+    .label {
+      display: inline-block;
+      margin: 0 0.25rem 0 0;
+      font-weight: bold;
+      font-size: 0.9rem;
     }
 
     textarea {

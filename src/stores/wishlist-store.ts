@@ -131,6 +131,20 @@ let addItem = (plant: IvwPlantsAvailable, qty: number) => {
   });
 };
   
+let sendList = () => {
+  return ax.post("/api/WishList/EmailCurrentList")
+  .then((resp: AxiosResponse<string>) =>{
+    if (resp.status < 299) {
+      wl.set([]);
+    }
+    else {
+      console.log(resp);
+    }
+
+    return resp;
+  })
+  .catch((err: AxiosError) => console.log(err.response));
+};
 
 export const wishListStore =  {
   ...wl,
@@ -138,7 +152,8 @@ export const wishListStore =  {
   setEditMode,
   updateQty,
   removeItem,
-  addItem
+  addItem,
+  sendList
 };
 
 export const wlPlantNames = derived(

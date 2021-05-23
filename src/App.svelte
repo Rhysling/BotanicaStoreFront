@@ -8,6 +8,7 @@
 	import Home from "./pages/Home.svelte";
 	import Plants from "./pages/Plants.svelte";
 	import Calendar from "./pages/Calendar.svelte";
+	import Links from "./pages/Links.svelte";
 	import Contact from "./pages/Contact.svelte";
 	import About from "./pages/About.svelte";
 	import WishList from "./pages/WishList.svelte";
@@ -37,6 +38,7 @@
 		Home,
 		Plants,
 		Calendar,
+		Links,
 		Contact,
 		About,
 		WishList,

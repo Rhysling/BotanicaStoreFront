@@ -7,6 +7,7 @@ const getEmptyUser = () => {
     email: "",
     fullName: "",
     token: "",
+    taxRate: 0,
     isAdmin: false 
   }
 };

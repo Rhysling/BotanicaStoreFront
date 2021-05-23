@@ -4,11 +4,12 @@
   import { user } from "../stores/user-store";
   import { currentParams } from "../stores/route-store";
 
-  let editError = "";
-  let isEditMode = false;
+   let isEditMode = false;
   let isValid = true;
+  let sendMsg = "";
+  let isSent = false;
 
-  let taxRate = 0.1025;
+  let taxRate = $user.taxRate;
   let wlSubtotal = 0;
   let stashQty = 0;
   
@@ -124,26 +125,30 @@
     }
   };
 
+  let sendList = () => {
+    if (!isValid || isEditMode) return;
 
-  let noop = () => {};
+    wls.sendList().then((resp) =>{
+      if (resp && resp.status < 299) {
+      }
+      else {
+        sendMsg = "Something went wrong:" + (resp ? resp.data : "Please try again; if it doesn't work ten, let us know.");
+        isSent = false;
+      }
+    });
 
-  
-  // Init
-  //wls.init();
-  
+  };
+
+  //let noop = () => {}; 
 
 </script>
 
 <div class="container" on:click={(e) => e.stopPropagation()}>
+  {#if !isSent}
   <div class="content">
     <div class="modal-title">
       Wish List for {($user.fullName) ? `${$user.fullName} (${$user.email})` : $user.email}
     </div>
-    {#if editError}
-    <div class="error">
-      Something went wrong: {editError}
-    </div>
-    {/if}
 
     <div class="wl-header">
       <div class="description">Plant / Pot Size</div>
@@ -254,13 +259,20 @@
     </div>
 
     <div class="buttons">
-      <button on:click={noop} class="primary" disabled={!isValid || isEditMode}>Send My Wish List</button>
+      <button on:click={sendList} class="primary" disabled={!isValid || isEditMode}>Send My Wish List</button>
     </div>
+    {#if sendMsg}<div class="error-box">{sendMsg}</div>{/if}
     <div>
       This emails the list to you and Pamela.
       You can always make changes later when you coordinate on the final details.
     </div>
   </div>
+  {:else}
+  <div class="result">
+    <div>The list is sent to Pamela with a copy to you.</div>
+    <div>Check your email.</div>
+  </div>
+  {/if}
 </div>
 
 <style lang="scss">
@@ -491,6 +503,12 @@
 
   .error-input {
     box-shadow: 0 0 2px 2px $error-secondary;
+    border: 1px solid $error-primary;
+    color: darken($error-primary, 10%);
+    background-color: lighten($error-secondary, 5%);
+  }
+
+  .error-box {
     border: 1px solid $error-primary;
     color: darken($error-primary, 10%);
     background-color: lighten($error-secondary, 5%);

@@ -38,6 +38,7 @@ interface IPlant {
 	plantSize: string;
 	plantType: string;
 	plantZone: string;
+	isNwNative: boolean;
 	hasSmallPic: boolean;
 	bigPicIds: string;
 	isListed: boolean;
@@ -70,6 +71,7 @@ interface IvwListedPlant {
 	plantSize: string;
 	plantType: string;
 	plantZone: string;
+	isNwNative: boolean;
 	hasSmallPic: boolean;
 	bigPicIds: string;
 	isFeatured: boolean;
@@ -172,6 +174,7 @@ interface IUserClient {
 	fullName: string;
 	token: string;
 	isAdmin: boolean;
+	taxRate: number;
 }
 
 interface IUserLogin {

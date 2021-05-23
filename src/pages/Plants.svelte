@@ -11,6 +11,7 @@
   
   let filterText = "";
   let isAvailableOnly = false;
+  let isNwNativeOnly = false;
 
   let filterPlants = () => {
     let f = (p: IvwListedPlant) => {
@@ -22,8 +23,9 @@
         p.description.toLowerCase().includes(filterText.toLowerCase());
 
       let passesAvailable = !isAvailableOnly || (p.availability.length > 1);
+      let passesNwNative = !isNwNativeOnly || p.isNwNative;
 
-      return passesText && passesAvailable;
+      return passesText && passesAvailable && passesNwNative;
     };
 
     filteredList = $listedPlants.filter(f);
@@ -33,6 +35,7 @@
   let clearFilter = () => {
     filterText = "";
     isAvailableOnly = false;
+    isNwNativeOnly = false;
     filterPlants();
   };
   
@@ -73,6 +76,8 @@
   <input type="text" class="search-box" bind:value={filterText} placeholder="Name or Description" />
   <div class="sep">Available:</div>
   <input type="checkbox" bind:checked={isAvailableOnly} />
+  <div class="sep">NW Native:</div>
+  <input type="checkbox" bind:checked={isNwNativeOnly} />
   <div class="sep"><i class="fas fa-caret-left"></i><i class="fas fa-caret-right"></i></div>
   <a href="/" on:click|preventDefault={filterPlants}>Go</a>
   <div class="sep">-</div>
@@ -93,6 +98,8 @@
   <input type="text" class="search-box" bind:value={filterText} placeholder="Name or Description" />
   <div class="sep">Available:</div>
   <input type="checkbox" bind:checked={isAvailableOnly} />
+  <div class="sep">NW Native:</div>
+  <input type="checkbox" bind:checked={isNwNativeOnly} />
   <div class="sep"><i class="fas fa-caret-left"></i><i class="fas fa-caret-right"></i></div>
   <a href="/" on:click|preventDefault={filterPlants}>Go</a>
   <div class="sep">-</div>
@@ -116,11 +123,11 @@
     background-color: $beige-lighter;
 
     input {
-      margin-left: 0.5em;
+      margin-left: 0.25em;
 
       &[type="checkbox"] {
         position: relative;
-        top: 1px;
+        top: 2px;
       }
     }
 

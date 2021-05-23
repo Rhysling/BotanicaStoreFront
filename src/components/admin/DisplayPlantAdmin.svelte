@@ -12,6 +12,7 @@
 	export let plantSize: string;
 	export let plantType: string;
 	export let plantZone: string;
+  export let isNwNative: boolean;
 	export let hasSmallPic: boolean;
 	export let bigPicIds: string;
 	export let isListed: boolean;
@@ -86,7 +87,7 @@
       <div class="description"><strong>Web Description: </strong>{webDescription}</div>
     {/if}
     <div class="details">
-      {plantZone || ""} {plantSize || ""} {plantType || ""}
+      {plantZone || ""} {plantSize || ""} {plantType || ""} {isNwNative ? "NW Native" : ""}
     </div>
     <div class="description">
       {bpc ? bpc : "No"} big picture{bpc === 1 ? "" : "s"}.

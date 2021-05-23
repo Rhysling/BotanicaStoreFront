@@ -2,7 +2,6 @@
   import { createEventDispatcher } from 'svelte';
   import { isLoggedIn } from "../stores/user-store";
   import { navTo } from "../stores/route-store.js";
-import Nav from './Nav.svelte';
 
   export let plantId: number;
   export let genus: string;
@@ -16,6 +15,7 @@ import Nav from './Nav.svelte';
 	export let bigPicIds: string;
 	export let isFeatured: boolean;
 	export let availability: string;
+	export let isNwNative: boolean;
 
   const dispatch = createEventDispatcher();
 
@@ -59,6 +59,9 @@ import Nav from './Nav.svelte';
     </div>
     {/if}
   </div>
+  {#if isNwNative}
+    <div class="nwn" title="Northwest Native">NWN</div>
+  {/if}
 </div>
 
 <style lang="scss">
@@ -69,6 +72,7 @@ import Nav from './Nav.svelte';
     display: flex;
     border: 1px solid black;
     margin: $pad 0;
+    position: relative;
 
     img {
       display: block;
@@ -111,6 +115,18 @@ import Nav from './Nav.svelte';
       span {
         font-weight: bold;
       }
+    }
+
+    .nwn {
+      position: absolute;
+      top: 0;
+      right: 0;
+      padding: 0.4rem;
+      font-size: 0.8rem;
+      font-weight: bold;
+      font-style: italic;
+      color: $main-color;
+      z-index: 2;
     }
   }
 

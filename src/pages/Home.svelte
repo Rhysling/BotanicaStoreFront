@@ -1,7 +1,16 @@
-<script>
+<script lang="ts">
+	import type { AxiosResponse } from "axios";
+  import { httpClient as ax } from "../stores/httpclient-store";
   import HomeFeaturedPlant from "../components/HomeFeaturedPlant.svelte";
   import { navTo } from "../stores/route-store.js";
   
+	let nextSale: ICalendar | null = null;
+
+	$ax.get("/api/Calendar/GetNext")
+		.then((response: AxiosResponse<ICalendar>) => nextSale = response.data)
+		.catch((err) => console.log({err}));
+
+
   // async function getWeather() {
 	// 	gettingWx = true;
 	// 	const res = await fetch("https://localhost:44370/WeatherForecast");
@@ -39,13 +48,34 @@
 				Create your "wish list" here. We will prepare your order, cooridnate with
 				you on any changes or adjustments, and let you know when it is ready for pickup.
 			</div>
-			<a href="/">Start your plant wish list...</a>
+			<a href="/" on:click={(e) => navTo(e, "/wish-list")}>Start your plant wish list...</a>
 		</div>
 		<HomeFeaturedPlant />
 		<div class="card-calendar">
 			<div class="title">Next Plant Sale</div>
-			<div class="t2">No Events Posted</div>
+			{#if nextSale}
+				{#if nextSale.isSpecial}
+					<div class="special-title">* * * Special Sale * * *</div>
+				{/if}
+				<div class="item" class:is-special={nextSale.isSpecial === true ? true : undefined}>
+					<div class="dates">
+						<div class="date">{nextSale.beginDateFormatted}</div>
+						{#if nextSale.endDate}
+						<div class="date-sep">through</div>
+						<div class="date">{nextSale.endDateFormatted}</div>
+						{/if}
+						<div class="time">{nextSale.eventTime}</div>
+					</div>
+					<div class="details">
+						<div class="title">{nextSale.title}</div>
+						<div class="description">{nextSale.description}</div>
+						<div class="location">{nextSale.location}</div>
+					</div>
+				</div>
+			{:else}
+			<div class="title">No Events Posted</div>
 			<div>Please check back again as plant sale season approaches.</div>
+			{/if}
 			<a
 				href="/"
 				on:click={(e) => navTo(e, "/calendar")}>See Calendar of Upcoming Plant Sales</a>
@@ -151,22 +181,48 @@
 	.card-calendar {
 		flex: 0 0 auto;
 		border: 1px solid black;
-
-		div {
-			margin-bottom: 0.5rem;
+		padding: 0.4rem;
+		
+		a {
+			display: block;
 		}
 
-		.t2 {
-			font-size: 1.1rem;
+		.dates {
+			text-align: center;
+		}
+
+		.date {
+      font-size: 0.9rem;
+    }
+
+    .date-sep {
+      font-size: 0.8rem;
+      padding-left: 2rem;
+      color: lighten($text-color, 5%);
+    }
+
+    .time {
+      font-size: 0.8rem;
+    }
+
+		
+    .title {
+      font-size: 1.1rem;
 			font-weight: bold;
 			text-align: center;
 			width: 100%;
 			margin: 0.5rem 0;
-		}
+    }
 
-		a {
-			display: block;
-		}
+    .description {
+      font-size: 0.9rem;
+			margin-bottom: 0.4rem;
+    }
+
+    .location {
+      font-size: 0.85rem;
+      color: #8B4513;
+    }
 	}
 
 </style>

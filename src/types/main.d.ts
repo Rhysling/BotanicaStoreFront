@@ -14,6 +14,7 @@ type UserClient = {
   fullName: string;
   token: string;
   isAdmin: boolean;
+  taxRate: number;
 };
 
 type JsonValue = string | number | boolean | null | JsonValue[] | { [key: string]: JsonValue };

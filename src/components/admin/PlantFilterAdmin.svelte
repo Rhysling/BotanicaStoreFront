@@ -5,7 +5,9 @@
   export let plants: IPlant[] = [];
 
   let filterGenus = "";
+  let filterFlag = "";
   let isListedOnly = false;
+  let isNwNativeOnly = false;
   let itemCount = 0;
 
   const dispatch = createEventDispatcher();
@@ -13,7 +15,9 @@
   let filterPlants = () => {
     let f = (p: IPlant) => {
       return (filterGenus === "" || p.genus.toLowerCase().startsWith(filterGenus.toLowerCase())) &&
-        (isListedOnly === false || p.isListed);
+        (!filterFlag || filterFlag.trim() === "" || p.flag === filterFlag.trim()) &&
+        (isListedOnly === false || p.isListed) &&
+        (isNwNativeOnly === false || p.isNwNative);
     };
 
     let filteredList = plants.filter(f);
@@ -23,6 +27,7 @@
 
   let clearFilter = () => {
     filterGenus = "";
+    filterFlag = "";
     isListedOnly = false;
     filterPlants();
   };
@@ -36,8 +41,11 @@
 <div class="search">
   Search:
   <input type="text" class="genus-box" bind:value={filterGenus} placeholder="Genus" />
-  <div class="sep">Listed only:</div>
-  <input type="checkbox" class="listed-only-box" bind:checked={isListedOnly} />
+  <input type="text" class="flag-box" bind:value={filterFlag} on:keyup={() => {if (filterFlag && filterFlag.length > 2) filterFlag = filterFlag.substring(0,2)}} placeholder="Flag" />
+  <div class="sep">Listed:</div>
+  <input type="checkbox" bind:checked={isListedOnly} />
+  <div class="sep">NW Native:</div>
+  <input type="checkbox" bind:checked={isNwNativeOnly} />
   <a href="/" on:click|preventDefault={filterPlants}>Go</a>
   <div class="sep">-</div>
   <a href="/" on:click|preventDefault={clearFilter}>Cancel</a>
@@ -58,7 +66,12 @@
     background-color: $beige-lighter;
 
     input {
-      margin-left: 0.5em;
+      margin-left: 0.25em;
+
+      &[type="checkbox"] {
+        position: relative;
+        top: 2px;
+      }
     }
 
     a {
@@ -73,6 +86,10 @@
 
     .genus-box {
       width: 8em;
+    }
+
+    .flag-box {
+      width: 3em;
     }
   }
 

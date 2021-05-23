@@ -21,17 +21,30 @@ let getBaseRoutes = (): Route => {
 				children: []
 			},
 			{
-				title: "About Botanica",
-				page: "About",
-				slug: "/about",
-				children: []
+				title: "More...",
+				page: "More",
+				slug: "/more",
+				children: [
+					{
+						title: "Interesting Links",
+						page: "Links",
+						slug: "/links",
+						children: []
+					},{
+						title: "About Botanica",
+						page: "About",
+						slug: "/about",
+						children: []
+					},
+					{
+						title: "Contact Us",
+						page: "Contact",
+						slug: "/contact",
+						children: []
+					}
+				]
 			},
 			{
-				title: "Contact Us",
-				page: "Contact",
-				slug: "/contact",
-				children: []
-			},{
 				title: "Wish List",
 				page: "WishList",
 				slug: "/wish-list",
