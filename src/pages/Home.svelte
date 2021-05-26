@@ -1,8 +1,10 @@
 <script lang="ts">
 	import type { AxiosResponse } from "axios";
   import { httpClient as ax } from "../stores/httpclient-store";
-  import HomeFeaturedPlant from "../components/HomeFeaturedPlant.svelte";
   import { navTo } from "../stores/route-store.js";
+  import { isLoggedIn } from "../stores/user-store.js";
+  import { isShowHowWlWorks } from "../stores/wishlist-store.js";
+  import HomeFeaturedPlant from "../components/HomeFeaturedPlant.svelte";
   
 	let nextSale: ICalendar | null = null;
 
@@ -10,6 +12,14 @@
 		.then((response: AxiosResponse<ICalendar>) => nextSale = response.data)
 		.catch((err) => console.log({err}));
 
+
+	let goToShoppingList = (e: MouseEvent) => {
+		e.preventDefault();
+		if ($isLoggedIn)
+			navTo(e, "/shopping-list");
+		else
+			$isShowHowWlWorks = true;
+	};
 
   // async function getWeather() {
 	// 	gettingWx = true;
@@ -45,10 +55,10 @@
 				<strong>Botanica Plants</strong> are now available for pickup in the Wallingford neighborhood (Seattle, WA).
 			</div>
 			<div>
-				Create your "wish list" here. We will prepare your order, cooridnate with
+				Create your &quot;shopping list&quot; here. We will prepare your order, cooridnate with
 				you on any changes or adjustments, and let you know when it is ready for pickup.
 			</div>
-			<a href="/" on:click={(e) => navTo(e, "/wish-list")}>Start your plant wish list...</a>
+			<a href="/" on:click={(e) => goToShoppingList(e)}>Start your plant shopping list...</a>
 		</div>
 		<HomeFeaturedPlant />
 		<div class="card-calendar">

@@ -2,9 +2,9 @@
   import { wishListStore as wls, wlPlantNames as wlp } from "../stores/wishlist-store";
   import { availablePlantsStore as aps, availablePlantNames as apn } from "../stores/availableplants-store";
   import { user } from "../stores/user-store";
-  import { currentParams } from "../stores/route-store";
+  import { navTo, currentParams } from "../stores/route-store";
 
-   let isEditMode = false;
+  let isEditMode = false;
   let isValid = true;
   let sendMsg = "";
   let isSent = false;
@@ -12,6 +12,13 @@
   let taxRate = $user.taxRate;
   let wlSubtotal = 0;
   let stashQty = 0;
+
+  // *** Initialize and Test for User ***
+  if ($user.userId == 0)
+    navTo(null, "/");
+
+  if (!wls.isInitialized)
+    wls.init();
   
   // *** Validations
 
@@ -29,7 +36,7 @@
   };
   
 
-  // *** WishList Edits
+  // *** ShoppingList Edits
 
   let editItem = (plantId: number, potSizeId: number, qty: number) => {
     if (!isValid || isEditMode) return;
@@ -130,9 +137,10 @@
 
     wls.sendList().then((resp) =>{
       if (resp && resp.status < 299) {
+        isSent = true;
       }
       else {
-        sendMsg = "Something went wrong:" + (resp ? resp.data : "Please try again; if it doesn't work ten, let us know.");
+        sendMsg = "Something went wrong:" + (resp ? resp.data : "Please try again; if it still doesn't work, let us know.");
         isSent = false;
       }
     });
@@ -147,7 +155,7 @@
   {#if !isSent}
   <div class="content">
     <div class="modal-title">
-      Wish List for {($user.fullName) ? `${$user.fullName} (${$user.email})` : $user.email}
+      Shopping List for {($user.fullName) ? `${$user.fullName} (${$user.email})` : $user.email}
     </div>
 
     <div class="wl-header">
@@ -259,18 +267,19 @@
     </div>
 
     <div class="buttons">
-      <button on:click={sendList} class="primary" disabled={!isValid || isEditMode}>Send My Wish List</button>
+      <button on:click={sendList} class="primary" disabled={!isValid || isEditMode}>Send My List</button>
     </div>
     {#if sendMsg}<div class="error-box">{sendMsg}</div>{/if}
     <div>
       This emails the list to you and Pamela.
-      You can always make changes later when you coordinate on the final details.
+      You can make changes later when you coordinate on the final details or change your mind.
     </div>
   </div>
   {:else}
   <div class="result">
     <div>The list is sent to Pamela with a copy to you.</div>
     <div>Check your email.</div>
+    <div><a href="/" on:click={(e) => navTo(e, "/")}>Home</a></div>
   </div>
   {/if}
 </div>
@@ -414,10 +423,10 @@
     }
 
     .wl-add {
-      border: 1pz solid $main-color;
+      border: 2px solid $main-color;
       border-radius: 5px;
       background-color: #eeffee;
-      padding: 0.4rem;
+      padding: 0.6rem;
 
       .wl-add-title {
         font-weight: bold;
@@ -496,8 +505,12 @@
     }
   }
 
+  .result {
+    text-align: center;
+  }
+
   .buttons {
-      margin: 1rem 0 0;
+      margin: 1.5rem 0 0;
       text-align: center;
     }
 

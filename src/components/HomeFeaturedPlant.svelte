@@ -23,22 +23,26 @@
     Featured Plant
   </div>
   <div class="plant">
-    <img {src} alt="{pn}" />
-    <div class="t1">
-      {pn}
+    <div class="pic">
+      <img {src} alt="{pn}" />
     </div>
-    {#if fp.common}
-    <div class="t2">
-      {fp.common}
+    <div class="info">
+      <div class="t1">
+        {pn}
+      </div>
+      {#if fp.common}
+      <div class="t2">
+        {fp.common}
+      </div>
+      {/if}
+      <div>
+        {fp.description}
+        <span class="plant-habit">{fp.plantSize || ""} {fp.plantType || ""} {fp.plantZone || ""}</span>
+      </div>
+      <a href="/" on:click={(e) => navTo(e, "/plants")}>
+        See List of Available Plants
+      </a>
     </div>
-    {/if}
-    <div>
-      {fp.description}
-      <span class="plant-habit">{fp.plantSize || ""} {fp.plantType || ""} {fp.plantZone || ""}</span>
-    </div>
-    <a href="/" on:click={(e) => navTo(e, "/plants")}>
-      See List of Available Plants
-    </a>
   </div>
   {:else}
   <div class="title">
@@ -53,6 +57,7 @@
   .card-plants {
 		flex: 1 0 auto;
 		border: 1px solid black;
+    margin: 0 0 2px 2px;
 
 		div {
 			margin-bottom: 0.5rem;
@@ -60,8 +65,11 @@
 
 		img {
 			display: block;
-			float: left;
-			margin: 0 0.3rem 0.3rem 0;
+			margin: 0 0.3rem 0.3rem;
+
+      @media screen and (max-width: $bp-small) {
+        margin: 0 auto 0.3rem;
+      }
 		}
 
 		.title {
@@ -74,6 +82,18 @@
 
 		.plant {
 			margin-top: 0.5rem;
+      display: flex;
+
+      @media screen and (max-width: $bp-small) {
+        display: block;
+      }
+		}
+
+    .info {
+
+      @media screen and (max-width: $bp-small) {
+        margin: 0 0.3rem 0.3rem;
+      }
 		}
 
 		.t1 {

@@ -51,8 +51,8 @@
       <span>Availability:</span>
       {#if $isLoggedIn}
       <a href="/"
-        on:click|preventDefault={(e) => navTo(e, "/wish-list", {plantId})}
-        title="Go to Wish List">{availability}</a>
+        on:click|preventDefault={(e) => navTo(e, "/shopping-list", {plantId})}
+        title="Go to Shopping List">{availability}</a>
       {:else}
       {availability}
       {/if}

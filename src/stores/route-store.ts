@@ -45,9 +45,9 @@ let getBaseRoutes = (): Route => {
 				]
 			},
 			{
-				title: "Wish List",
-				page: "WishList",
-				slug: "/wish-list",
+				title: "Shopping List",
+				page: "ShoppingList",
+				slug: "/shopping-list",
 				isHidden: true,
 				children: []
 			},
@@ -179,8 +179,8 @@ export const navFromUrl = function () {
 	}
 };
 
-export const navTo = function (e: MouseEvent, path: string, params?: any) {
-	e.preventDefault();
+export const navTo = function (e: MouseEvent | null, path: string, params?: any) {
+	e && e.preventDefault();
 
 	//let pathName = e.currentTarget.dataset.dest;
 	let url = window.location.origin + path;

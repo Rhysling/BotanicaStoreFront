@@ -119,6 +119,7 @@ interface IvwWishListFlat {
 	plantName: string;
 	potSizeId: number;
 	potDescription: string;
+	sortOrder: number;
 	price: number;
 	qty: number;
 	currentPrice: INullable<number>;

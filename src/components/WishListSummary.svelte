@@ -1,11 +1,9 @@
 <script lang="ts">
-  import { wishListStore as wls, wlItemCount } from "../stores/wishlist-store";
+  import { wishListStore as wls, wlItemCount, isShowHowWlWorks } from "../stores/wishlist-store";
   import { user, isLoggedIn } from "../stores/user-store";
   import { navTo } from "../stores/route-store.js";
   import Modal from "./Modal.svelte";
 
-  let isShowIntro = false;
-  let isShowModal = false;
   let linkText = "";
 
   if ($isLoggedIn)
@@ -14,13 +12,11 @@
   // *** Local handlers
 
   let cancel = () => {
-    isShowIntro = false;
-    isShowModal = false;
+    $isShowHowWlWorks = false;
   };
 
   let showIntro = () => {
-    isShowIntro = true;
-    isShowModal = true;
+    $isShowHowWlWorks = true;
   };
 
   // *** Reactivity
@@ -28,11 +24,11 @@
   $: {
     if ($user.userId > 0) {
       linkText = ($wlItemCount > 0)
-        ? `Your Wish List has ${$wlItemCount} item${($wlItemCount !== 1) ? "s" : ""}`
-        : "Start your Wish List";
+        ? `Your list has ${$wlItemCount} item${($wlItemCount !== 1) ? "s" : ""}`
+        : "Start your shopping list";
     }
     else {
-      linkText = "Sign in to create a Wish List"
+      linkText = "Sign in to create a shopping list"
     }
   }
 
@@ -42,17 +38,17 @@
 
 {#if $isLoggedIn}
   <a href="/"
-  on:click={(e) => navTo(e, "/wish-list")}>{linkText}</a>
+  on:click={(e) => navTo(e, "/shopping-list")}>{linkText}</a>
 {:else}
   Shop online for pickup. <a href="/" on:click|preventDefault={showIntro}>Learn more...</a>
 {/if}
 
 
-<Modal {isShowModal} on:setmodal={cancel}>
+<Modal isShowModal={$isShowHowWlWorks} on:setmodal={cancel}>
   <div class="container" on:click={(e) => e.stopPropagation()}>
     <div class="content">
       <div class="modal-title">
-        [Describe how the Wish List works...]
+        [Describe how the Shopping List works...]
       </div>
 
 

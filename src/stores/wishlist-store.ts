@@ -7,6 +7,7 @@ import { httpClient } from "./httpclient-store";
 let ax: AxiosInstance;
 
 let wlId = 0;
+let isInitialized = false;
 let wl = writable<IvwWishListFlat[]>([]);
 
 let alphaSort = (a: any, b: any) => {
@@ -17,9 +18,9 @@ let alphaSort = (a: any, b: any) => {
     if (a.plantName > b.plantName) sv = 100;
   }
   
-  if (a.price && b.price) {
-    if (a.price < b.price) sv -= 10;
-    if (a.price > b.price) sv += 10;
+  if (a.sortOrder && b.sortOrder) {
+    if (a.sortOrder < b.sortOrder) sv -= 10;
+    if (a.sortOrder > b.sortOrder) sv += 10;
   }
 
   return sv;
@@ -42,10 +43,16 @@ let addUpdateItemDb = (item: IWishListItem) => {
 let init = () => {
   ax = get(httpClient);
 
-  ax.get("/api/WishList/GetCurrentList")
-  .then((resp: AxiosResponse<IvwWishListFlat[]>) => {
-    wl.set(resp.data);
-    wlId = Math.max(...resp.data.map(a => a.wlId), -1);
+  ax.get("/api/WishList/GetOrCreateCurrent")
+  .then((resp: AxiosResponse<IWishList>) => {
+    wlId = resp.data.wlId;
+  
+    ax.get("/api/WishList/GetListById?wlId=" + wlId)
+    .then((resp: AxiosResponse<IvwWishListFlat[]>) => {
+      wl.set(resp.data);
+      isInitialized = true;
+    })
+    .catch((err: AxiosError) => console.log(err.response));
   })
   .catch((err: AxiosError) => console.log(err.response));
 };
@@ -110,6 +117,7 @@ let addItem = (plant: IvwPlantsAvailable, qty: number) => {
     plantName: plant.plantName,
     potSizeId: plant.potSizeId,
     potDescription: plant.potDescription,
+    sortOrder: plant.sortOrder,
     price: plant.price,
     qty,
     currentPrice: plant.price,
@@ -136,6 +144,7 @@ let sendList = () => {
   .then((resp: AxiosResponse<string>) =>{
     if (resp.status < 299) {
       wl.set([]);
+      isInitialized = false;
     }
     else {
       console.log(resp);
@@ -153,7 +162,8 @@ export const wishListStore =  {
   updateQty,
   removeItem,
   addItem,
-  sendList
+  sendList,
+  isInitialized
 };
 
 export const wlPlantNames = derived(
@@ -168,6 +178,8 @@ export const wlPlantNames = derived(
     .sort(alphaSort);
   }
 );
+
+export const isShowHowWlWorks = writable(false);
 
 export const wlItemCount = derived(
   wl,

@@ -11,7 +11,7 @@
 	import Links from "./pages/Links.svelte";
 	import Contact from "./pages/Contact.svelte";
 	import About from "./pages/About.svelte";
-	import WishList from "./pages/WishList.svelte";
+	import ShoppingList from "./pages/ShoppingList.svelte";
 	import PlantAdmin from "./pages/admin/PlantAdmin.svelte";
 	import PlantAvailability from "./pages/admin/PlantAvailability.svelte";
 	import CalendarAdmin from "./pages/admin/CalendarAdmin.svelte";
@@ -41,7 +41,7 @@
 		Links,
 		Contact,
 		About,
-		WishList,
+		ShoppingList,
 		PlantAdmin,
 		PlantAvailability,
 		CalendarAdmin
