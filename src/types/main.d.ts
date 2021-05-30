@@ -41,3 +41,7 @@ type PlantPriceMatrix = {
 	price: string | null;
 	isAvailable: boolean;
 };
+
+interface ILinkEdit extends ILink {
+  sortOrderEntered: string;
+}

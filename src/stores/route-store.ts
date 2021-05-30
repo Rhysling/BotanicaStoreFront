@@ -74,6 +74,12 @@ let getBaseRoutes = (): Route => {
 						page: "CalendarAdmin",
 						slug: "/calendar-admin",
 						isAdmin: true
+					},
+					{
+						title: "Links Admin",
+						page: "LinksAdmin",
+						slug: "/links-admin",
+						isAdmin: true
 					}
 				]
 			}

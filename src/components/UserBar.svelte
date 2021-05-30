@@ -1,12 +1,12 @@
 <script lang="ts">
-  import WishListSummary from "./WishListSummary.svelte";
+  import ShoppingListSummary from "./ShoppingListSummary.svelte";
   import SignIn from "./SignIn.svelte";
 
 </script>
 
 <div class="user-bar">
   <div>
-    <WishListSummary />
+    <ShoppingListSummary />
   </div>
   <div>
     <SignIn />

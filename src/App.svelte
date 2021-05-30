@@ -15,6 +15,7 @@
 	import PlantAdmin from "./pages/admin/PlantAdmin.svelte";
 	import PlantAvailability from "./pages/admin/PlantAvailability.svelte";
 	import CalendarAdmin from "./pages/admin/CalendarAdmin.svelte";
+	import LinksAdmin from "./pages/admin/LinksAdmin.svelte";
 
 	import { currentRoute, navFromUrl } from "./stores/route-store.js";
 	import { user } from "./stores/user-store.js";
@@ -44,7 +45,8 @@
 		ShoppingList,
 		PlantAdmin,
 		PlantAvailability,
-		CalendarAdmin
+		CalendarAdmin,
+		LinksAdmin
 	};
 
 	$: {

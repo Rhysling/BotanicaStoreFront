@@ -28,6 +28,15 @@ interface IKey {
 	keyValue: string;
 }
 
+interface ILink {
+	linkId: number;
+	title: string;
+	description: string;
+	url: string;
+	sortOrder: number;
+	isDeleted: boolean;
+}
+
 interface IPlant {
 	plantId: number;
 	genus: string;
