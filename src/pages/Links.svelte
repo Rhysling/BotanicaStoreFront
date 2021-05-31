@@ -58,5 +58,25 @@
 
 	}
 
+  @media screen and (max-width: $bp-small) {
+    .content {
+      font-size: 0.8rem;
+      padding: 1rem;
+
+      .item {
+        display: block;
+        margin-bottom: 1rem;
+      }
+
+      .star {
+        display: none;
+      }
+
+      .title {
+        font-size: 0.9rem;
+      }
+    }
+  }
+
 
 </style>

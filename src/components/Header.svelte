@@ -65,6 +65,8 @@
   }
 
   .subpage {
+    margin-bottom: 0.3rem;
+
     .logo {
       width: clamp(40px, 10px + 11vw, 85px);
     }

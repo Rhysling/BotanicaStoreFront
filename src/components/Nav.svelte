@@ -1,31 +1,58 @@
-<script>
+<script lang="ts">
   import { routes, navTo } from "../stores/route-store.js";
 
   export let slug = "/";
 
-  let allRoutes;
+  let allRoutes: Route[];
   $: {
-    allRoutes = [{...$routes}, ...($routes.children.filter(a => !a.isHidden) || [])];
+    allRoutes = [{...$routes}, ...($routes.children?.filter(a => !a.isHidden) || [])];
     allRoutes[0].children = [];
   }
 
+  let isOpenRoot = false;
+
+  let setOpenRoot = (val: boolean) => {
+    isOpenRoot = val;
+    toggleOpenDropdown("");
+  };
+
+  let toggleOpenDropdown = (slug: string) => {
+    // let r = allRoutes.find(a => a.slug == slug);
+    // if (r) r.isExpanded = !r.isExpanded;
+    for (let r of allRoutes) {
+      r.isExpanded = (r.slug == slug) ? !r.isExpanded : false;
+    }
+    allRoutes = allRoutes;
+  };
+
+  let nav = (e: MouseEvent, slug: string) => {
+    e.stopPropagation();
+    navTo(e, slug);
+    setOpenRoot(false);
+  };
+
+
 </script>
 
-<div class="nav-vertical">
-  <div class="nav-toggle"><i class="fas fa-bars"></i></div>
+<div class="nav-vertical" class:open={isOpenRoot ? true : undefined}>
+  <div
+    class="nav-toggle"
+    on:mouseenter={() => setOpenRoot(true)}
+    on:click|stopPropagation={() => setOpenRoot(!isOpenRoot)}
+    ><i class="fas fa-bars"></i></div>
   <nav>
     {#each allRoutes as r}
     {#if r.children && r.children.length}
       <a
         href="/"
-        on:click={(e) => e.preventDefault()}
-        class="dropdown" >
+        on:click|preventDefault|stopPropagation={() => toggleOpenDropdown(r.slug)}
+        class="dropdown" class:open={r.isExpanded ? true : undefined}>
         <span class="icon">{r.page}</span>
         <div class="dropdown-content">
           {#each r.children.filter(a => !a.isHidden) as c}
             <a
               href="/"
-              on:click={(e) => navTo(e, c.slug)}
+              on:click={(e) => nav(e, c.slug)}
               class:selected="{c.slug === slug}">{c.page}</a>
           {/each}
         </div>
@@ -33,12 +60,16 @@
     {:else}
       <a
         href="/"
-        on:click={(e) => navTo(e, r.slug)}
+        on:click={(e) => nav(e, r.slug)}
         class:selected="{r.slug === slug}">{r.page}</a>
     {/if}
     {/each}
   </nav>
 </div>
+
+<svelte:body
+  on:click={() => setOpenRoot(false)}
+/>
 
 <style lang="scss">
   @import "../styles/_custom-variables.scss";
@@ -117,7 +148,11 @@
       }
     }
 
-    .dropdown:hover .dropdown-content {
+    // .dropdown:hover .dropdown-content {
+    //   display: block;
+    // }
+
+    .dropdown.open .dropdown-content {
       display: block;
     }
   }
@@ -149,6 +184,7 @@
         display: none;
         position: absolute;
         z-index: 1;
+        transition: height 0.5s ease 0;
 
         .icon::after {
           font-family: "Font Awesome 5 Free"; font-weight: 900; content: "\f105";
@@ -166,10 +202,13 @@
         }
       }
 
-      &:hover nav {
+      // &:hover nav {
+      //   display: block;
+      // }
+
+      &.open nav {
         display: block;
       }
-
     }
 
 

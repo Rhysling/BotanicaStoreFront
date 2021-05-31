@@ -89,7 +89,8 @@
   $: apsFiltered = plantToAdd.plantId ? $aps.filter(a => a.plantId === plantToAdd.plantId) : [];
 
 
-  let validateAddQty = (qty: string) => {
+  let validateAddQty = (qty: string, isOkEmpty: boolean) => {
+    if (!qty && isOkEmpty) return true;
     let val = Number(qty);
     if (isNaN(val)) return false;
     if (!Number.isInteger(val)) return false;
@@ -106,7 +107,7 @@
     let ap =apsFiltered.find(a => a.plantId === plantId && a.potSizeId == potSizeId);
 
     if (ap) {
-      if (!validateAddQty(qtyEntered)) {
+      if (!validateAddQty(qtyEntered, false)) {
         ap.isValid = false;
         apsFiltered = apsFiltered;
         return;
@@ -158,7 +159,7 @@
       Shopping List for {($user.fullName) ? `${$user.fullName} (${$user.email})` : $user.email}
     </div>
 
-    <div class="wl-header">
+    <div class="wl-header row">
       <div class="description">Plant / Pot Size</div>
       <div class="qty">Qty</div>
       <div class="price">Price</div>
@@ -167,11 +168,11 @@
     </div>
 
     {#each $wlp as p (p.plantId)}
-    <div class="wl-name">
+    <div class="wl-plantname">
       {p.plantName}
     </div>
       {#each $wls.filter(a => a.plantId === p.plantId) as w (w.potSizeId)}
-      <div class="wl-item">
+      <div class="wl-item row">
         <div class="description">{w.potDescription}</div>
         <div class="qty">
           {#if w.isEditMode}
@@ -210,21 +211,21 @@
       {/each}
     {/each}
 
-    <div class="wl-footer">
+    <div class="wl-footer row">
       <div class="description">Subtotal</div>
-      <div class="total">{wlSubtotal.toFixed(2)}</div>
+      <div class="ext">{wlSubtotal.toFixed(2)}</div>
       <div class="edit">&nbsp;</div>
     </div>
 
-    <div class="wl-footer">
+    <div class="wl-footer row">
       <div class="description">Estimated tax @ {(taxRate * 100).toFixed(2)}%</div>
-      <div class="total">{(wlSubtotal * taxRate).toFixed(2)}</div>
+      <div class="ext">{(wlSubtotal * taxRate).toFixed(2)}</div>
       <div class="edit">&nbsp;</div>
     </div>
 
-    <div class="wl-footer bold">
+    <div class="wl-footer row grand-total">
       <div class="description">Projected Total</div>
-      <div class="total">${(wlSubtotal * (1 + taxRate)).toFixed(2)}</div>
+      <div class="ext">${(wlSubtotal * (1 + taxRate)).toFixed(2)}</div>
       <div class="edit">&nbsp;</div>
     </div>
 
@@ -243,19 +244,19 @@
       </div>
     
       {#each apsFiltered as a (a.potSizeId)}
-      <div class="wl-add-item">
+      <div class="wl-add-item row">
         <div class="description">{a.potDescription}</div>
         <div class="qty">
           <input type="text"
             bind:value={a.qtyEntered}
-            class:error-input={a.isValid === false} />
+            class:error-input={(validateAddQty(a.qtyEntered, true) === false) ? true : undefined} />
         </div>
         <div class="price">{a.price.toFixed(2)}</div>
         <div class="ext">{calcExt(a.price, a.qtyEntered)}</div>
         <div class="edit">
           <a href="/"
             on:click|preventDefault={() => addItem(a.plantId, a.potSizeId, a.qtyEntered)}
-            disabled={validateAddQty(a.qtyEntered) ? undefined : true}
+            disabled={validateAddQty(a.qtyEntered, false) ? undefined : true}
             title="Add plant"><i class="fas fa-save"></i></a>
           <a href="/"
             on:click|preventDefault={() => cancelAddItem(a.plantId, a.potSizeId)}
@@ -288,18 +289,19 @@
   @import "../styles/_custom-variables.scss";
 
   .container {
-    margin: 2rem 5rem;
-    padding: 2rem 0;
+    margin: 2rem auto;
+    padding: 2rem 1rem;
+    max-width: 610px;
     background-color: antiquewhite;
 
     @media screen and (max-width: $bp-small) {
-      margin: 2rem;
+      margin: 1rem 0;
     }
   }
 
   .content {
     margin: 0 auto;
-    max-width: clamp(220px, 50vw, 400px);
+    max-width: 400px;
 
     .modal-title {
       font-size: 1.1rem;
@@ -307,67 +309,26 @@
       text-align:center;
       margin-bottom: 1rem;
     }
+    
+// *** Common ***
 
-    .wl-header {
+    .row {
       display: flex;
-      //justify-content: center;
       align-items: baseline;
-      margin-left: 0;
-      margin-bottom:0.5rem;
-      font-weight:bold;
-      font-size:0.9rem;
 
       .description {
-        flex: 0 1 1500px;
+        flex: 0 1 195px;
       }
 
       .qty {
-        flex: 0 0 40px;
+        flex: 0 1 35px;
         text-align: right;
-      }
-
-      .price {
-        flex: 0 0 50px;
-        text-align: right;
-      }
-
-      .ext {
-        flex: 0 0 70px;
-        text-align: right;
-      }
-
-      .edit {
-        flex: 0 0 50px;
-        margin-left: 0.35rem;
-      }
-    }
-
-    .wl-name {
-      font-weight: bold;
-      font-size: 0.85rem;
-    }
-
-    .wl-item {
-      display: flex;
-      //justify-content: center;
-      align-items: baseline;
-      margin-bottom:0.5rem;
-      font-weight: normal;
-      font-size: 0.8rem;
-
-      .description {
-        flex: 0 1 1500px;
-        margin-left: 0.5rem;
-      }
-
-      .qty {
-        flex: 0 0 40px;
-        text-align: right;
+        padding-left: 0.5em;
         position: relative;
         min-height: 0.8rem;
 
         input {
-          width: 35px;
+          width: 30px;
           text-align: right;
           position: absolute;
           top: -0.4rem;
@@ -376,23 +337,26 @@
       }
 
       .price {
-        flex: 0 0 50px;
+        flex: 0 1 50px;
         text-align: right;
+        padding-left: 0.5em;
       }
 
       .ext {
-        flex: 0 0 70px;
+        flex: 0 1 70px;
         text-align: right;
+        padding-left: 0.5em;
       }
 
       .edit {
-        flex: 0 0 50px;
-        margin-left: 0.35rem;
+        flex: 0 1 50px;
+        text-align: left;
+        padding-left: 0.5em;
         
         a {
           display: inline-block;
           color: $main-color;
-          margin-left: 0.35rem;
+          margin-right: 0.25em;
 
           &[disabled] {
             color: $text-disabled;
@@ -402,23 +366,44 @@
       }
     }
 
+
+    .wl-header {
+      //justify-content: center;
+      font-weight:bold;
+      font-size:0.9rem;
+    }
+
+    .wl-plantname {
+      font-weight: bold;
+      font-size: 0.85rem;
+      margin-top:0.5rem;
+    }
+
+    .wl-item {
+      margin-top:0.2rem;
+      font-weight: normal;
+      font-size: 0.8rem;
+
+      .description {
+        margin-left: 0.5rem;
+      }
+      // @media screen and (max-width: $bp-small) {
+      //   font-size: 0.8rem;
+      // }
+    }
+
     .wl-footer {
-      display: flex;
-      margin-bottom:0.5rem;
+      margin-top:0.5rem;
       font-size: 0.85rem;
 
       .description {
-        flex: 0 1 1500px;
+        flex: 0 1 280px;
         text-align: right;
       }
 
-      .total {
-        flex: 0 0 70px;
-        text-align: right;
-      }
-      .edit {
-        flex: 0 0 50px;
-        margin-left: 0.35rem;
+      &.grand-total {
+        font-weight: bold;
+        margin-bottom: 0.5rem;
       }
     }
 
@@ -428,14 +413,18 @@
       background-color: #eeffee;
       padding: 0.6rem;
 
+      @media screen and (max-width: $bp-small) {
+        font-size: 0.9rem;
+      }
+
       .wl-add-title {
         font-weight: bold;
-        font-size: 0.9rem;
-        margin-bottom: 0.8rem;
+        font-size: 0.9em;
+        margin-bottom: 0.8em;
       }
       .wl-add-name {
-        font-size: 0.8rem;
-        margin-bottom: 0.8rem;
+        font-size: 0.8em;
+        margin-bottom: 0.8em;
 
         select {
           min-width: 70%;
@@ -445,64 +434,32 @@
       }
 
       .wl-add-item {
-        display: flex;
-        align-items: baseline;
-        margin-bottom:0.8rem;
+        margin-bottom:0.8em;
         font-weight: normal;
-        font-size: 0.8rem;
+        font-size: 0.8em;
 
         .description {
-          flex: 0 1 1500px;
-          margin-left: 0.5rem;
+          padding-left: 0.5em;
         }
 
         .qty {
-          flex: 0 0 40px;
-          text-align: right;
-          position: relative;
-          min-height: 0.8rem;
-
+          
           input {
-            width: 35px;
-            text-align: right;
-            position: absolute;
-            top: -0.2rem;
-            right: -0.2rem;
-            padding: 0.2rem;
+            
+            top: -0.2em;
+            right: -0.2em;
+            padding: 0.2em;
           }
-        }
-
-        .price {
-          flex: 0 0 50px;
-          text-align: right;
         }
 
         .ext {
-          flex: 0 0 70px;
+          flex: 0 1 60px;
           text-align: right;
         }
 
-        .edit {
-          flex: 0 0 50px;
-          margin-left: 0.35rem;
-          
-          a {
-            display: inline-block;
-            color: $main-color;
-            margin-left: 0.35rem;
-
-            &[disabled] {
-              color: $text-disabled;
-              cursor: default;
-            }
-          }
-        }
       }
     }
 
-    .bold {
-      font-weight: bold;
-    }
   }
 
   .result {

@@ -24,6 +24,7 @@ let getBaseRoutes = (): Route => {
 				title: "More...",
 				page: "More",
 				slug: "/more",
+				isExpanded: undefined,
 				children: [
 					{
 						title: "Interesting Links",
@@ -56,6 +57,7 @@ let getBaseRoutes = (): Route => {
 				page: "Admin",
 				slug: "/admin",
 				isAdmin: true,
+				isExpanded: undefined,
 				children: [
 					{
 						title: "Plant Admin",

@@ -59,6 +59,10 @@
 		border: 1px solid black;
     margin: 0 0 2px 2px;
 
+    @media screen and (max-width: $bp-small) {
+      margin: 0.2rem 0;
+    }
+
 		div {
 			margin-bottom: 0.5rem;
 		}
@@ -92,7 +96,7 @@
     .info {
 
       @media screen and (max-width: $bp-small) {
-        margin: 0 0.3rem 0.3rem;
+        margin: 0 0.5rem 0.3rem;
       }
 		}
 

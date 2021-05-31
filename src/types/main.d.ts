@@ -4,6 +4,7 @@ type Route = {
   slug: string;
   isAdmin?: boolean;
   isHidden?: boolean;
+  isExpanded?: boolean;
   children?: Route[];
 };
 

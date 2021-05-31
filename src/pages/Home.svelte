@@ -235,4 +235,24 @@
     }
 	}
 
+	@media screen and (max-width: $bp-small) {
+		.content {
+			display: block;
+
+			.left {
+				display: none;
+			}
+
+			.right {
+				flex: 1 1 100%;
+
+				& > div {
+					margin: 0.2rem 0;
+					padding: 0.5rem;
+				}
+			}
+		}
+
+	}
+
 </style>

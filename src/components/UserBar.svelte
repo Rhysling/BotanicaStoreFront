@@ -25,6 +25,10 @@
     display: flex;
     flex-flow: row nowrap;
     justify-content: space-between;
+
+    @media screen and (max-width: $bp-small) {
+      padding: 0.25rem 0.5rem;
+    }
   }
 
 
