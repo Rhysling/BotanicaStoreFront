@@ -7,19 +7,33 @@
 
   let ids: string[];
   let last: number;
+  let ix = 0;
+  let hasMultiple: boolean;
 
   $: {
     ids = bigPicIds.split(",");
     last = ids.length - 1;
     ix = 0;
+    hasMultiple = last > 0;
   }
 
   //console.log({plantId, bigPicIds, isShowModal});
   //console.log({ids});
-  let ix = 0;
 
   let changePic = (n: number) => {
-    ix += n;
+    let i = ix + n;
+
+    if (i < 0) {
+      ix = last;
+      return;
+    }
+
+    if (i > last) {
+      ix = 0;
+      return;
+    }
+
+    ix = i;
   };
 
 </script>
@@ -27,16 +41,12 @@
 <Modal {isShowModal} on:setmodal>
   {#if isShowModal}
   <div class="frame" on:click={(e) => e.stopPropagation()}>
-    {#if ix == 0}
-      <i class="fas fa-angle-left"></i>
-    {:else}
-      <a href="/" on:click|preventDefault|stopPropagation={() => changePic(-1)}><i class="fas fa-angle-left"></i></a>
+    {#if hasMultiple}
+      <a href="/" class="arrow left" on:click|preventDefault|stopPropagation={() => changePic(-1)}><i class="fas fa-angle-left"></i></a>
     {/if}
     <img src="/plantpics/p{plantId.toString().padStart(4, "0")}_{ids[ix].padStart(2, "0")}.jpg" alt="Botanica plant" />
-    {#if ix == last}
-      <i class="fas fa-angle-right"></i>
-    {:else}
-      <a href="/" on:click|preventDefault|stopPropagation={() => changePic(1)}><i class="fas fa-angle-right"></i></a>
+    {#if hasMultiple}
+      <a href="/" class="arrow right" on:click|preventDefault|stopPropagation={() => changePic(1)}><i class="fas fa-angle-right"></i></a>
     {/if}
   </div>
   {/if}
@@ -46,18 +56,40 @@
   @import "../styles/_custom-variables.scss";
 
   .frame {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin: 50vh auto 0;
+    position: relative;
+    height: 90vh;
+    width: 100%;
+    margin-top: 5vh;
+  }
+
+  img {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    max-width: 95vw;
+    max-height: 90vh;
+  }
+
+  .arrow {
+    display: block;
+    position: absolute;
+    top: 50%;
     transform: translateY(-50%);
+    font-size: 5rem;
+    z-index: 2;
+
+    &.left {
+      left: 2rem;
+    }
+
+    &.right {
+      right: 2rem;
+    }
   }
 
   i {
-    display: block;
-    font-size: 5rem;
     color: rgba(255, 255, 255, 0.3);
-    margin: 0 2rem;
   }
 
   a {
@@ -72,9 +104,5 @@
     }
   }
 
-  img {
-    max-width: calc(100vw - 15rem);
-    max-height: 90vh;
-  }
 
 </style>

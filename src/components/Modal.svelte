@@ -12,7 +12,7 @@
 </script>
 
 <div class="modal" on:click={() => setModal(false)} style="display:{isShowModal ? "block" : "none"}">
-  <i class="close fas fa-times" on:click={() => setModal(false)}></i>
+  <i class="close fas fa-times" on:click={() => setModal(false)} title="close"></i>
   <slot />
 </div>
 
@@ -38,6 +38,7 @@
     color: #aaa;
     font-size: 28px;
     font-weight: bold;
+    z-index: 110;
     
     &:hover,
     &:focus {
