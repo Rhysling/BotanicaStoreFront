@@ -43,6 +43,12 @@ type PlantPriceMatrix = {
 	isAvailable: boolean;
 };
 
+type PlantListFilterType = {
+	filterText: string;
+  isNwNativeOnly: boolean;
+  includeNotAvailable: boolean;
+};
+
 interface ILinkEdit extends ILink {
   sortOrderEntered: string;
 }

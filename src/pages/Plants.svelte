@@ -1,19 +1,20 @@
 <script lang="ts">
   import Pager from "../components/Pager.svelte";
+  import PlantListFilter from "../components/PlantListFilter.svelte";
   import DisplayPlant from "../components/DisplayPlant.svelte";
   import PlantBigPicModal from "../components/PlantBigPicModal.svelte";
   import { listedPlants } from "../stores/listedplants-store";
   
-  
-  let filteredList = $listedPlants;
-  let itemCount = filteredList.length;
-  let pagedList = filteredList.slice(0, 25);
-  
   let filterText = "";
-  let isAvailableOnly = false;
   let isNwNativeOnly = false;
+  let includeNotAvailable = false;
+  
+  let filteredList: IvwListedPlant[] = [];
+  let itemCount = 0;
+  let pagedList: IvwListedPlant[] = [];
 
   let filterPlants = () => {
+
     let f = (p: IvwListedPlant) => {
       let passesText = 
         filterText === "" ||
@@ -22,7 +23,7 @@
         (p.common || "").toLowerCase().includes(filterText.toLowerCase()) ||
         p.description.toLowerCase().includes(filterText.toLowerCase());
 
-      let passesAvailable = !isAvailableOnly || (p.availability.length > 1);
+      let passesAvailable =  includeNotAvailable || (p.availability.length > 1);
       let passesNwNative = !isNwNativeOnly || p.isNwNative;
 
       return passesText && passesAvailable && passesNwNative;
@@ -30,12 +31,14 @@
 
     filteredList = $listedPlants.filter(f);
     itemCount = filteredList.length;
+    pagedList = filteredList.slice(0, 25);
   };
 
-  let clearFilter = () => {
-    filterText = "";
-    isAvailableOnly = false;
-    isNwNativeOnly = false;
+  let handleFilterPlants = (e: CustomEvent<PlantListFilterType>) => {
+    filterText = e.detail.filterText;
+    isNwNativeOnly = e.detail.isNwNativeOnly;
+    includeNotAvailable = e.detail.includeNotAvailable;
+
     filterPlants();
   };
   
@@ -69,19 +72,13 @@
     //console.log({bigPics});
   };
 
+  // *** Init ***
+  filterPlants();
+
 </script>
 
-<div class="search">
-  <div class="sep">Search:</div>
-  <input type="text" class="search-box" bind:value={filterText} placeholder="Name or Description" />
-  <div class="sep">Available:</div>
-  <input type="checkbox" bind:checked={isAvailableOnly} />
-  <div class="sep">NW Native:</div>
-  <input type="checkbox" bind:checked={isNwNativeOnly} />
-  <div class="sep"><i class="fas fa-caret-left"></i><i class="fas fa-caret-right"></i></div>
-  <a href="/" on:click|preventDefault={filterPlants}>Go</a>
-  <div class="sep">-</div>
-  <a href="/" on:click|preventDefault={clearFilter}>Cancel</a>
+<div class="filter-pager">
+  <PlantListFilter {filterText} {isNwNativeOnly} {includeNotAvailable} on:filterPlants={handleFilterPlants} />
   <div class="pager">
     <Pager { itemCount } on:pageChanged={handlePageChanged} />
   </div>
@@ -93,17 +90,8 @@
   {/each}
 </div>
 
-<div class="search">
-  <div class="sep">Search:</div>
-  <input type="text" class="search-box" bind:value={filterText} placeholder="Name or Description" />
-  <div class="sep">Available:</div>
-  <input type="checkbox" bind:checked={isAvailableOnly} />
-  <div class="sep">NW Native:</div>
-  <input type="checkbox" bind:checked={isNwNativeOnly} />
-  <div class="sep"><i class="fas fa-caret-left"></i><i class="fas fa-caret-right"></i></div>
-  <a href="/" on:click|preventDefault={filterPlants}>Go</a>
-  <div class="sep">-</div>
-  <a href="/" on:click|preventDefault={clearFilter}>Cancel</a>
+<div class="filter-pager">
+  <PlantListFilter {filterText} {isNwNativeOnly} {includeNotAvailable} on:filterPlants={handleFilterPlants} />
   <div class="pager">
     <Pager { itemCount } on:pageChanged={handlePageChanged} />
   </div>
@@ -114,36 +102,13 @@
 <style lang="scss">
 	@import "../styles/_custom-variables.scss";
 
-  .search {
+  .filter-pager {
     display: flex;
     flex-flow: row wrap;
     align-items: baseline;
     font-size: 0.8rem;
     margin-top: 0.5em;
     background-color: $beige-lighter;
-
-    input {
-      margin-left: 0.25em;
-
-      &[type="checkbox"] {
-        position: relative;
-        top: 2px;
-      }
-    }
-
-    a {
-      display: inline-block;
-      margin-left: 0.5em;
-    }
-
-    .sep {
-      display: inline-block;
-      margin-left: 0.5em;
-    }
-
-    .search-box {
-      width: 12em;
-    }
   }
 
   .pager {
