@@ -1,4 +1,5 @@
 <script lang="ts">
+  import Modal from "../components/Modal.svelte";
   import { wishListStore as wls, wlPlantNames as wlp } from "../stores/wishlist-store";
   import { availablePlantsStore as aps, availablePlantNames as apn } from "../stores/availableplants-store";
   import { user } from "../stores/user-store";
@@ -8,6 +9,7 @@
   let isValid = true;
   let sendMsg = "";
   let isSent = false;
+  let isShowPotSizes = false;
 
   let taxRate = $user.taxRate;
   let wlSubtotal = 0;
@@ -148,6 +150,9 @@
 
   };
 
+  // ** Pot Size Modal **
+  let setModal = (val: boolean) => isShowPotSizes = val;
+
   //let noop = () => {}; 
 
 </script>
@@ -155,7 +160,8 @@
 <div class="container" on:click={(e) => e.stopPropagation()}>
   {#if !isSent}
   <div class="content">
-    <div class="modal-title">
+    <a href="/" class="pot-sizes" on:click|preventDefault={() => setModal(true)}>pot sizes</a>
+    <div class="title">
       Shopping List for {($user.fullName) ? `${$user.fullName} (${$user.email})` : $user.email}
     </div>
 
@@ -284,11 +290,20 @@
   </div>
   {/if}
 </div>
+<Modal isShowModal={isShowPotSizes} on:setmodal={() => setModal(false)}>
+  <div class="pot-size-container">
+    <div class="title">
+      Pot size pictures here.
+    </div>
+    <div>Here's the picture...</div>
+  </div>
+</Modal>
 
 <style lang="scss">
   @import "../styles/_custom-variables.scss";
 
   .container {
+    position: relative;
     margin: 2rem auto;
     padding: 2rem 1rem;
     max-width: 610px;
@@ -299,16 +314,26 @@
     }
   }
 
+  .title {
+    font-size: 1.1rem;
+    font-weight: bold;
+    text-align:center;
+    margin-bottom: 1rem;
+  }
+
   .content {
     margin: 0 auto;
     max-width: 400px;
 
-    .modal-title {
-      font-size: 1.1rem;
-      font-weight: bold;
-      text-align:center;
-      margin-bottom: 1rem;
+    .pot-sizes {
+      position: absolute;
+      top: 0;
+      right: 0;
+      margin: 0.4rem 0.4rem 0 0;
+      font-size: 0.75rem;
+      font-style: italic;
     }
+
     
 // *** Common ***
 
@@ -482,6 +507,24 @@
     border: 1px solid $error-primary;
     color: darken($error-primary, 10%);
     background-color: lighten($error-secondary, 5%);
+  }
+
+  .pot-size-container {
+    position: absolute;
+    top: 5rem;
+    right: 5rem;
+    bottom: 5rem;
+    left: 5rem;
+    padding: 3rem;
+    background-color: antiquewhite;
+
+    @media screen and (max-width: $bp-small) {
+      top: 2rem;
+      right: 2rem;
+      bottom: 2rem;
+      left: 2rem;
+      padding: 2rem;
+    }
   }
 
 </style>

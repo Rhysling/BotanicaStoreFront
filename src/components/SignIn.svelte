@@ -7,7 +7,11 @@
   
   $: isShowModal = false;
   let showModal = (val: boolean) => isShowModal = val;
-  let setModal = (e: any) => isShowModal = e.detail.val;
+
+  let setModal = (e: any) => {
+    isShowModal = e.detail.val;
+    resetUserLogin();
+  }
   
   let userLogin: IUserLogin;
 
@@ -16,6 +20,11 @@
   let submitErrorMessage = "";
   let isShowName = false;
   let isShowPw = false;
+
+  let showLogin = () => {
+    showModal(true);
+    setTimeout(() => document.getElementById("login-email")?.focus(), 200);
+  };
 
   let resetUserLogin = () => {
     
@@ -58,10 +67,16 @@
       emailValidationMessage = "Email address doesn't look right.";
 
     isShowPw = userLogin.email.endsWith("polson.com");
+
+    if (isShowPw)
+    setTimeout(() => document.getElementById("login-pw")?.focus(), 200);
   };
 
   
-  let showName = () => isShowName = true;
+  let showName = () => {
+    isShowName = true;
+    setTimeout(() => document.getElementById("login-name")?.focus(), 200);
+  }
 
 
   let signIn = function() {
@@ -100,7 +115,7 @@
 {#if $isLoggedIn}
   {$user.fullName || $user.email} <a href="/" on:click|preventDefault={signOut}>Sign out</a>
 {:else}
-  <a href="/" on:click|preventDefault={() => showModal(true)}>Sign in</a>
+  <a href="/" on:click|preventDefault={() => showLogin()}>Sign in</a>
 {/if}
 
 <Modal { isShowModal } on:setmodal={setModal}>
@@ -110,6 +125,7 @@
     </div>
     <div class="content">
       <input
+        id="login-email"
         type="text"
         class="signin"
         placeholder="Email"
@@ -119,6 +135,7 @@
 
       <a href="/" on:click|preventDefault={showName} style="display:{isShowName ? "none" : "block"}">Optional: Include your name</a>
       <input
+        id="login-name"
         type="text"
         class="signin"
         style="display:{isShowName ? "block" : "none"}"
@@ -126,6 +143,7 @@
         bind:value={userLogin.fullName} />
 
       <input
+        id="login-pw"
         type="password"
         class="signin"
         style="display:{isShowPw ? "block" : "none"}"

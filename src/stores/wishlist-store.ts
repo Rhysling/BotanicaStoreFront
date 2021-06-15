@@ -108,8 +108,8 @@ let addItem = (plant: IvwPlantsAvailable, qty: number) => {
 
   let newItem: IvwWishListFlat = {
     userId: 0,
-    createdDate: null,
-    lastUpdateDate: null,
+    createdDate: "",
+    lastUpdateDate: "",
     emailedDate: null,
     isClosed: false,
     wlId,

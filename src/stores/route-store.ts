@@ -61,26 +61,37 @@ let getBaseRoutes = (): Route => {
 				children: [
 					{
 						title: "Plant Admin",
+						navName: "Plant Admin",
 						page: "PlantAdmin",
 						slug: "/plant-admin",
 						isAdmin: true
 					},
 					{
 						title: "Plant Availability",
+						navName: "Availability",
 						page: "PlantAvailability",
 						slug: "/plant-availability",
 						isAdmin: true
 					},
 					{
 						title: "Calendar Admin",
+						navName: "Calendar Admin",
 						page: "CalendarAdmin",
 						slug: "/calendar-admin",
 						isAdmin: true
 					},
 					{
 						title: "Links Admin",
+						navName: "Links Admin",
 						page: "LinksAdmin",
 						slug: "/links-admin",
+						isAdmin: true
+					},
+					{
+						title: "Shopping Lists",
+						navName: "Shopping Lists",
+						page: "ShoppingListAdmin",
+						slug: "/shopping-list-admin",
 						isAdmin: true
 					}
 				]

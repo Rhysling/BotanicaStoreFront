@@ -1,19 +1,19 @@
-// Using MSBuild ver. 16.9.31205.134 to load projects.
-// Generated - 2021/04/29-10:37:08
+// Using MSBuild ver. 5.0.301 to load projects.
+// Generated - 2021/06/13-16:02:25
 
 // SOLUTION: Single Project
 
 // PROJECT SEARCHED:
 //	BotanicaStoreBack
 
-type INullable<T> = T | null;
+type INullable<T> = T | null | undefined;
 
 // NAMESPACE: BotanicaStoreBack.Models
 
 interface ICalendar {
 	itemId: number;
-	beginDate: any;
-	endDate: any;
+	beginDate: string;
+	endDate: INullable<string>;
 	eventTime: string;
 	title: string;
 	location: string;
@@ -52,7 +52,7 @@ interface IPlant {
 	bigPicIds: string;
 	isListed: boolean;
 	isFeatured: boolean;
-	lastUpdate: any;
+	lastUpdate: string;
 	flag: string;
 	lastUpdateFormatted: string;
 }
@@ -114,14 +114,65 @@ interface IvwPlantsAvailable {
 	sortOrder: number;
 	price: number;
 	qtyEntered: string;
-	isValid?: boolean;
+	isValid: INullable<boolean>;
+}
+
+interface IvwShoppingListItem {
+	wlId: number;
+	plantId: number;
+	plantName: string;
+	potSizeId: number;
+	potDescription: string;
+	sortOrder: number;
+	qty: number;
+	price: number;
+	currentPrice: INullable<number>;
+	isCurrentlyAvailable: INullable<boolean>;
+}
+
+interface IvwShoppingListSummary {
+	wlId: number;
+	userId: number;
+	createdDate: string;
+	lastUpdateDate: string;
+	emailedDate: INullable<string>;
+	isClosed: boolean;
+	userFullName: string;
+	email: string;
+	totalCount: number;
+	totalPretax: number;
+	createdDateFormatted: string;
+	lastUpdateDateFormatted: string;
+	emailedDateFormatted: string;
+}
+
+interface IvwWishListEmail {
+	wlId: number;
+	userId: number;
+	createdDate: string;
+	lastUpdateDate: string;
+	emailedDate: INullable<string>;
+	isClosed: boolean;
+	email: string;
+	fullName: string;
+	items: Array<IvwWishListEmailItem>;
+}
+
+interface IvwWishListEmailItem {
+	wlId: number;
+	plantId: number;
+	plantName: string;
+	potSizeId: number;
+	potDescription: string;
+	price: number;
+	qty: number;
 }
 
 interface IvwWishListFlat {
 	userId: number;
-	createdDate: any;
-	lastUpdateDate: any;
-	emailedDate: any;
+	createdDate: string;
+	lastUpdateDate: string;
+	emailedDate: INullable<string>;
 	isClosed: boolean;
 	wlId: number;
 	plantId: number;
@@ -139,9 +190,9 @@ interface IvwWishListFlat {
 interface IWishList {
 	wlId: number;
 	userId: number;
-	createdDate: any;
-	lastUpdateDate: any;
-	emailedDate: any;
+	createdDate: string;
+	lastUpdateDate: string;
+	emailedDate: INullable<string>;
 	isClosed: boolean;
 	createdDateFormatted: string;
 	lastUpdateDateFormatted: string;

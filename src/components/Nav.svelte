@@ -53,7 +53,7 @@
             <a
               href="/"
               on:click={(e) => nav(e, c.slug)}
-              class:selected="{c.slug === slug}">{c.page}</a>
+              class:selected="{c.slug === slug}">{c.navName || c.page}</a>
           {/each}
         </div>
       </a>
@@ -61,7 +61,7 @@
       <a
         href="/"
         on:click={(e) => nav(e, r.slug)}
-        class:selected="{r.slug === slug}">{r.page}</a>
+        class:selected="{r.slug === slug}">{r.navName || r.page}</a>
     {/if}
     {/each}
   </nav>

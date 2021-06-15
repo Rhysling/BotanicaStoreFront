@@ -1,5 +1,6 @@
 type Route = {
   title: string;
+  navName?: string;
   page: string;
   slug: string;
   isAdmin?: boolean;
