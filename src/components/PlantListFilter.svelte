@@ -1,41 +1,37 @@
 <script lang="ts">
-  import { createEventDispatcher } from 'svelte';
-
-  const dispatch = createEventDispatcher();
-
-  export let filterText = "";
-  export let isNwNativeOnly = false;
-  export let includeNotAvailable = false;
+  import { plantListFilterDisplay as plfd, plantListFilterActive as plfa } from "../stores/listedplants-store";
 
   let filterPlants = () => {
-    dispatch("filterPlants", {
-      filterText,
-      includeNotAvailable,
-      isNwNativeOnly
-    });
+    $plfa = $plfd;
+
+    // let el = document.getElementById("plant-list");
+    // if (el) el.scrollIntoView(true); // top
+
+    window.scroll({
+			top: 0,
+			left: 0,
+			behavior: "smooth"
+		});
   };
 
   let clearFilter = () => {
-    filterText = "";
-    includeNotAvailable = false;
-    isNwNativeOnly = false
+    $plfd = {
+      filterText: "",
+      includeNotAvailable: false,
+      isNwNativeOnly: false
+    };
 
-    dispatch("filterPlants", {
-      filterText,
-      includeNotAvailable,
-      isNwNativeOnly
-    });
+    filterPlants();
   };
-
   
 </script>
 
 <div class="sep">Search:</div>
-<input type="text" class="search-box" bind:value={filterText} placeholder="Name or Description" />
+<input type="text" class="search-box" bind:value={$plfd.filterText} placeholder="Name or Description" />
 <div class="sep">NW Native:</div>
-<input type="checkbox" bind:checked={isNwNativeOnly} />
+<input type="checkbox" bind:checked={$plfd.isNwNativeOnly} />
 <div class="sep" title="All plants including not currently available">Full List:</div>
-<input type="checkbox" bind:checked={includeNotAvailable} title="All plants including not currently available" />
+<input type="checkbox" bind:checked={$plfd.includeNotAvailable} title="All plants including not currently available" />
 <div class="sep"><i class="fas fa-caret-left"></i><i class="fas fa-caret-right"></i></div>
 <a href="/" on:click|preventDefault={filterPlants}>Go</a>
 <div class="sep">-</div>

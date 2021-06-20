@@ -3,56 +3,7 @@
   import PlantListFilter from "../components/PlantListFilter.svelte";
   import DisplayPlant from "../components/DisplayPlant.svelte";
   import PlantBigPicModal from "../components/PlantBigPicModal.svelte";
-  import { listedPlants } from "../stores/listedplants-store";
-  
-  let filterText = "";
-  let isNwNativeOnly = false;
-  let includeNotAvailable = false;
-  
-  let filteredList: IvwListedPlant[] = [];
-  let itemCount = 0;
-  let pagedList: IvwListedPlant[] = [];
-
-  let filterPlants = () => {
-
-    let f = (p: IvwListedPlant) => {
-      let passesText = 
-        filterText === "" ||
-        p.genus.toLowerCase().startsWith(filterText.toLowerCase()) ||
-        p.species.toLowerCase().startsWith(filterText.toLowerCase()) ||
-        (p.common || "").toLowerCase().includes(filterText.toLowerCase()) ||
-        p.description.toLowerCase().includes(filterText.toLowerCase());
-
-      let passesAvailable =  includeNotAvailable || (p.availability.length > 1);
-      let passesNwNative = !isNwNativeOnly || p.isNwNative;
-
-      return passesText && passesAvailable && passesNwNative;
-    };
-
-    filteredList = $listedPlants.filter(f);
-    itemCount = filteredList.length;
-    pagedList = filteredList.slice(0, 25);
-  };
-
-  let handleFilterPlants = (e: CustomEvent<PlantListFilterType>) => {
-    filterText = e.detail.filterText;
-    isNwNativeOnly = e.detail.isNwNativeOnly;
-    includeNotAvailable = e.detail.includeNotAvailable;
-
-    filterPlants();
-  };
-  
-  let handlePageChanged = (event: CustomEvent<PageState>) => {
-    let ps = event.detail;
-    pagedList = filteredList.slice(ps.startIndex, ps.endIndex);
-    // console.log({pagedList});
-
-    window.scroll({
-			top: 0,
-			left: 0,
-			behavior: "smooth"
-		});
-	};
+  import { pagedPlants } from "../stores/listedplants-store";
 
   let bigPics = {
     plantId: 0,
@@ -73,27 +24,26 @@
   };
 
   // *** Init ***
-  filterPlants();
 
 </script>
 
 <div class="filter-pager">
-  <PlantListFilter {filterText} {isNwNativeOnly} {includeNotAvailable} on:filterPlants={handleFilterPlants} />
+  <PlantListFilter />
   <div class="pager">
-    <Pager { itemCount } on:pageChanged={handlePageChanged} />
+    <Pager />
   </div>
 </div>
 
-<div>
-  {#each pagedList as p (p.plantId)}
+<div id="plant-list">
+  {#each $pagedPlants as p (p.plantId)}
     <DisplayPlant {...p} on:showBigPics={showBigPics} />
   {/each}
 </div>
 
 <div class="filter-pager">
-  <PlantListFilter {filterText} {isNwNativeOnly} {includeNotAvailable} on:filterPlants={handleFilterPlants} />
+  <PlantListFilter />
   <div class="pager">
-    <Pager { itemCount } on:pageChanged={handlePageChanged} />
+    <Pager />
   </div>
 </div>
 
