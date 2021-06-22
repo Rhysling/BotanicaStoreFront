@@ -15,7 +15,7 @@ let plant = {
 	bigPicIds:  "",
 	isListed: false,
 	isFeatured: false,
-	lastUpdate: null,
+	lastUpdate: "",
 	flag: "",
 	lastUpdateFormatted: "None"
 };

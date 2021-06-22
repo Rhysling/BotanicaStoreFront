@@ -1,7 +1,6 @@
 <script lang="ts">
   import type { AxiosResponse } from "axios";
   import { httpClient as ax } from "../../stores/httpclient-store";
-import { wishListStore } from "../../stores/wishlist-store";
 
   let master: IvwShoppingListSummary[] = [];
   let summaryList: IvwShoppingListSummary[] = [];

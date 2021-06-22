@@ -293,9 +293,9 @@
 <Modal isShowModal={isShowPotSizes} on:setmodal={() => setModal(false)}>
   <div class="pot-size-container">
     <div class="title">
-      Pot size pictures here.
+      Pot Sizes
     </div>
-    <div>Here's the picture...</div>
+    <img src="./assets/img/pot-size-comparison.jpg" alt="Pot Size Comparison" />
   </div>
 </Modal>
 
@@ -517,6 +517,13 @@
     left: 5rem;
     padding: 3rem;
     background-color: antiquewhite;
+
+    img {
+      display: block;
+      max-width: 100%;
+      max-height: 100%;
+      margin: 0 auto;
+    }
 
     @media screen and (max-width: $bp-small) {
       top: 2rem;
