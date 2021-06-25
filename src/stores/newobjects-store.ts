@@ -15,7 +15,7 @@ let plant = {
 	bigPicIds:  "",
 	isListed: false,
 	isFeatured: false,
-	lastUpdate: "",
+	lastUpdate: "1950-01-01",
 	flag: "",
 	lastUpdateFormatted: "None"
 };

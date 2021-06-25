@@ -93,6 +93,13 @@ let getBaseRoutes = (): Route => {
 						page: "ShoppingListAdmin",
 						slug: "/shopping-list-admin",
 						isAdmin: true
+					},
+					{
+						title: "User Admin",
+						navName: "Users",
+						page: "UserAdmin",
+						slug: "/user-admin",
+						isAdmin: true
 					}
 				]
 			}

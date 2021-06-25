@@ -1,5 +1,5 @@
 // Using MSBuild ver. 5.0.301 to load projects.
-// Generated - 2021/06/13-16:02:25
+// Generated - 2021/06/24-15:06:49
 
 // SOLUTION: Single Project
 
@@ -144,6 +144,21 @@ interface IvwShoppingListSummary {
 	createdDateFormatted: string;
 	lastUpdateDateFormatted: string;
 	emailedDateFormatted: string;
+}
+
+interface IvwUserDetail {
+	userId: number;
+	email: string;
+	fullName: string;
+	isAdmin: boolean;
+	createdDate: string;
+	lastLoginDate: string;
+	loginCount: number;
+	countAll: number;
+	countPending: number;
+	countClosed: number;
+	createdDateFormatted: string;
+	lastLoginDateFormatted: string;
 }
 
 interface IvwWishListEmail {
