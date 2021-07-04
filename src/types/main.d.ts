@@ -25,8 +25,8 @@ type PageState = {
   itemsPerPage: number;
   itemCount: number;
   currentPage: number;
-  startIndex?: number;
-  endIndex?: number;
+  startIndex: number;
+  endIndex: number;
 };
 
 type PlantToggle = {

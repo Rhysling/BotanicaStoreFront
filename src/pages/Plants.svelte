@@ -1,9 +1,26 @@
 <script lang="ts">
+  import { listedPlants as lp } from "../stores/listedplants-store";
+  import { onDestroy } from 'svelte';
   import Pager from "../components/Pager.svelte";
   import PlantListFilter from "../components/PlantListFilter.svelte";
   import DisplayPlant from "../components/DisplayPlant.svelte";
   import PlantBigPicModal from "../components/PlantBigPicModal.svelte";
-  import { pagedPlants } from "../stores/listedplants-store";
+
+  let listedPlants: IvwListedPlant[] = [];
+  let filteredPlants: IvwListedPlant[] = [];
+  let pagedPlants: IvwListedPlant[] = [];
+
+  let plantListFilter: PlantListFilterType = {
+    filterText: "",
+    isNwNativeOnly: false,
+    includeNotAvailable: false
+  };
+
+  let itemsPerPage = 25;
+  let itemCount = 0;
+  let currentPage = 1;
+  let startIndex = 0;
+  let endIndex = 0;
 
   let bigPics = {
     plantId: 0,
@@ -23,27 +40,85 @@
     //console.log({bigPics});
   };
 
+  let handleFilterPlants = (e: CustomEvent<PlantListFilterType>) => {
+    plantListFilter = e.detail;
+    filterPlants();
+  };
+
+  let handlePageChanged = (e: CustomEvent<PageState>) => {
+    currentPage = e.detail.currentPage;
+    startIndex = e.detail.startIndex;
+    endIndex = e.detail.endIndex
+    pagedPlants = filteredPlants.slice(startIndex, endIndex);
+  };
+
+
+  let filterPlants = () => {
+
+    let plf = plantListFilter;
+
+    let f = (p: IvwListedPlant) => {
+      let passesText = 
+        plf.filterText === "" ||
+        p.genus.toLowerCase().startsWith(plf.filterText.toLowerCase()) ||
+        p.species.toLowerCase().startsWith(plf.filterText.toLowerCase()) ||
+        (p.common || "").toLowerCase().includes(plf.filterText.toLowerCase()) ||
+        p.description.toLowerCase().includes(plf.filterText.toLowerCase());
+
+      let passesAvailable =  plf.includeNotAvailable || (p.availability.length > 1);
+      let passesNwNative = !plf.isNwNativeOnly || p.isNwNative;
+
+      return passesText && passesAvailable && passesNwNative;
+    };
+
+    filteredPlants =  listedPlants.filter(f);
+    itemCount = filteredPlants.length;
+  };
+
+  // let loadPlants = () => {
+  //   $ax.get("/api/ListedPlants")
+  //   .then((resp: AxiosResponse<IvwListedPlant[]>) => {
+  //     listedPlants = resp.data;
+  //     filterPlants();
+  //   })
+  //   .catch((err: AxiosError) => console.log(err.response));
+  // };
+
   // *** Init ***
+  //onMount(loadPlants);
+
+  const unsubscribe = lp.subscribe(value => {
+    listedPlants = value;
+    filterPlants();
+    itemCount = filteredPlants.length;
+    currentPage = 1;
+    startIndex = 0;
+    endIndex = Math.min(startIndex + itemsPerPage, itemCount);
+
+    pagedPlants = filteredPlants.slice(startIndex, endIndex);
+  });
+
+  onDestroy(unsubscribe);
 
 </script>
 
 <div class="filter-pager">
-  <PlantListFilter />
+  <PlantListFilter  {...plantListFilter} on:filterPlants={handleFilterPlants} />
   <div class="pager">
-    <Pager />
+    <Pager {itemsPerPage} {currentPage} {itemCount} on:pageChanged={handlePageChanged} />
   </div>
 </div>
 
 <div id="plant-list">
-  {#each $pagedPlants as p (p.plantId)}
+  {#each pagedPlants as p (p.plantId)}
     <DisplayPlant {...p} on:showBigPics={showBigPics} />
   {/each}
 </div>
 
 <div class="filter-pager">
-  <PlantListFilter />
+  <PlantListFilter  {...plantListFilter} on:filterPlants={handleFilterPlants} />
   <div class="pager">
-    <Pager />
+    <Pager {itemsPerPage} {currentPage} {itemCount} on:pageChanged={handlePageChanged} />
   </div>
 </div>
 
