@@ -5,7 +5,8 @@
     "strict": true,
     "typeRoots": [
       "./src/types"
-    ]
+    ],
+	"types": ["node", "svelte"]
   },
 
   "include": ["src/**/*"],

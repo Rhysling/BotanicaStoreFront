@@ -75,14 +75,6 @@
     itemCount = filteredPlants.length;
   };
 
-  // let loadPlants = () => {
-  //   $ax.get("/api/ListedPlants")
-  //   .then((resp: AxiosResponse<IvwListedPlant[]>) => {
-  //     listedPlants = resp.data;
-  //     filterPlants();
-  //   })
-  //   .catch((err: AxiosError) => console.log(err.response));
-  // };
 
   // *** Init ***
   //onMount(loadPlants);

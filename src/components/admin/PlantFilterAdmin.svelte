@@ -29,6 +29,7 @@
     filterGenus = "";
     filterFlag = "";
     isListedOnly = false;
+    isNwNativeOnly = false;
     filterPlants();
   };
 
