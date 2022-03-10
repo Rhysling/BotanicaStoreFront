@@ -26,7 +26,7 @@
     }
 
     
-    //console.log({file: acceptedFiles[0], isSmall});
+    //console.log({ acceptedFiles, fileRejections });
 
   };
   let deletePic = (plantId: number, picId: string) => {
@@ -58,7 +58,7 @@
           on:drop={(e) => handlePicDropped(e, true)}
           on:click={(e) => e.stopPropagation() }
           containerClasses={"dz-wrap"}
-          accept=".jpg,.png">
+          accept=".jpg,.jpeg">
           <p>Drop new small picture here or click to search for file.</p>
         </Dropzone>
       </div>
@@ -78,7 +78,7 @@
           on:drop={(e) => handlePicDropped(e, false)}
           on:click={(e) => e.stopPropagation() }
           containerClasses={"dz-wrap"}
-          accept=".jpg,.png">
+          accept=".jpg,.jpeg">
           <p>Drop new big picture here or click to search for file.</p>
         </Dropzone>
       </div>
