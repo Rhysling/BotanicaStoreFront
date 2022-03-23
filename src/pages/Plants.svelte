@@ -62,7 +62,7 @@
         plf.filterText === "" ||
         p.genus.toLowerCase().startsWith(plf.filterText.toLowerCase()) ||
         p.species.toLowerCase().startsWith(plf.filterText.toLowerCase()) ||
-        (p.common || "").toLowerCase().includes(plf.filterText.toLowerCase()) ||
+        (p.family || "").toLowerCase().includes(plf.filterText.toLowerCase()) ||
         p.description.toLowerCase().includes(plf.filterText.toLowerCase());
 
       let passesAvailable =  plf.includeNotAvailable || (p.availability.length > 1);

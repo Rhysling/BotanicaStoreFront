@@ -6,7 +6,7 @@
   export let plantId: number;
   export let genus: string;
 	export let species: string;
-	export let common: string;
+	export let family: string;
 	export let description: string;
 	export let plantSize: string;
 	export let plantType: string;
@@ -39,7 +39,7 @@
   {/if}
   <div class="text">
     <div class="h1">{genus} {species}</div>
-    {#if common}<div class="h2">{common}</div>{/if}
+    {#if family}<div class="h2">{family}</div>{/if}
     <div class="description">
       {description}
     </div>

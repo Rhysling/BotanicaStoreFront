@@ -6,12 +6,13 @@
   export let plantId: number;
   export let genus: string;
 	export let species: string;
-	export let common: string;
+	export let family: string;
 	export let description: string;
   export let webDescription: string;
 	export let plantSize: string;
 	export let plantType: string;
 	export let plantZone: string;
+	export let pictureLocation: string;
   export let isNwNative: boolean;
 	export let hasSmallPic: boolean;
 	export let bigPicIds: string;
@@ -79,7 +80,7 @@
   <img {src} alt="{genus} {species}" />
   <div class="text">
     <div class="h1">{genus} {species}</div>
-    {#if common}<div class="h2">{common}</div>{/if}
+    {#if family}<div class="h2">{family}</div>{/if}
     <div class="description">
       <strong>Description: </strong>{description || "none"}
     </div>
@@ -88,6 +89,9 @@
     {/if}
     <div class="details">
       {plantZone || ""} {plantSize || ""} {plantType || ""} {isNwNative ? "NW Native" : ""}
+    </div>
+    <div class="description">
+      Picture Location: {pictureLocation || "none"}
     </div>
     <div class="description">
       {bpc ? bpc : "No"} big picture{bpc === 1 ? "" : "s"}.

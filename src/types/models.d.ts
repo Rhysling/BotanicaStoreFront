@@ -1,5 +1,5 @@
-// Using MSBuild ver. 5.0.301 to load projects.
-// Generated - 2021/06/24-15:06:49
+// Using MSBuild ver. 6.0.201 to load projects.
+// Generated - 2022/03/23-11:05:16
 
 // SOLUTION: Single Project
 
@@ -41,12 +41,13 @@ interface IPlant {
 	plantId: number;
 	genus: string;
 	species: string;
-	common: string;
+	family: string;
 	description: string;
 	webDescription: string;
 	plantSize: string;
 	plantType: string;
 	plantZone: string;
+	pictureLocation: string;
 	isNwNative: boolean;
 	hasSmallPic: boolean;
 	bigPicIds: string;
@@ -75,11 +76,12 @@ interface IvwListedPlant {
 	plantId: number;
 	genus: string;
 	species: string;
-	common: string;
+	family: string;
 	description: string;
 	plantSize: string;
 	plantType: string;
 	plantZone: string;
+	pictureLocation: string;
 	isNwNative: boolean;
 	hasSmallPic: boolean;
 	bigPicIds: string;

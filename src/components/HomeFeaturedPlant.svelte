@@ -30,9 +30,9 @@
       <div class="t1">
         {pn}
       </div>
-      {#if fp.common}
+      {#if fp.family}
       <div class="t2">
-        {fp.common}
+        {fp.family}
       </div>
       {/if}
       <div>
