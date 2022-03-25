@@ -154,6 +154,7 @@ export const routes = derived(user, ($user) => {
 
 export const currentSlug = writable("/");
 export const currentParams = writable<any>({});
+export const isLiveOnlineShopping = writable(false);
 
 export const currentRoute = derived([routes, currentSlug], ([$routes, $currentSlug]) => {
 	let r = findRoute($routes, $currentSlug);

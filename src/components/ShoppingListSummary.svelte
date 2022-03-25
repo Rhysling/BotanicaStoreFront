@@ -1,7 +1,7 @@
 <script lang="ts">
   import { wishListStore as wls, wlItemCount, isShowHowWlWorks } from "../stores/wishlist-store";
   import { user, isLoggedIn } from "../stores/user-store";
-  import { navTo } from "../stores/route-store.js";
+  import { navTo, isLiveOnlineShopping } from "../stores/route-store.js";
   import Modal from "./Modal.svelte";
 
   let linkText = "";
@@ -36,11 +36,13 @@
 
 </script>
 
-{#if $isLoggedIn}
-  <a href="/"
-  on:click={(e) => navTo(e, "/shopping-list")}>{linkText}</a>
-{:else}
-  Shop online for pickup. <a href="/" on:click|preventDefault={showIntro}>Learn more...</a>
+{#if $isLiveOnlineShopping}
+  {#if $isLoggedIn}
+    <a href="/"
+    on:click={(e) => navTo(e, "/shopping-list")}>{linkText}</a>
+  {:else}
+    Shop online for pickup. <a href="/" on:click|preventDefault={showIntro}>Learn more...</a>
+  {/if}
 {/if}
 
 

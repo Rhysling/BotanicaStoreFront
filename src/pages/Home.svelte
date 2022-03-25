@@ -1,7 +1,7 @@
 <script lang="ts">
 	import type { AxiosResponse } from "axios";
   import { httpClient as ax } from "../stores/httpclient-store";
-  import { navTo } from "../stores/route-store.js";
+  import { navTo, isLiveOnlineShopping } from "../stores/route-store.js";
   import { isLoggedIn } from "../stores/user-store.js";
   import { isShowHowWlWorks } from "../stores/wishlist-store.js";
   import HomeFeaturedPlant from "../components/HomeFeaturedPlant.svelte";
@@ -37,18 +37,17 @@
 			<div class="small">An old friend...</div>
 		</div>
 		<div class="card-special">
-			<div class="title">
+			<div class="title" style="display:none;">
 				Now Available at<br />
 				Seattle Audubon
 			</div>
 			<div>
-				<img src="https://picsum.photos/100/75" alt="placeholder" />
-				Lorem ipsum, dolor sit amet consectetur adipisicing elit. Velit, fugiat, dolor pariatur, voluptate quo mollitia
-				error odit cupiditate perspiciatis sequi quas nobis quae aut sit deserunt harum fuga recusandae ab.
+				<img src="/assets/img/botanica-logo-512x512.png" alt="Botanica" style="max-width:295px;height:auto;" />
 			</div>
 		</div>
 	</div>
 	<div class="right">
+		{#if $isLiveOnlineShopping}
 		<div class="card-shop">
 			<div class="t1">Shop Online!</div>
 			<div class="t2">
@@ -60,6 +59,7 @@
 			</div>
 			<a href="/" on:click={(e) => goToShoppingList(e)}>Start your plant shopping list...</a>
 		</div>
+		{/if}
 		<HomeFeaturedPlant />
 		<div class="card-calendar">
 			<div class="title">Next Plant Sale</div>
