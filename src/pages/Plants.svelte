@@ -13,7 +13,7 @@
   let plantListFilter: PlantListFilterType = {
     filterText: "",
     isNwNativeOnly: false,
-    includeNotAvailable: false
+    includeNotAvailable: true
   };
 
   let itemsPerPage = 25;

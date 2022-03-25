@@ -207,7 +207,6 @@
 
     .date-sep {
       font-size: 0.8rem;
-      padding-left: 2rem;
       color: lighten($text-color, 5%);
     }
 
@@ -218,6 +217,15 @@
 		
     .title {
       font-size: 1.1rem;
+			font-weight: bold;
+			text-align: center;
+			width: 100%;
+			margin: 0.5rem 0;
+    }
+
+		.special-title {
+			color: $main-color;
+      font-size: 1rem;
 			font-weight: bold;
 			text-align: center;
 			width: 100%;

@@ -3,7 +3,7 @@
   //import { plantListFilterDisplay as plfd, plantListFilterActive as plfa } from "../stores/listedplants-store";
 
   export let filterText = "";
-  export let includeNotAvailable = false;
+  export let includeNotAvailable = true;
   export let isNwNativeOnly = false;
 
   const dispatch = createEventDispatcher();
@@ -27,7 +27,7 @@
 
   let clearFilter = () => {
       filterText = "";
-      includeNotAvailable = false;
+      includeNotAvailable = true;
       isNwNativeOnly = false;
 
     filterPlants();
