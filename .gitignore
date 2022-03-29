@@ -4,5 +4,6 @@
 
 public/plantpics/
 tools/
+secrets/
 
 .DS_Store

@@ -11,6 +11,7 @@
 	export let plantSize: string;
 	export let plantType: string;
 	export let plantZone: string;
+	export let pictureLocation: string;
 	export let hasSmallPic: boolean;
 	export let bigPicIds: string;
 	export let isFeatured: boolean;
@@ -21,6 +22,7 @@
 
   let src = hasSmallPic ? `/plantpics/p${plantId.toString().padStart(4, "0")}_sm.jpg` : "/plantpics/no-pic.jpg";
   let _: any = isFeatured;
+  _ = pictureLocation;
 
   let showBigPics = () => {
     dispatch("showBigPics", {
