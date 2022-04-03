@@ -3,7 +3,6 @@
   export let slug = "/";
 
   let yr = new Date().getFullYear() - 2000;
-  let isFooter = true;
 
   let scrollToTop = () => {
     window.scroll({

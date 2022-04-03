@@ -12,10 +12,11 @@
     .filter(a => a !== "");
   $: bigPicPaths = bigPicsIds
     .map(a => [a, `/plantpics/p${plant.plantId.toString().padStart(4, "0")}_${a.padStart(2, "0")}.jpg`]);
-  let errorMsg = "";
+  //let errorMsg = "";
 
-  let handlePicDropped = (e: any, isSmall: boolean) => {
-    const { acceptedFiles, fileRejections } = e.detail;
+  const handlePicDropped = (e: CustomEvent, isSmall: boolean) => {
+    const { acceptedFiles } = e.detail;
+    //{ acceptedFiles, fileRejections }
 
     if (acceptedFiles.length) {
       const formData = new FormData();
@@ -25,11 +26,15 @@
       dispatch("savePic", formData);
     }
 
-    
     //console.log({ acceptedFiles, fileRejections });
-
   };
-  let deletePic = (plantId: number, picId: string) => {
+
+  const handlePicDroppedSmall = (e: CustomEvent) => handlePicDropped(e, true);
+  const handlePicDroppedLarge = (e: CustomEvent) => handlePicDropped(e, false);
+
+  const stopProp = (e: Event) => e.stopPropagation();
+
+  const deletePic = (plantId: number, picId: string) => {
     dispatch("deletePic", {plantId, picId});
   };
 
@@ -55,8 +60,8 @@
       </div>
       <div class="dz-frame">
         <Dropzone
-          on:drop={(e) => handlePicDropped(e, true)}
-          on:click={(e) => e.stopPropagation() }
+          on:drop={ handlePicDroppedSmall }
+          on:click={ stopProp }
           containerClasses={"dz-wrap"}
           accept=".jpg,.jpeg">
           <p>Drop new small picture here or click to search for file.</p>
@@ -75,8 +80,8 @@
       {/each}
       <div class="dz-frame">
         <Dropzone
-          on:drop={(e) => handlePicDropped(e, false)}
-          on:click={(e) => e.stopPropagation() }
+          on:drop={ handlePicDroppedLarge }
+          on:click={ stopProp }
           containerClasses={"dz-wrap"}
           accept=".jpg,.jpeg">
           <p>Drop new big picture here or click to search for file.</p>

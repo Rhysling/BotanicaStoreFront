@@ -63,17 +63,17 @@
 
 <!-- svelte-ignore a11y-no-onchange -->
 <div>
-  <a href="/" on:click|preventDefault={(e) => changePage(1)} class:disabled={isFirst} disabled={isFirst || undefined} title="first"><i class="fas fa-angle-double-left"></i></a>
-  <a href="/" on:click|preventDefault={(e) => changePage(currentPage - 1)} class:disabled={isFirst} disabled={isFirst || undefined} title="previous"><i class="fas fa-angle-left"></i></a>
-  <select bind:value={selectedPage} on:change={(e) => changePage(selectedPage)}>
+  <a href="/" on:click|preventDefault={() => changePage(1)} class:disabled={isFirst} disabled={isFirst || undefined} title="first"><i class="fas fa-angle-double-left"></i></a>
+  <a href="/" on:click|preventDefault={() => changePage(currentPage - 1)} class:disabled={isFirst} disabled={isFirst || undefined} title="previous"><i class="fas fa-angle-left"></i></a>
+  <select bind:value={selectedPage} on:change={() => changePage(selectedPage)}>
 		{#each pagelist as p}
 			<option value={p.value} selected={p.value == currentPage}>
 				{p.label}
 			</option>
 		{/each}
 	</select>
-  <a href="/" on:click|preventDefault={(e) => changePage(currentPage + 1)} class:disabled={isLast} disabled={isLast} title="next"><i class="fas fa-angle-right"></i></a>
-  <a href="/" on:click|preventDefault={(e) => changePage(pages)} class:disabled={isLast} disabled={isLast} title="last"><i class="fas fa-angle-double-right"></i></a>
+  <a href="/" on:click|preventDefault={() => changePage(currentPage + 1)} class:disabled={isLast} disabled={isLast} title="next"><i class="fas fa-angle-right"></i></a>
+  <a href="/" on:click|preventDefault={() => changePage(pages)} class:disabled={isLast} disabled={isLast} title="last"><i class="fas fa-angle-double-right"></i></a>
 </div>
 
 <style lang="scss">

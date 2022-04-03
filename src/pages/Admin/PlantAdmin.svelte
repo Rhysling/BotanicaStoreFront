@@ -30,13 +30,19 @@
 
   onMount(loadPlants);
 
-  let addPlant = () => {
+  const addPlant = () => {
     editedPlant = {...$newPlant};
+  };
+
+  const updatePlant = (p: IPlant) => {
+    plants = plants.map(a => (a.plantId === p.plantId) ? p : a);
+    filteredList = filteredList.map(a => (a.plantId === p.plantId) ? p : a);
+    pagedList = pagedList.map(a => (a.plantId === p.plantId) ? p : a);
   };
 
   // Db Ops
 
-  let savePlant = (p: IPlant) => {
+  const savePlant = (p: IPlant) => {
     editError = "";
     let isNew = p.plantId === 0;
     // delete p.lastUpdate;
@@ -44,6 +50,7 @@
     $ax.post("/api/admin/Plants", p)
     .then(function (response: AxiosResponse<number>) {
       let pid = response.data;
+      p.lastUpdateFormatted = (new Date()).toLocaleString();
 
       if (isNew) {
         p.plantId = pid;
@@ -52,9 +59,7 @@
         pagedList = [p, ...pagedList];
       }
       else {
-        plants = plants.map(a => (a.plantId === pid) ? p : a);
-        filteredList = filteredList.map(a => (a.plantId === pid) ? p : a);
-        pagedList = pagedList.map(a => (a.plantId === pid) ? p : a);
+        updatePlant(p);
       }
 
       editedPlant = null;
@@ -150,8 +155,8 @@
           plantForPics.bigPicIds = plantForPics.bigPicIds ?
             plantForPics.bigPicIds + "," + ppid.picId : ppid.picId;
         }
+        updatePlant(plantForPics);
       }
-      plantForPics = plantForPics;
     })
     .catch((e: AxiosError) => {
       console.log(e);
@@ -169,8 +174,8 @@
         else {
           plantForPics.bigPicIds = plantForPics.bigPicIds.split(",").filter(a => a !== ppid.picId).join(",");
         }
+        updatePlant(plantForPics);
       }
-      plantForPics = plantForPics;
     })
     .catch((e: AxiosError) => {
       console.log(e);

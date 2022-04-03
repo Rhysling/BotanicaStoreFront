@@ -53,8 +53,8 @@
   $: isValid = (valMsgBeginDate + valMsgEndDate + valMsgTitle).length === 0;
 
   let validate = () => {
-    validateBeginDate(c.beginDate);
-    validateEndDate(c.endDate, c.beginDate);
+    validateBeginDate(c.beginDate || "");
+    validateEndDate(c.endDate || "", c.beginDate || "");
     validateTitle(c.title || "");
     isValid = (valMsgBeginDate + valMsgEndDate + valMsgTitle).length === 0;
   };
@@ -95,7 +95,7 @@
       <div class="info">
         <input type="text"
           bind:value={c.beginDate}
-          on:blur={() => validateBeginDate(c.beginDate)}
+          on:blur={() => validateBeginDate(c.beginDate || "")}
           class:error-box={valMsgBeginDate ? true : null}
           placeholder="Begin Date" />
         {#if valMsgBeginDate}<span class="error">{valMsgBeginDate}</span>{/if}
@@ -107,7 +107,7 @@
       <div class="info">
         <input type="text"
           bind:value={c.endDate}
-          on:blur={() => validateEndDate(c.endDate, c.beginDate)}
+          on:blur={() => validateEndDate(c.endDate || "", c.beginDate || "")}
           class:error-box={valMsgEndDate ? true : null}
           placeholder="End Date" />
         {#if valMsgEndDate}<span class="error">{valMsgEndDate}</span>{/if}

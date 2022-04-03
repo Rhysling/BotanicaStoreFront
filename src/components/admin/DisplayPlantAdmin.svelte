@@ -1,5 +1,5 @@
 <script lang="ts">
-  import type { AxiosResponse } from "axios";
+  //import type { AxiosResponse } from "axios";
   import { httpClient as ax } from "../../stores/httpclient-store";
   import { createEventDispatcher } from 'svelte';
 
@@ -22,10 +22,14 @@
 	export let flag: string;
 	export let lastUpdateFormatted: string;
 
-  let src = hasSmallPic ? `/plantpics/p${plantId.toString().padStart(4, "0")}_sm.jpg` : "/plantpics/no-pic.jpg";
-  let bp = bigPicIds.split(",");
-  let bpc = (bp.length === 1 && bp[0] === "") ? 0 : bp.length;
+  let src = "";
+  let bp: string[] = [];
+  let bpc = 0;
   let _ = lastUpdate;
+
+  $: src = hasSmallPic ? `/plantpics/p${plantId.toString().padStart(4, "0")}_sm.jpg` : "/plantpics/no-pic.jpg";
+  $: bp = bigPicIds.split(",");
+  $: bpc = (bp.length === 1 && bp[0] === "") ? 0 : bp.length;
 
   const dispatch = createEventDispatcher();
 
@@ -33,8 +37,8 @@
     let pt = { plantId, val: status };
     //Save status
     $ax.post("/api/admin/Plants/SetFeatured", pt)
-    .then((response: AxiosResponse<void>) => {
-      //Notify parent
+    .then(() => {
+      //Notify parent  response: AxiosResponse<void>
       dispatch("updatePlantToggle", { ...pt, column: "isFeatured" });
     })
     .catch((e) => {
@@ -46,8 +50,8 @@
     let pt: PlantToggle = { plantId, val: status };
     //Save status
     $ax.post("/api/admin/Plants/SetListed", pt)
-    .then((response: AxiosResponse<void>) => {
-      //Notify parent
+    .then(() => {
+      //Notify parent  response: AxiosResponse<void>
       dispatch("updatePlantToggle", { ...pt, column: "isListed" });
     })
     .catch((e) => {

@@ -40,7 +40,7 @@
     $ax.post("/api/Calendar/Save", item)
     .then((response: AxiosResponse<ICalendar>) => {
       let item = response.data;
-      item.beginDate = item.beginDate ? item.beginDate.substring(0, 10) : null;
+      item.beginDate = item.beginDate ? item.beginDate.substring(0, 10) : "";
       item.endDate = item.endDate ? item.endDate.substring(0, 10) : null;
 
       calMaster = [
@@ -84,7 +84,7 @@
     .then((response: AxiosResponse<ICalendar[]>) => {
       calMaster = response.data.map(a => ({
         ...a,
-        beginDate: a.beginDate ? a.beginDate.substring(0, 10) : null,
+        beginDate: a.beginDate ? a.beginDate.substring(0, 10) : "",
         endDate: a.endDate ? a.endDate.substring(0, 10) : null
       }))
     })
