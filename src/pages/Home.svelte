@@ -42,7 +42,7 @@
 				Seattle Audubon
 			</div>
 			<div>
-				<img src="/assets/img/botanica-logo-512x512.png" alt="Botanica" style="max-width:295px;height:auto;" />
+				<img src="/assets/img/botanica-logo-512x512.png" alt="Botanica" style="max-width:100%;height:auto;" />
 			</div>
 		</div>
 	</div>
@@ -136,7 +136,7 @@
 	}
 
 	.card-oldfriend {
-		flex: 0 0 auto;
+		flex: 0 1 auto;
 
 		img {
 			display: block;
@@ -153,7 +153,7 @@
 	}
 
 	.card-special {
-		flex: 1 0 auto;
+		flex: 1 1 auto;
 		border: 1px solid black;
 
 		img {

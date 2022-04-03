@@ -15,8 +15,12 @@
   //let errorMsg = "";
 
   const handlePicDropped = (e: CustomEvent, isSmall: boolean) => {
-    const { acceptedFiles } = e.detail;
-    //{ acceptedFiles, fileRejections }
+    const { acceptedFiles, fileRejections } = e.detail;
+
+    if (fileRejections.length) {
+      alert("Can only take 'jpg' or 'jpeg' files.");
+      return;
+    }
 
     if (acceptedFiles.length) {
       const formData = new FormData();

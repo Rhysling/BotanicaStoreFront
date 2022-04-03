@@ -23,9 +23,7 @@
     Featured Plant
   </div>
   <div class="plant">
-    <div class="pic">
-      <img {src} alt="{pn}" />
-    </div>
+    <img {src} alt="{pn}" />
     <div class="info">
       <div class="t1">
         {pn}
@@ -70,6 +68,8 @@
 		img {
 			display: block;
 			margin: 0 0.3rem 0.3rem;
+      max-width: 150px;
+        height: auto;
 
       @media screen and (max-width: $bp-small) {
         margin: 0 auto 0.3rem;
@@ -87,6 +87,7 @@
 		.plant {
 			margin-top: 0.5rem;
       display: flex;
+      align-items: flex-start;
 
       @media screen and (max-width: $bp-small) {
         display: block;

@@ -4,7 +4,9 @@
 
   export let plants: IPlant[] = [];
 
-  let filterGenus = "";
+  const filterTypeList = ["genus", "all"];
+  let filterType = "genus";
+  let filterText = "";
   let filterFlag = "";
   let isListedOnly = false;
   let isNwNativeOnly = false;
@@ -14,10 +16,26 @@
 
   let filterPlants = () => {
     let f = (p: IPlant) => {
-      return (filterGenus === "" || p.genus.toLowerCase().startsWith(filterGenus.toLowerCase())) &&
-        (!filterFlag || filterFlag.trim() === "" || p.flag === filterFlag.trim()) &&
-        (isListedOnly === false || p.isListed) &&
-        (isNwNativeOnly === false || p.isNwNative);
+
+      let passesText = true;
+      if (filterText) {
+        if (filterType === "genus") {
+          passesText = p.genus.toLowerCase().startsWith(filterText.toLowerCase());
+        }
+        else {
+          passesText =
+            p.genus.toLowerCase().startsWith(filterText.toLowerCase()) ||
+            p.species.toLowerCase().startsWith(filterText.toLowerCase()) ||
+            (p.family || "").toLowerCase().includes(filterText.toLowerCase()) ||
+            (p.description || "").toLowerCase().includes(filterText.toLowerCase());
+        }
+      }
+      
+      let passesFlag = !filterFlag || filterFlag.trim() === "" || p.flag === filterFlag.trim();
+      let passesListedOnly = isListedOnly === false || p.isListed;
+      let passesNativeOnly = isNwNativeOnly === false || p.isNwNative;
+
+      return passesText && passesFlag && passesListedOnly && passesNativeOnly;
     };
 
     let filteredList = plants.filter(f);
@@ -26,7 +44,7 @@
   };
 
   let clearFilter = () => {
-    filterGenus = "";
+    filterText = "";
     filterFlag = "";
     isListedOnly = false;
     isNwNativeOnly = false;
@@ -40,16 +58,18 @@
 </script>
 
 <div class="search">
-  Search:
-  <input type="text" class="genus-box" bind:value={filterGenus} placeholder="Genus" />
+  <select bind:value={filterType}>
+		{#each filterTypeList as ft}
+			<option value={ft}>
+				{ft}
+			</option>
+		{/each}
+	</select>
+  <input type="text" class="genus-box" bind:value={filterText} placeholder="Search {filterType}" />
   <input type="text" class="flag-box" bind:value={filterFlag} on:keyup={() => {if (filterFlag && filterFlag.length > 2) filterFlag = filterFlag.substring(0,2)}} placeholder="Flag" />
-  <div class="sep">Listed:</div>
-  <input type="checkbox" bind:checked={isListedOnly} />
-  <div class="sep">NW Native:</div>
-  <input type="checkbox" bind:checked={isNwNativeOnly} />
-  <a href="/" on:click|preventDefault={filterPlants}>Go</a>
-  <div class="sep">-</div>
-  <a href="/" on:click|preventDefault={clearFilter}>Cancel</a>
+  <div class="sep">Listed:<input type="checkbox" bind:checked={isListedOnly} /></div>
+  <div class="sep">NW&nbsp;Native:<input type="checkbox" bind:checked={isNwNativeOnly} /></div>
+  <div class="sep"><a href="/" on:click|preventDefault={filterPlants}>Go</a>-<a href="/" on:click|preventDefault={clearFilter}>Cancel</a></div>
   <div class="pager">
     <Pager { itemCount } on:pageChanged />
   </div>
@@ -66,23 +86,21 @@
     margin-top: 0.5em;
     background-color: $beige-lighter;
 
-    input {
-      margin-left: 0.25em;
+    select {
+      max-width: 4.6rem;
+    }
 
-      &[type="checkbox"] {
-        position: relative;
-        top: 2px;
-      }
+    input {
+      margin-left: 0.25rem;
     }
 
     a {
       display: inline-block;
-      margin-left: 0.5em;
     }
 
     .sep {
       display: inline-block;
-      margin-left: 0.5em;
+      margin-left: 0.6rem;
     }
 
     .genus-box {
@@ -97,6 +115,11 @@
   .pager {
     flex: 1 0 auto;
     text-align: right;
+
+    @media screen and (max-width: $bp-small) {
+      text-align: left;
+      margin-left: 0.25rem;
+    }
   }
 
 </style>
