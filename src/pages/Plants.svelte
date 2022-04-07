@@ -10,7 +10,7 @@
   let filteredPlants: IvwListedPlant[] = [];
   let pagedPlants: IvwListedPlant[] = [];
 
-  let plantListFilter: PlantListFilterType = {
+  let plantListFilter: PlantFilter = {
     filterText: "",
     isNwNativeOnly: false,
     includeNotAvailable: true
@@ -40,7 +40,7 @@
     //console.log({bigPics});
   };
 
-  let handleFilterPlants = (e: CustomEvent<PlantListFilterType>) => {
+  let handleFilterPlants = (e: CustomEvent<PlantFilter>) => {
     plantListFilter = e.detail;
     filterPlants();
   };

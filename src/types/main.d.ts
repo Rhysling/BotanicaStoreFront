@@ -44,10 +44,18 @@ type PlantPriceMatrix = {
 	isAvailable: boolean;
 };
 
-type PlantListFilterType = {
+type PlantFilter = {
 	filterText: string;
   isNwNativeOnly: boolean;
   includeNotAvailable: boolean;
+};
+
+type PlantAdminFilter = {
+  filterType: "genus" | "all";
+	filterText: string;
+  filterFlag: string;
+  isListedOnly: boolean;
+  isNwNativeOnly: boolean;
 };
 
 interface ILinkEdit extends ILink {

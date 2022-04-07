@@ -62,22 +62,10 @@ input:disabled {
 
 @import "_buttons.scss";
 
+
 // Custom Classes
 
-/* .arc-head {
-	text-align: center;
-	margin: 0;
-	padding: 0 0 1rem 0;
-	border: 0;
-	color: $grey-darker;
-	font-size: 2.5rem; //36px;
-	font-family: "book antiqua", palatino, sans-serif;
-
-	@media screen and (max-width: $desktop) {
-		font-size: 2rem;
-	}
-
-	@media screen and (max-width: $tablet) {
-		font-size: 1.5rem;
-	}
-} */
+.swal-confirm-button {
+	margin: 0.5em;
+	min-width: 6rem;
+}

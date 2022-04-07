@@ -6,20 +6,20 @@
   export let plantId: number;
   export let genus: string;
 	export let species: string;
-	export let family: string;
-	export let description: string;
-  export let webDescription: string;
-	export let plantSize: string;
-	export let plantType: string;
-	export let plantZone: string;
-	export let pictureLocation: string;
+	export let family: INullable<string>;
+	export let description: INullable<string>;
+  export let webDescription: INullable<string>;
+	export let plantSize: INullable<string>;
+	export let plantType: INullable<string>;
+	export let plantZone: INullable<string>;
+	export let pictureLocation: INullable<string>;
   export let isNwNative: boolean;
 	export let hasSmallPic: boolean;
 	export let bigPicIds: string;
 	export let isListed: boolean;
 	export let isFeatured: boolean;
 	export let lastUpdate: any;
-	export let flag: string;
+	export let flag: INullable<string>;
 	export let lastUpdateFormatted: string;
 
   let src = "";

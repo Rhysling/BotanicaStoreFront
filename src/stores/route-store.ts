@@ -100,6 +100,13 @@ let getBaseRoutes = (): Route => {
 						page: "UserAdmin",
 						slug: "/user-admin",
 						isAdmin: true
+					},
+					{
+						title: "Color Cards",
+						navName: "ColorCards",
+						page: "ColorCards",
+						slug: "/color-cards",
+						isAdmin: true
 					}
 				]
 			}
@@ -169,8 +176,17 @@ export const currentRoute = derived([routes, currentSlug], ([$routes, $currentSl
 let paramStringToObj = (inp: string) => {
 	let entries = (new URLSearchParams(inp)).entries();
 	let p: any = {};
-	for(let [key, val] of entries) { 
-		p[key] = val; 
+	for(let [key, val] of entries) {
+		switch(val) {
+			case "true":
+				p[key] = true;
+				break;
+			case "false":
+				p[key] = false;
+				break;
+			default:
+				p[key] = val;
+		}
 	}
 	return p;
 };
@@ -195,7 +211,7 @@ export const navFromUrl = function () {
 	let pathName = window.location.pathname;
 	let r = findRoute(get(routes), pathName);
 
-	let p= paramStringToObj(window.location.search);
+	let p = paramStringToObj(window.location.search);
 
 	if (r) {
 		currentSlug.set(pathName);
@@ -204,6 +220,12 @@ export const navFromUrl = function () {
 	} else {
 		window.location.replace(window.location.origin);
 	}
+};
+
+export const paramsFromUrl = () => {
+	const p = paramStringToObj(window.location.search);
+	currentParams.set(p);
+	return p;
 };
 
 export const navTo = function (e: MouseEvent | null, path: string, params?: any) {

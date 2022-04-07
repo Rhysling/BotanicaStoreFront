@@ -1,14 +1,38 @@
 // Using MSBuild ver. 6.0.201 to load projects.
-// Generated - 2022/03/23-11:05:16
+// Generated - 2022/04/06-09:15:12
 
-// SOLUTION: Single Project
+// SOLUTION: BotanicaStoreBack
 
-// PROJECT SEARCHED:
+// PROJECTS SEARCHED:
 //	BotanicaStoreBack
+//	BotanicaStoreBack.ColorCards
+//	BotanicaStoreBack.Repo
 
 type INullable<T> = T | null | undefined;
 
-// NAMESPACE: BotanicaStoreBack.Models
+// NAMESPACE: BotanicaStoreBack.Models.Core
+
+interface IPlantIdName {
+	plantId: number;
+	plantName: string;
+}
+
+interface IUserClient {
+	userId: number;
+	email: string;
+	fullName: string;
+	token: string;
+	isAdmin: boolean;
+	taxRate: number;
+}
+
+interface IUserLogin {
+	email: string;
+	fullName: string;
+	pw: string;
+}
+
+// NAMESPACE: BotanicaStoreBack.Repo.Models
 
 interface ICalendar {
 	itemId: number;
@@ -21,6 +45,16 @@ interface ICalendar {
 	isSpecial: boolean;
 	beginDateFormatted: string;
 	endDateFormatted: string;
+}
+
+interface IDummyTestTable {
+	firstKey: number;
+	secondKey: string;
+	lastThing: string;
+	info: INullable<string>;
+	moreStuff: INullable<string>;
+	byteThing: Array<string>;
+	bigByteThing: INullable<Array<string>>;
 }
 
 interface IKey {
@@ -37,25 +71,35 @@ interface ILink {
 	isDeleted: boolean;
 }
 
+interface INameValueItem {
+	name: string;
+	value: string;
+}
+
 interface IPlant {
 	plantId: number;
 	genus: string;
 	species: string;
-	family: string;
-	description: string;
-	webDescription: string;
-	plantSize: string;
-	plantType: string;
-	plantZone: string;
-	pictureLocation: string;
+	family: INullable<string>;
+	description: INullable<string>;
+	webDescription: INullable<string>;
+	plantSize: INullable<string>;
+	plantType: INullable<string>;
+	plantZone: INullable<string>;
+	pictureLocation: INullable<string>;
 	isNwNative: boolean;
 	hasSmallPic: boolean;
 	bigPicIds: string;
 	isListed: boolean;
 	isFeatured: boolean;
 	lastUpdate: string;
-	flag: string;
+	flag: INullable<string>;
 	lastUpdateFormatted: string;
+}
+
+interface IPlantPicId {
+	plantId: number;
+	picId: string;
 }
 
 interface IPlantPrice {
@@ -65,11 +109,23 @@ interface IPlantPrice {
 	isAvailable: boolean;
 }
 
+interface IPlantToggle {
+	plantId: number;
+	val: boolean;
+}
+
 interface IPotSize {
 	id: number;
 	potDescription: string;
 	potShorthand: string;
 	sortOrder: number;
+}
+
+interface IvwFlagSummary {
+	flag: INullable<string>;
+	plantCount: INullable<number>;
+	lastUpdate: INullable<string>;
+	lastUpdateFormatted: string;
 }
 
 interface IvwListedPlant {
@@ -222,42 +278,5 @@ interface IWishListItem {
 	potSizeId: number;
 	price: number;
 	qty: number;
-}
-
-// NAMESPACE: BotanicaStoreBack.Models.Core
-
-interface INameValueItem {
-	name: string;
-	value: string;
-}
-
-interface IPlantIdName {
-	plantId: number;
-	plantName: string;
-}
-
-interface IPlantPicId {
-	plantId: number;
-	picId: string;
-}
-
-interface IPlantToggle {
-	plantId: number;
-	val: boolean;
-}
-
-interface IUserClient {
-	userId: number;
-	email: string;
-	fullName: string;
-	token: string;
-	isAdmin: boolean;
-	taxRate: number;
-}
-
-interface IUserLogin {
-	email: string;
-	fullName: string;
-	pw: string;
 }
 

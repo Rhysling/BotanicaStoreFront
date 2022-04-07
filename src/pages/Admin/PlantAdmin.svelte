@@ -7,10 +7,20 @@
   import EditPlantAdmin from "../../components/admin/EditPlantAdmin.svelte";
   import PlantPicsAdmin from "../../components/admin/PlantPicsAdmin.svelte";
   import { newPlant } from "../../stores/newobjects-store";
+  import { plantAdminFilterStore } from "../../stores/plantadminfilter-store";
+  import { paramsFromUrl } from "../../stores/route-store";
 
   let plants: IPlant[] = [];
   let filteredList: IPlant[] = [];
   let pagedList: IPlant[] = [];
+
+  let plantFilterIn: PlantAdminFilter = {
+    filterType: "genus",
+    filterText: "",
+    filterFlag: "",
+    isListedOnly: false,
+    isNwNativeOnly: false
+  };
 
   let editedPlant: IPlant | null;
   let editError = "";
@@ -21,6 +31,14 @@
     $ax.get("/api/admin/Plants")
     .then(function (response: AxiosResponse<IPlant[]>) {
       plants = response.data;
+    }).then(() => {
+      const pu = paramsFromUrl();
+      if (pu.filterType) {
+        plantFilterIn = <PlantAdminFilter>{ ...pu };
+      }
+      else {
+        plantFilterIn = { ...$plantAdminFilterStore };
+      }
     })
     .catch(function (e) {
       console.log(e);
@@ -189,7 +207,7 @@
   <i class="fas fa-caret-right"></i>
   <a href="/" on:click|preventDefault={addPlant}>Add Plant</a>
 </div>
-<PlantFilterAdmin { plants }
+<PlantFilterAdmin { plants } { plantFilterIn }
   on:filterPlants={handleFilterPlants}
   on:pageChanged={handleChangePage}
 />
