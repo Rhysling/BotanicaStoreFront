@@ -6,16 +6,16 @@
 
   let list: IvwFlagSummary[] = [];
   
-  const pf: PlantAdminFilter = {
-    filterType: "genus",
-    filterText: "",
-    filterFlag: "",
-    isListedOnly: false,
-    isNwNativeOnly: false
-  };
+  // const pf: PlantAdminFilter = {
+  //   filterType: "genus",
+  //   filterText: "",
+  //   filterFlag: "",
+  //   isListedOnly: false,
+  //   isNwNativeOnly: false
+  // };
 
   const navToPlantList = (e: MouseEvent, flag: string) => {
-    navTo(e, "/plant-admin", { ...pf, filterFlag: flag });
+    navTo(e, "/plant-admin", { filterFlag: flag });
   };
 
   const getColorCards = async (flag: string) => {

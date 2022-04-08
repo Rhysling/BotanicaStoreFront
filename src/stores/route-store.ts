@@ -199,8 +199,10 @@ let objToParamString = (inp: any) => {
 	if (!entries.length) return "";
 
 	let p = new URLSearchParams();
-	for(let [key, val] of entries)
-		p.append(key, <string>val); 
+	for(let [key, val] of entries) {
+		if (val === null || val === undefined || val ==="") continue;
+		p.append(key, <string>val);
+	}
 
 	return "?" + p.toString();
 };

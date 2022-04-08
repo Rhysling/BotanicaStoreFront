@@ -33,8 +33,8 @@
       plants = response.data;
     }).then(() => {
       const pu = paramsFromUrl();
-      if (pu.filterType) {
-        plantFilterIn = <PlantAdminFilter>{ ...pu };
+      if (Object.entries(pu).length) {
+        plantFilterIn = <PlantAdminFilter>{ ...plantFilterIn, ...pu };
       }
       else {
         plantFilterIn = { ...$plantAdminFilterStore };
