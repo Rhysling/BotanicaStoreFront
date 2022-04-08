@@ -86,7 +86,7 @@
   <div class="title">Last Update</div>
   <div class="title">Goto List</div>
   <div class="title">Make Cards</div>
-  <div class="title">Remove Flag</div>
+  <div class="title">Unflag</div>
     
   {#each list as a, i (a.flag)}
     { @const alt = (i % 2) == 0 }
@@ -127,7 +127,7 @@
     padding: 0.4rem;
 
     &.right {
-      padding-right: 0.6rem;
+      padding-right: 1rem;
     }
   }
 
