@@ -46,7 +46,7 @@
     })
     .then(() => filterList(includeDeleted))
     .then(() => editedItem = null)
-    .catch((err) => console.log({err}));
+    .catch((err) => console.error({err}));
   };
 
   let filterList = (includeDeleted: boolean) => {
@@ -79,7 +79,7 @@
       master = response.data;
     })
     .then(() => filterList(includeDeleted))
-    .catch((err) => console.log({err}));
+    .catch((err) => console.error({err}));
 
   };
 

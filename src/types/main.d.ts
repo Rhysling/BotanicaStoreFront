@@ -2,10 +2,11 @@ type Route = {
   title: string;
   navName?: string;
   page: string;
-  slug: string;
+  path: string;
   isAdmin?: boolean;
   isHidden?: boolean;
   isExpanded?: boolean;
+  hasParam?: boolean;
   children?: Route[];
 };
 

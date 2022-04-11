@@ -30,7 +30,7 @@ let init = () => {
   .then((resp: AxiosResponse<IvwPlantsAvailable[]>) =>{
     aps.set(resp.data);
   })
-  .catch((err: AxiosError) => console.log(err.response));
+  .catch((err: AxiosError) => console.error(err.response));
 };
 
 // *** Public ***

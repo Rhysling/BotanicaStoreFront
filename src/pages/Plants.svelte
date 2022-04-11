@@ -29,15 +29,11 @@
   };
 
   let showBigPics = (e: CustomEvent<{plantId: number, bigPicIds: string}>) => {
-    //console.log({e});
     bigPics = { ...e.detail, ...{isShowModal: true} };
-    //console.log({bigPics});
   };
 
   let handleSetModal = (e: CustomEvent<{val: boolean}>) => {
-    //console.log({e});
     bigPics = { ...bigPics, ...{isShowModal: e.detail.val} };
-    //console.log({bigPics});
   };
 
   let handleFilterPlants = (e: CustomEvent<PlantFilter>) => {

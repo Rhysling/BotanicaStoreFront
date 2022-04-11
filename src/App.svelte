@@ -7,6 +7,7 @@
 
 	import Home from "./pages/Home.svelte";
 	import Plants from "./pages/Plants.svelte";
+	import Plant from "./pages/Plant.svelte";
 	import Calendar from "./pages/Calendar.svelte";
 	import Links from "./pages/Links.svelte";
 	import Contact from "./pages/Contact.svelte";
@@ -25,7 +26,7 @@
 	import { wishListStore as wls } from "./stores/wishlist-store.js";
   import { availablePlantsStore as aps } from "./stores/availableplants-store";
 	
-	let slug = "/";
+	let path = "/";
 	let page = "Home";
 
 	if ($user.userId)
@@ -41,6 +42,7 @@
 	let pages = {
 		Home,
 		Plants,
+		Plant,
 		Calendar,
 		Links,
 		Contact,
@@ -56,9 +58,8 @@
 	};
 
 	$: {
-		slug = $currentRoute.slug;
+		path = $currentRoute.path;
 		page = $currentRoute?.page ?? "Home";
-		//console.log({currentRoute: $currentRoute});
 
 		window.scroll({
 			top: 0,
@@ -73,7 +74,7 @@
 <main>
 	<Header />
 	<svelte:component this={ pages[page] } />
-	<Footer {slug} />
+	<Footer { path } />
 
 </main>
 

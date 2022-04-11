@@ -6,7 +6,7 @@
 
   $ax.get("/api/Calendar/GetAllFuture")
     .then((response: AxiosResponse<ICalendar[]>) => calList = response.data)
-    .catch((err) => console.log({err}));
+    .catch((err) => console.error({err}));
 
 </script>
 

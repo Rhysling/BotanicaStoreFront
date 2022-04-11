@@ -4,21 +4,21 @@
   import UserBar from "./UserBar.svelte";	
   import Nav from "./Nav.svelte";
 
-  $: slug = $currentRoute.slug;
+  $: path = $currentRoute.path;
 
 </script>
 
-<div class="page-head" class:subpage={slug != "/"}>
+<div class="page-head" class:subpage={path != "/"}>
   <a href="/" on:click={(e) => navTo(e, "/")}>
-    <img class="logo" src="./assets/img/botanica-logo-512x512.png" alt="Botanica" />
+    <img class="logo" src="{window.location.origin}/assets/img/botanica-logo-512x512.png" alt="Botanica" />
   </a>
   <div class="page-title">
     <div class="botanica">Botanica</div>
     <div class="page-name">{$currentRoute.title || $currentRoute.page}</div>
   </div>
-  <img class="logo" src="./assets/img/botanica-logo-512x512.png" alt="Botanica" />
+  <img class="logo" src="{window.location.origin}/assets/img/botanica-logo-512x512.png" alt="Botanica" />
 </div>
-{#if slug == "/"}
+{#if path == "/"}
   <div class="subtitle">
     A specialty nursery featuring rare, choice, and unusual perennials...<br>
     as well as many old favorites.
@@ -27,7 +27,7 @@
 
 <UserBar />
 <Headroom offset={ 110 }>
-  <Nav { slug } />
+  <Nav { path } />
 </Headroom>
 
 <style lang="scss">

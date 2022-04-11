@@ -5,14 +5,6 @@
   import Swal from "sweetalert2";
 
   let list: IvwFlagSummary[] = [];
-  
-  // const pf: PlantAdminFilter = {
-  //   filterType: "genus",
-  //   filterText: "",
-  //   filterFlag: "",
-  //   isListedOnly: false,
-  //   isNwNativeOnly: false
-  // };
 
   const navToPlantList = (e: MouseEvent, flag: string) => {
     navTo(e, "/plant-admin", { filterFlag: flag });
@@ -72,7 +64,7 @@
     .then((response: AxiosResponse<IvwFlagSummary[]>) => {
       list = response.data;
     })
-    .catch((err) => console.log({err}));
+    .catch((err) => console.error({err}));
 
   };
 

@@ -32,7 +32,7 @@ let mapOriginalToDisplay = (vw: IvwPlantPriceMatrix[]): PlantPriceMatrix[] => {
       epp = mapOriginalToDisplay(eppOriginal);
     })
     .catch(function (e) {
-      console.log(e);
+      console.error(e);
     });
   }
 
@@ -78,7 +78,7 @@ let mapOriginalToDisplay = (vw: IvwPlantPriceMatrix[]): PlantPriceMatrix[] => {
     })
     .catch(function (e: AxiosError) {
       editError = e.response?.data?.title || "No title provided.";
-      console.log(e);
+      console.error(e);
     });
     
   };

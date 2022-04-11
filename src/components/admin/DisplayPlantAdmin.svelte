@@ -42,7 +42,7 @@
       dispatch("updatePlantToggle", { ...pt, column: "isFeatured" });
     })
     .catch((e) => {
-      console.log(e);
+      console.error(e);
     });
   };
 
@@ -55,7 +55,7 @@
       dispatch("updatePlantToggle", { ...pt, column: "isListed" });
     })
     .catch((e) => {
-      console.log(e);
+      console.error(e);
     });
   };
 

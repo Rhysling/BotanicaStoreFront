@@ -57,7 +57,7 @@
       master = response.data;
     })
     .then(() => filterList("todo"))
-    .catch((err) => console.log({err}));
+    .catch((err) => console.error({err}));
 
   };
 

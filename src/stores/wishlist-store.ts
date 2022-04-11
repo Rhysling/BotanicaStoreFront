@@ -34,7 +34,7 @@ let addUpdateItemDb = (item: IWishListItem) => {
   .then(() =>{
     // no op
   })
-  .catch((err: AxiosError) => console.log(err.response));
+  .catch((err: AxiosError) => console.error(err.response));
 };
 
 
@@ -52,9 +52,9 @@ let init = () => {
       wl.set(resp.data);
       isInitialized = true;
     })
-    .catch((err: AxiosError) => console.log(err.response));
+    .catch((err: AxiosError) => console.error(err.response));
   })
-  .catch((err: AxiosError) => console.log(err.response));
+  .catch((err: AxiosError) => console.error(err.response));
 };
 
 // *** Public ***
@@ -147,12 +147,12 @@ let sendList = () => {
       isInitialized = false;
     }
     else {
-      console.log(resp);
+      console.error(resp);
     }
 
     return resp;
   })
-  .catch((err: AxiosError) => console.log(err.response));
+  .catch((err: AxiosError) => console.error(err.response));
 };
 
 export const wishListStore =  {

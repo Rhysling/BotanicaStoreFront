@@ -17,9 +17,6 @@
     hasMultiple = last > 0;
   }
 
-  //console.log({plantId, bigPicIds, isShowModal});
-  //console.log({ids});
-
   let changePic = (n: number) => {
     let i = ix + n;
 

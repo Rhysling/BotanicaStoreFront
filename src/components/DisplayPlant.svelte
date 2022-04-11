@@ -15,6 +15,7 @@
 	export let hasSmallPic: boolean;
 	export let bigPicIds: string;
 	export let isFeatured: boolean;
+	export let slug: string;
 	export let availability: string;
 	export let isNwNative: boolean;
 
@@ -47,6 +48,10 @@
     </div>
     <div class="details">
       {plantZone || ""} {plantSize || ""} {plantType || ""}
+    </div>
+    <div class="permalink">
+      <a href="/plant/{slug}" target="_blank">Permalink</a>
+      {#if false}<a href="/" on:click|preventDefault={(e) => navTo(e, "/plant/" + slug)}>Permalink</a>{/if}
     </div>
     {#if availability}
     <div class="availability">
@@ -106,6 +111,11 @@
     .details {
       margin: 0.5rem 0 0;
       color: #8b4513;
+      font-size: 0.85rem;
+    }
+
+    .permalink {
+      margin: 0.5rem 0 0;
       font-size: 0.85rem;
     }
 

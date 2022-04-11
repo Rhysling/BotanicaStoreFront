@@ -6,41 +6,41 @@ let getBaseRoutes = (): Route => {
 	return {
 		title: "Home",
 		page: "Home",
-		slug: "/",
+		path: "/",
 		children: [
 			{
 				title: "Botanica Plants",
 				page: "Plants",
-				slug: "/plants",
+				path: "/plants",
 				children: []
 			},
 			{
 				title: "Plant Sale Calendar",
 				page: "Calendar",
-				slug: "/calendar",
+				path: "/calendar",
 				children: []
 			},
 			{
 				title: "More...",
 				page: "More",
-				slug: "/more",
+				path: "/more",
 				isExpanded: undefined,
 				children: [
 					{
 						title: "Interesting Links",
 						page: "Links",
-						slug: "/links",
+						path: "/links",
 						children: []
 					},{
 						title: "About Botanica",
 						page: "About",
-						slug: "/about",
+						path: "/about",
 						children: []
 					},
 					{
 						title: "Contact Us",
 						page: "Contact",
-						slug: "/contact",
+						path: "/contact",
 						children: []
 					}
 				]
@@ -48,14 +48,22 @@ let getBaseRoutes = (): Route => {
 			{
 				title: "Shopping List",
 				page: "ShoppingList",
-				slug: "/shopping-list",
+				path: "/shopping-list",
 				isHidden: true,
+				children: []
+			},
+			{
+				title: "Plant",
+				page: "Plant",
+				path: "/plant",
+				isHidden: true,
+				hasParam: true,
 				children: []
 			},
 			{
 				title: "Admin",
 				page: "Admin",
-				slug: "/admin",
+				path: "/admin",
 				isAdmin: true,
 				isExpanded: undefined,
 				children: [
@@ -63,49 +71,49 @@ let getBaseRoutes = (): Route => {
 						title: "Plant Admin",
 						navName: "Plant Admin",
 						page: "PlantAdmin",
-						slug: "/plant-admin",
+						path: "/plant-admin",
 						isAdmin: true
 					},
 					{
 						title: "Plant Availability",
 						navName: "Availability",
 						page: "PlantAvailability",
-						slug: "/plant-availability",
+						path: "/plant-availability",
 						isAdmin: true
 					},
 					{
 						title: "Calendar Admin",
 						navName: "Calendar Admin",
 						page: "CalendarAdmin",
-						slug: "/calendar-admin",
+						path: "/calendar-admin",
 						isAdmin: true
 					},
 					{
 						title: "Links Admin",
 						navName: "Links Admin",
 						page: "LinksAdmin",
-						slug: "/links-admin",
+						path: "/links-admin",
 						isAdmin: true
 					},
 					{
 						title: "Shopping Lists",
 						navName: "Shopping Lists",
 						page: "ShoppingListAdmin",
-						slug: "/shopping-list-admin",
+						path: "/shopping-list-admin",
 						isAdmin: true
 					},
 					{
 						title: "User Admin",
 						navName: "Users",
 						page: "UserAdmin",
-						slug: "/user-admin",
+						path: "/user-admin",
 						isAdmin: true
 					},
 					{
 						title: "Color Cards",
 						navName: "ColorCards",
 						page: "ColorCards",
-						slug: "/color-cards",
+						path: "/color-cards",
 						isAdmin: true
 					}
 				]
@@ -123,13 +131,17 @@ function filterAdminRoutes (node: Route) {
 
 
 
-function findRoute(routeRoot: Route, slug: string): Route | undefined {
+function findRoute(routeRoot: Route, path: string): Route | undefined {
 	let cr: Route | undefined;
 
 	function traverse(node: Route): Route | undefined {
 
-		if (node.slug === slug)
+		if (node.path === path)
 			return node;
+
+		if (node.hasParam && path.startsWith(node.path + "/")) {
+			return { ...node, path };
+		}
 
 		let cr: Route | undefined;
 
@@ -159,15 +171,15 @@ export const routes = derived(user, ($user) => {
 	return r;
 });
 
-export const currentSlug = writable("/");
+export const currentPath = writable("/");
 export const currentParams = writable<any>({});
 export const isLiveOnlineShopping = writable(false);
 
-export const currentRoute = derived([routes, currentSlug], ([$routes, $currentSlug]) => {
-	let r = findRoute($routes, $currentSlug);
+export const currentRoute = derived([routes, currentPath], ([$routes, $currentPath]) => {
+	let r = findRoute($routes, $currentPath);
 	if (r) return r;
 
-	$currentSlug = "/";
+	$currentPath = "/";
 	return $routes;
 });
 
@@ -213,15 +225,29 @@ export const navFromUrl = function () {
 	let pathName = window.location.pathname;
 	let r = findRoute(get(routes), pathName);
 
-	let p = paramStringToObj(window.location.search);
-
-	if (r) {
-		currentSlug.set(pathName);
-		currentParams.set(p);
-		document.title = `Botanica - ${r.title}`;
-	} else {
+	if (!r) {
 		window.location.replace(window.location.origin);
+		return;
 	}
+
+	let p: any;
+
+	if (r.hasParam) {
+		const re = /.*\/([^\/]+)\/?$/;
+		let match = pathName.match(re);
+		if (!match) {
+			window.location.replace(window.location.origin);
+			return;
+		}
+		p = { id: match[1] };
+	}
+	else {
+		p = paramStringToObj(window.location.search);
+	}
+
+	currentPath.set(pathName);
+	currentParams.set(p);
+	document.title = `Botanica - ${r.title}`;
 };
 
 export const paramsFromUrl = () => {
@@ -230,21 +256,40 @@ export const paramsFromUrl = () => {
 	return p;
 };
 
-export const navTo = function (e: MouseEvent | null, path: string, params?: any) {
+export const navTo = function (e: MouseEvent | null, pathName: string, params?: any) {
 	e && e.preventDefault();
+	let url = window.location.origin + pathName;
 
-	//let pathName = e.currentTarget.dataset.dest;
-	let url = window.location.origin + path;
+	let r = findRoute(get(routes), pathName);
+	if (!r) {
+		window.location.replace(window.location.origin);
+		return;
+	}
 
-	if (params)
-		url += objToParamString(params);
+	if (r.hasParam) {
+		const re = /.*\/([^\/]+)\/?$/;
+		let match = pathName.match(re);
+		if (!match) {
+			window.location.replace(window.location.origin);
+			return;
+		}
+		params = { id: match[1] };
+		currentParams.set(params);
+	}
+	else {
+		if (params) {
+			url += objToParamString(params);
+			currentParams.set(params);
+		}
+		else {
+			currentParams.set({});
+		}
+	}
 
-	window.history.pushState({}, path, url);
-	currentSlug.set(path);
-	currentParams.set(params || {});
+	currentPath.set(pathName);
+	document.title = `Botanica - ${r.title}`;
 
-	let r = findRoute(get(routes), path);
-	if (r) document.title = "Botanica - " + r.title;
+	window.history.pushState({}, pathName, url);	
 };
 
 // Back Button
@@ -254,7 +299,7 @@ window.onpopstate = () => {
 	let r = findRoute(get(routes), pathName);
 
 	if (r) {
-		currentSlug.set(pathName);
+		currentPath.set(pathName);
 	} else {
 		window.location.replace(window.location.origin);
 	}

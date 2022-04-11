@@ -67,7 +67,7 @@
 
       showSummary = false;
     })
-    .catch((err) => console.log({err}));
+    .catch((err) => console.error({err}));
 
   };
   
@@ -103,7 +103,7 @@ let toggleClosed = () => {
       
       detIsClosed = !detIsClosed;
     })
-    .catch((err) => console.log({err}));
+    .catch((err) => console.error({err}));
 };
 
 
@@ -116,7 +116,7 @@ let toggleClosed = () => {
       master = response.data;
     })
     .then(() => filterList(includeClosed))
-    .catch((err) => console.log({err}));
+    .catch((err) => console.error({err}));
 
   };
 

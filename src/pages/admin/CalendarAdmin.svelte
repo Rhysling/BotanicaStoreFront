@@ -50,7 +50,7 @@
     })
     .then(() => filterList(isFutureOnly))
     .then(() => editedItem = null)
-    .catch((err) => console.log({err}));
+    .catch((err) => console.error({err}));
 };
 
   let filterList = (ifo: boolean) => {
@@ -89,7 +89,7 @@
       }))
     })
     .then(() => filterList(isFutureOnly))
-    .catch((err) => console.log({err}));
+    .catch((err) => console.error({err}));
 
   };
 

@@ -1,6 +1,6 @@
 <script>
 
-  export let slug = "/";
+  export let path = "/";
 
   let yr = new Date().getFullYear() - 2000;
 
@@ -16,7 +16,7 @@
 
 <footer>
   <div class="f1">
-    {#if slug == "/"}
+    {#if path == "/"}
     Remember, plant selections change throughout the season!
     {:else}
     <hr style="width:100%" />

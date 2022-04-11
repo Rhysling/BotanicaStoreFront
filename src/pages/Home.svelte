@@ -10,7 +10,7 @@
 
 	$ax.get("/api/Calendar/GetNext")
 		.then((response: AxiosResponse<ICalendar>) => nextSale = response.data)
-		.catch((err) => console.log({err}));
+		.catch((err) => console.error({err}));
 
 
 	let goToShoppingList = (e: MouseEvent) => {
@@ -21,19 +21,12 @@
 			$isShowHowWlWorks = true;
 	};
 
-  // async function getWeather() {
-	// 	gettingWx = true;
-	// 	const res = await fetch("https://localhost:44370/WeatherForecast");
-	// 	wx = await res.json();
-	// 	console.log(wx);
-	// 	gettingWx = false;
-  // }
 </script>
 
 <div class="content">
 	<div class="left">
 		<div class="card-oldfriend">
-			<img src="./assets/img/bench-350x230.jpg" alt="Hello, old friend" />
+			<img src="{window.location.origin}/assets/img/bench-350x230.jpg" alt="Hello, old friend" />
 			<div class="small">An old friend...</div>
 		</div>
 		<div class="card-special">

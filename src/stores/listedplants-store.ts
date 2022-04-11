@@ -11,4 +11,4 @@ ax.get("/api/ListedPlants")
   .then((resp: AxiosResponse<IvwListedPlant[]>) => {
 		listedPlants.set(resp.data);
   })
-  .catch((err: AxiosError) => console.log(err.response));
+  .catch((err: AxiosError) => console.error(err.response));

@@ -92,6 +92,7 @@ interface IPlant {
 	bigPicIds: string;
 	isListed: boolean;
 	isFeatured: boolean;
+	slug: string;
 	lastUpdate: string;
 	flag: INullable<string>;
 	lastUpdateFormatted: string;
@@ -142,6 +143,7 @@ interface IvwListedPlant {
 	hasSmallPic: boolean;
 	bigPicIds: string;
 	isFeatured: boolean;
+	slug: string;
 	availability: string;
 }
 

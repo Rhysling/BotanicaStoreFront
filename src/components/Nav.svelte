@@ -1,7 +1,7 @@
 <script lang="ts">
   import { routes, navTo } from "../stores/route-store.js";
 
-  export let slug = "/";
+  export let pathName = "/";
 
   let allRoutes: Route[];
   $: {
@@ -16,18 +16,19 @@
     toggleOpenDropdown("");
   };
 
-  let toggleOpenDropdown = (slug: string) => {
+  let toggleOpenDropdown = (pathName: string) => {
     // let r = allRoutes.find(a => a.slug == slug);
     // if (r) r.isExpanded = !r.isExpanded;
     for (let r of allRoutes) {
-      r.isExpanded = (r.slug == slug) ? !r.isExpanded : false;
+      r.isExpanded = (r.path == pathName) ? !r.isExpanded : false;
     }
     allRoutes = allRoutes;
   };
 
-  let nav = (e: MouseEvent, slug: string) => {
+  let nav = (e: MouseEvent, path: string) => {
     e.stopPropagation();
-    navTo(e, slug);
+    pathName = path;
+    navTo(e, pathName);
     setOpenRoot(false);
   };
 
@@ -45,23 +46,23 @@
     {#if r.children && r.children.length}
       <a
         href="/"
-        on:click|preventDefault|stopPropagation={() => toggleOpenDropdown(r.slug)}
+        on:click|preventDefault|stopPropagation={() => toggleOpenDropdown(r.path)}
         class="dropdown" class:open={r.isExpanded ? true : undefined}>
         <span class="icon">{r.page}</span>
         <div class="dropdown-content">
           {#each r.children.filter(a => !a.isHidden) as c}
             <a
               href="/"
-              on:click={(e) => nav(e, c.slug)}
-              class:selected="{c.slug === slug}">{c.navName || c.page}</a>
+              on:click={(e) => nav(e, c.path)}
+              class:selected="{c.path === pathName}">{c.navName || c.page}</a>
           {/each}
         </div>
       </a>
     {:else}
       <a
         href="/"
-        on:click={(e) => nav(e, r.slug)}
-        class:selected="{r.slug === slug}">{r.navName || r.page}</a>
+        on:click={(e) => nav(e, r.path)}
+        class:selected="{r.path === pathName}">{r.navName || r.page}</a>
     {/if}
     {/each}
   </nav>

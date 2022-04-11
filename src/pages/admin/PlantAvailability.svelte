@@ -19,7 +19,7 @@
       plants = response.data;
     })
     .catch(function (e) {
-      console.log(e);
+      console.error(e);
     });
 
   };

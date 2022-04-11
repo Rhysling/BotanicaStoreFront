@@ -33,11 +33,9 @@
   };
 
   let changePage = (n: number) => {
-    //selected = {label: `Page ${n}`, value: n};
     currentPage = Math.min(Math.max(n, 1), pages);
     startIndex = (currentPage - 1) * itemsPerPage;
     endIndex = Math.min(startIndex + itemsPerPage, itemCount);
-    // console.log({n, pages, currentPage, startIndex, endIndex});
     dispatch("pageChanged", {
       itemsPerPage,
       itemCount,

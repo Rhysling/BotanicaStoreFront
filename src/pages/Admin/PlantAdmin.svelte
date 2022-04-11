@@ -41,7 +41,7 @@
       }
     })
     .catch(function (e) {
-      console.log(e);
+      console.error(e);
     });
 
   };
@@ -63,15 +63,12 @@
   const savePlant = (p: IPlant) => {
     editError = "";
     let isNew = p.plantId === 0;
-    // delete p.lastUpdate;
 
     $ax.post("/api/admin/Plants", p)
-    .then(function (response: AxiosResponse<number>) {
-      let pid = response.data;
-      p.lastUpdateFormatted = (new Date()).toLocaleString();
+    .then(function (response: AxiosResponse<IPlant>) {
+      p = response.data;
 
       if (isNew) {
-        p.plantId = pid;
         plants = [p, ...plants].sort((a, b) => ((a.genus < b.genus) ? -10 : 0) + ((a.species < b.species) ? -1 : 0));
         filteredList = [p, ...filteredList].sort((a, b) => ((a.genus < b.genus) ? -10 : 0) + ((a.species < b.species) ? -1 : 0));
         pagedList = [p, ...pagedList];
@@ -83,8 +80,8 @@
       editedPlant = null;
     })
     .catch(function (e: AxiosError) {
-      editError = e.response?.data?.title || "No title provided.";
-      console.log(e);
+      editError = (e.response?.data?.title || "No title provided.") + " See log.";
+      console.error(e);
     });
   };
 
@@ -121,7 +118,7 @@
       }
     }
     else {
-      console.log({handleUpdatePlantToggle: "Item not found", pt});
+      console.error({handleUpdatePlantToggle: "Item not found", pt});
     }
   };
 
@@ -159,7 +156,6 @@
   };
 
   let handleSavePicture = (e: CustomEvent<FormData>) => {
-    //console.log({fd: e.detail});
     $ax.post("/api/admin/Pictures/SavePicture", e.detail, {
       headers: {
         "Content-Type": "multipart/form-data"
@@ -177,12 +173,11 @@
       }
     })
     .catch((e: AxiosError) => {
-      console.log(e);
+      console.error(e);
     });
   };
 
   let handleDeletePicture = (e: CustomEvent<IPlantPicId>) => {
-    //console.log({fd: e.detail});
     let ppid = e.detail;
     $ax.post("/api/admin/Pictures/DeletePicture", ppid)
     .then(() => {
@@ -196,7 +191,7 @@
       }
     })
     .catch((e: AxiosError) => {
-      console.log(e);
+      console.error(e);
     });
   };
 

@@ -6,7 +6,7 @@
 
   $ax.get("/api/Links/GetAll")
     .then((response: AxiosResponse<ILink[]>) => links = response.data)
-    .catch((err) => console.log({err}));
+    .catch((err) => console.error({err}));
 
 </script>
 
