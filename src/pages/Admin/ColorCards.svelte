@@ -97,7 +97,7 @@
 
   .table {
     display: grid;
-    grid-template-columns: 3fr 3fr 8fr 5fr 5fr 5fr;
+    grid-template-columns: 2fr 2.5fr 9fr 4.5fr 5fr 5fr;
     align-items: stretch;
     font-size: 0.8rem;
     margin: 2rem 6rem;
@@ -113,6 +113,10 @@
     font-weight: bold;
     color: $main-color;
     padding: 0.4rem;
+
+    @media screen and (max-width: $bp-small) {
+      font-size: 0.7rem;
+    }
   }
 
   .item {
