@@ -1,14 +1,12 @@
 <script>
-  import { currentRoute, navTo } from "../stores/route-store.js";
+  import { currentRoute, currentPath, navTo } from "../stores/route-store.js";
   import Headroom from "./Headroom.svelte"; // Thanks to "svelte-headroom"
   import UserBar from "./UserBar.svelte";	
   import Nav from "./Nav.svelte";
 
-  $: path = $currentRoute.path;
-
 </script>
 
-<div class="page-head" class:subpage={path != "/"}>
+<div class="page-head" class:subpage={$currentPath != "/"}>
   <a href="/" on:click={(e) => navTo(e, "/")}>
     <img class="logo" src="{window.location.origin}/assets/img/botanica-logo-512x512.png" alt="Botanica" />
   </a>
@@ -18,7 +16,7 @@
   </div>
   <img class="logo" src="{window.location.origin}/assets/img/botanica-logo-512x512.png" alt="Botanica" />
 </div>
-{#if path == "/"}
+{#if $currentPath == "/"}
   <div class="subtitle">
     A specialty nursery featuring rare, choice, and unusual perennials...<br>
     as well as many old favorites.
@@ -27,7 +25,7 @@
 
 <UserBar />
 <Headroom offset={ 110 }>
-  <Nav { path } />
+  <Nav />
 </Headroom>
 
 <style lang="scss">

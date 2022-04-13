@@ -3,27 +3,44 @@
   import { isLoggedIn } from "../stores/user-store";
   import { navTo } from "../stores/route-store.js";
 
-  export let plantId: number;
-  export let genus: string;
-	export let species: string;
-	export let family: string;
-	export let description: string;
-	export let plantSize: string;
-	export let plantType: string;
-	export let plantZone: string;
-	export let pictureLocation: string;
-	export let hasSmallPic: boolean;
-	export let bigPicIds: string;
-	export let isFeatured: boolean;
-	export let slug: string;
-	export let availability: string;
-	export let isNwNative: boolean;
+  export let plant: IvwListedPlant;
+
+  let plantId: number;
+  let genus: string;
+	let species: string;
+	let family: string;
+	let description: string;
+	let plantSize: string;
+	let plantType: string;
+	let plantZone: string;
+  // pictureLocation
+	let isNwNative: boolean;
+	let hasSmallPic: boolean;
+	let bigPicIds: string;
+  // isFeatured
+	let slug: string;
+	let availability: string;
+
+  $:({
+    plantId,
+    genus,
+    species,
+    family,
+    description,
+    plantSize,
+    plantType,
+    plantZone,
+    isNwNative,
+    hasSmallPic,
+    bigPicIds,
+    slug,
+    availability
+  } = plant);
 
   const dispatch = createEventDispatcher();
 
-  let src = hasSmallPic ? `/plantpics/p${plantId.toString().padStart(4, "0")}_sm.jpg` : "/plantpics/no-pic.jpg";
-  let _: any = isFeatured;
-  _ = pictureLocation;
+  let src = "";
+  $: src = hasSmallPic ? `/plantpics/p${plantId.toString().padStart(4, "0")}_sm.jpg` : "/plantpics/no-pic.jpg";
 
   let showBigPics = () => {
     dispatch("showBigPics", {

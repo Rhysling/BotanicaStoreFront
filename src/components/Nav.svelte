@@ -1,7 +1,5 @@
 <script lang="ts">
-  import { routes, navTo } from "../stores/route-store.js";
-
-  export let pathName = "/";
+  import { routes, navTo, currentPath } from "../stores/route-store.js";
 
   let allRoutes: Route[];
   $: {
@@ -27,8 +25,7 @@
 
   let nav = (e: MouseEvent, path: string) => {
     e.stopPropagation();
-    pathName = path;
-    navTo(e, pathName);
+    navTo(e, path);
     setOpenRoot(false);
   };
 
@@ -54,7 +51,7 @@
             <a
               href="/"
               on:click={(e) => nav(e, c.path)}
-              class:selected="{c.path === pathName}">{c.navName || c.page}</a>
+              class:selected="{c.path === $currentPath}">{c.navName || c.page}</a>
           {/each}
         </div>
       </a>
@@ -62,7 +59,7 @@
       <a
         href="/"
         on:click={(e) => nav(e, r.path)}
-        class:selected="{r.path === pathName}">{r.navName || r.page}</a>
+        class:selected="{r.path === $currentPath}">{r.navName || r.page}</a>
     {/if}
     {/each}
   </nav>

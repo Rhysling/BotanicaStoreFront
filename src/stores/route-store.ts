@@ -227,6 +227,7 @@ export const navFromUrl = function () {
 
 	if (!r) {
 		window.location.replace(window.location.origin);
+		currentPath.set("/");
 		return;
 	}
 
@@ -263,6 +264,7 @@ export const navTo = function (e: MouseEvent | null, pathName: string, params?: 
 	let r = findRoute(get(routes), pathName);
 	if (!r) {
 		window.location.replace(window.location.origin);
+		currentPath.set("/");
 		return;
 	}
 

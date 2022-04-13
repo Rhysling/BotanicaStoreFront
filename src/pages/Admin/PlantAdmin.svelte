@@ -209,7 +209,8 @@
 <div>
   {#each pagedList as p (p.plantId)}
     <div>
-      <DisplayPlantAdmin { ...p }
+      <DisplayPlantAdmin
+        plant={p}
         on:updatePlantToggle={handleUpdatePlantToggle}
         on:editPlant={handleEditPlant}
         on:editPictures={handleEditPictures}

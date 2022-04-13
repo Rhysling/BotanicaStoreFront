@@ -3,29 +3,51 @@
   import { httpClient as ax } from "../../stores/httpclient-store";
   import { createEventDispatcher } from 'svelte';
 
-  export let plantId: number;
-  export let genus: string;
-	export let species: string;
-	export let family: INullable<string>;
-	export let description: INullable<string>;
-  export let webDescription: INullable<string>;
-	export let plantSize: INullable<string>;
-	export let plantType: INullable<string>;
-	export let plantZone: INullable<string>;
-	export let pictureLocation: INullable<string>;
-  export let isNwNative: boolean;
-	export let hasSmallPic: boolean;
-	export let bigPicIds: string;
-	export let isListed: boolean;
-	export let isFeatured: boolean;
-	export let lastUpdate: any;
-	export let flag: INullable<string>;
-	export let lastUpdateFormatted: string;
+  export let plant: IPlant;
+
+  let plantId: number;
+  let genus: string;
+	let species: string;
+	let family: INullable<string>;
+	let description: INullable<string>;
+  let webDescription: INullable<string>;
+	let plantSize: INullable<string>;
+	let plantType: INullable<string>;
+	let plantZone: INullable<string>;
+	let pictureLocation: INullable<string>;
+  let isNwNative: boolean;
+	let hasSmallPic: boolean;
+	let bigPicIds: string;
+	let isListed: boolean;
+	let isFeatured: boolean;
+  //let slug: string;
+	//let lastUpdate: any;
+	let flag: INullable<string>;
+	let lastUpdateFormatted: string;
+
+  $: ({
+    plantId,
+    genus,
+    species,
+    family,
+    description,
+    webDescription,
+    plantSize,
+    plantType,
+    plantZone,
+    pictureLocation,
+    isNwNative,
+    hasSmallPic,
+    bigPicIds,
+    isListed,
+    isFeatured,
+    flag,
+    lastUpdateFormatted 
+  } = plant);
 
   let src = "";
   let bp: string[] = [];
   let bpc = 0;
-  let _ = lastUpdate;
 
   $: src = hasSmallPic ? `/plantpics/p${plantId.toString().padStart(4, "0")}_sm.jpg` : "/plantpics/no-pic.jpg";
   $: bp = bigPicIds.split(",");

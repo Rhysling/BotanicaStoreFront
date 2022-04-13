@@ -93,7 +93,7 @@ let closeDetail = () => showSummary = true;
 let toggleClosed = () => {
   // POST api/admin/ShoppingList/SetIsClosed?listId=1&isClosed=true
   $ax.post("/api/admin/ShoppingList/SetIsClosed?listId=" + detListId + "&isClosed=" + (detIsClosed ? "false" : "true"))
-    .then((response: AxiosResponse<boolean>) => {
+    .then(() => {
 
       let s = master.find(a => a.wlId === detListId);
       if (s) {

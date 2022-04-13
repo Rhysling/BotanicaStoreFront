@@ -99,7 +99,7 @@
 
 <div id="plant-list">
   {#each pagedPlants as p (p.plantId)}
-    <DisplayPlant {...p} on:showBigPics={showBigPics} />
+    <DisplayPlant plant={p} on:showBigPics={showBigPics} />
   {/each}
 </div>
 
