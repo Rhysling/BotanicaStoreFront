@@ -26,7 +26,7 @@
       </div>
       <div class="details">
         <div class="title">{c.title}</div>
-        <div class="description">{c.description}</div>
+        <div class="description">{@html c.description}</div>
         <div class="location">{c.location}</div>
       </div>
     </div>

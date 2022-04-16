@@ -121,7 +121,7 @@
       </div>
       <div class="details">
         <div class="title"><a href="/" on:click|preventDefault={() => editItem(c.itemId)}>{c.title}</a></div>
-        <div class="description">{c.description}</div>
+        <div class="description">{@html c.description}</div>
         <div class="location">{c.location}</div>
         {#if c.isSpecial}<div class="is-special">Is Special</div>{/if}
       </div>

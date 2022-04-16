@@ -137,6 +137,7 @@
       <div class="label">Description</div>
       <div class="info">
         <textarea bind:value={c.description} placeholder="Description"></textarea>
+        <div class="small">HTML is ok.</div>
       </div>
     </div>
     
@@ -197,6 +198,9 @@
 
         input[type=text], textarea {
           width: 100%;
+        }
+        .small {
+          font-size: 0.75rem;
         }
       }
     }

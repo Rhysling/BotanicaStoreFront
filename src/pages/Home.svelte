@@ -71,7 +71,7 @@
 					</div>
 					<div class="details">
 						<div class="title">{nextSale.title}</div>
-						<div class="description">{nextSale.description}</div>
+						<div class="description">{@html nextSale.description}</div>
 						<div class="location">{nextSale.location}</div>
 					</div>
 				</div>
@@ -186,7 +186,7 @@
 		border: 1px solid black;
 		padding: 0.4rem;
 		
-		a {
+		> a {
 			display: block;
 		}
 
@@ -233,6 +233,7 @@
     .location {
       font-size: 0.85rem;
       color: #8B4513;
+			margin-bottom: 0.4rem;
     }
 	}
 
