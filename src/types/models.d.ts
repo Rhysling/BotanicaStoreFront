@@ -88,8 +88,9 @@ interface IPlant {
 	plantZone: INullable<string>;
 	pictureLocation: INullable<string>;
 	isNwNative: boolean;
-	hasSmallPic: boolean;
-	bigPicIds: string;
+	pics: string;
+	//hasSmallPic: boolean;
+	//bigPicIds: string;
 	isListed: boolean;
 	isFeatured: boolean;
 	slug: string;
@@ -100,7 +101,9 @@ interface IPlant {
 
 interface IPlantPicId {
 	plantId: number;
-	picId: string;
+	picId: number;
+	key: string;
+	pvt?: number;
 }
 
 interface IPlantPrice {
@@ -140,8 +143,7 @@ interface IvwListedPlant {
 	plantZone: string;
 	pictureLocation: string;
 	isNwNative: boolean;
-	hasSmallPic: boolean;
-	bigPicIds: string;
+	pics: string;
 	isFeatured: boolean;
 	slug: string;
 	availability: string;

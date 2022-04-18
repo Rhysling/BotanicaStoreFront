@@ -12,6 +12,7 @@ let plant = {
 	plantZone: "",
 	pictureLocation: "",
 	isNwNative: false,
+	pics: "[]",
 	hasSmallPic: false,
 	bigPicIds:  "",
 	isListed: false,

@@ -22,18 +22,17 @@
   let startIndex = 0;
   let endIndex = 0;
 
-  let bigPics = {
-    plantId: 0,
-    bigPicIds: "",
-    isShowModal: false
-  };
+  let bigPicPaths: PicIdPath[] = [];
+  let isShowModal = false;
+  
 
-  let showBigPics = (e: CustomEvent<{plantId: number, bigPicIds: string}>) => {
-    bigPics = { ...e.detail, ...{isShowModal: true} };
+  let showBigPics = (e: CustomEvent<PicIdPath[]>) => {
+    bigPicPaths = e.detail;
+    isShowModal = true;
   };
 
   let handleSetModal = (e: CustomEvent<{val: boolean}>) => {
-    bigPics = { ...bigPics, ...{isShowModal: e.detail.val} };
+    isShowModal = e.detail.val;
   };
 
   let handleFilterPlants = (e: CustomEvent<PlantFilter>) => {
@@ -110,7 +109,7 @@
   </div>
 </div>
 
-<PlantBigPicModal {...bigPics} on:setmodal={handleSetModal} />
+<PlantBigPicModal {bigPicPaths} {isShowModal} on:setmodal={handleSetModal} />
 
 <style lang="scss">
 	@import "../styles/_custom-variables.scss";

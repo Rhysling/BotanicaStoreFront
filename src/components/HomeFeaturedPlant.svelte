@@ -1,17 +1,20 @@
 <script lang="ts">
   import { navTo } from "../stores/route-store.js";
   import { listedPlants } from "../stores/listedplants-store";
+  import { picPaths } from "../stores/utils";
 
   let fp: IvwListedPlant | undefined;
   let pn = ""
   let src = "";
+  let paths: PicPaths;
 
   $: {
     fp = $listedPlants.find(p => p.isFeatured);
 
     if (fp) {
       pn = fp.genus + ((fp.species) ? " " + fp.species : "");
-      src = fp.hasSmallPic ? `/plantpics/p${fp.plantId.toString().padStart(4, "0")}_sm.jpg` : "/plantpics/no-pic.jpg";
+      paths = picPaths(fp.plantId, fp.pics);
+      src = paths.smPath;
     }
   }
 

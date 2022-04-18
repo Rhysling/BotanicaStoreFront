@@ -2,17 +2,20 @@
   import Modal from "../Modal.svelte";
   import Dropzone from "svelte-file-dropzone";
   import { createEventDispatcher } from 'svelte';
+  import { picPaths } from "../../stores/utils";
 
   export let plant: IPlant;
 
   const dispatch = createEventDispatcher();
 
-  $: smSrc = plant.hasSmallPic ? `/plantpics/p${plant.plantId.toString().padStart(4, "0")}_sm.jpg` : "/plantpics/no-pic.jpg";
-  $: bigPicsIds = plant.bigPicIds.split(",")
-    .filter(a => a !== "");
-  $: bigPicPaths = bigPicsIds
-    .map(a => [a, `/plantpics/p${plant.plantId.toString().padStart(4, "0")}_${a.padStart(2, "0")}.jpg`]);
-  //let errorMsg = "";
+  let paths: PicPaths;
+  let hasSmallPic = false;
+
+  $: {
+    paths = picPaths(plant.plantId, plant.pics);
+    hasSmallPic = !paths.smPath.endsWith("no-pic.jpg");
+  }
+
 
   const handlePicDropped = (e: CustomEvent, isSmall: boolean) => {
     const { acceptedFiles, fileRejections } = e.detail;
@@ -38,7 +41,7 @@
 
   const stopProp = (e: Event) => e.stopPropagation();
 
-  const deletePic = (plantId: number, picId: string) => {
+  const deletePic = (plantId: number, picId: number) => {
     dispatch("deletePic", {plantId, picId});
   };
 
@@ -53,13 +56,13 @@
 
     </div>
     <div class="t3">
-      Small Picture
+      Small Picture - Only One
     </div>
     <div class="gallery">
       <div class="pic">
-        <img src={smSrc} alt="{plant.genus} {plant.species}" />
-        {#if plant.hasSmallPic}
-        <div><a href="/" on:click|preventDefault={() => deletePic(plant.plantId, "sm")}>Delete</a></div>
+        <img src={paths.smPath} alt="{plant.genus} {plant.species}" />
+        {#if hasSmallPic}
+        <div><a href="/" on:click|preventDefault={() => deletePic(plant.plantId, 0)}>Delete</a></div>
         {/if}
       </div>
       <div class="dz-frame">
@@ -76,10 +79,10 @@
       Big Pictures
     </div>
     <div class="gallery">
-      {#each bigPicPaths as bp}
+      {#each paths.lgPaths as bp}
       <div class="pic">
-        <img src={bp[1]} alt="pic {bp[0]}" />
-        <div><a href="/" on:click|preventDefault={() => deletePic(plant.plantId, bp[0])}>Delete</a></div>
+        <img src={bp.path} alt="pic {bp.picId}" />
+        <div><a href="/" on:click|preventDefault={() => deletePic(plant.plantId, bp.picId)}>Delete</a></div>
       </div>
       {/each}
       <div class="dz-frame">

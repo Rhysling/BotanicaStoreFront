@@ -2,6 +2,7 @@
   //import type { AxiosResponse } from "axios";
   import { httpClient as ax } from "../../stores/httpclient-store";
   import { createEventDispatcher } from 'svelte';
+  import { picPaths } from "../../stores/utils";
 
   export let plant: IPlant;
 
@@ -16,8 +17,7 @@
 	let plantZone: INullable<string>;
 	let pictureLocation: INullable<string>;
   let isNwNative: boolean;
-	let hasSmallPic: boolean;
-	let bigPicIds: string;
+  let pics: string;
 	let isListed: boolean;
 	let isFeatured: boolean;
   //let slug: string;
@@ -37,21 +37,22 @@
     plantZone,
     pictureLocation,
     isNwNative,
-    hasSmallPic,
-    bigPicIds,
+    pics,
     isListed,
     isFeatured,
     flag,
     lastUpdateFormatted 
   } = plant);
 
+  let paths: PicPaths;
   let src = "";
-  let bp: string[] = [];
   let bpc = 0;
 
-  $: src = hasSmallPic ? `/plantpics/p${plantId.toString().padStart(4, "0")}_sm.jpg` : "/plantpics/no-pic.jpg";
-  $: bp = bigPicIds.split(",");
-  $: bpc = (bp.length === 1 && bp[0] === "") ? 0 : bp.length;
+  $: {
+    paths = picPaths(plantId, pics);
+    src = paths.smPath;
+    bpc = paths.lgPaths.length;
+  }
 
   const dispatch = createEventDispatcher();
 

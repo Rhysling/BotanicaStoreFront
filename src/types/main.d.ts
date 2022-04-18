@@ -30,6 +30,16 @@ type PageState = {
   endIndex: number;
 };
 
+type PicIdPath = {
+  picId: number;
+  path: string;
+};
+
+type PicPaths = {
+  smPath: string;
+  lgPaths: PicIdPath[];
+};
+
 type PlantToggle = {
   plantId: number;
   val: boolean;

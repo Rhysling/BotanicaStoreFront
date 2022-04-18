@@ -2,6 +2,7 @@
   import { createEventDispatcher } from 'svelte';
   import { isLoggedIn } from "../stores/user-store";
   import { navTo } from "../stores/route-store.js";
+  import { picPaths } from "../stores/utils";
 
   export let plant: IvwListedPlant;
 
@@ -15,8 +16,7 @@
 	let plantZone: string;
   // pictureLocation
 	let isNwNative: boolean;
-	let hasSmallPic: boolean;
-	let bigPicIds: string;
+	let pics: string;
   // isFeatured
 	let slug: string;
 	let availability: string;
@@ -31,31 +31,27 @@
     plantType,
     plantZone,
     isNwNative,
-    hasSmallPic,
-    bigPicIds,
+    pics,
     slug,
     availability
   } = plant);
 
   const dispatch = createEventDispatcher();
 
-  let src = "";
-  $: src = hasSmallPic ? `/plantpics/p${plantId.toString().padStart(4, "0")}_sm.jpg` : "/plantpics/no-pic.jpg";
+  let paths: PicPaths;
+  $: paths = picPaths(plantId, pics);
 
   let showBigPics = () => {
-    dispatch("showBigPics", {
-			plantId,
-      bigPicIds
-		});
+    dispatch("showBigPics", paths.lgPaths);
   };
 
 </script>
 
 <div class="plant">
-  {#if bigPicIds}
-  <a href="/" on:click|preventDefault={showBigPics}><img {src} alt="{genus} {species}" /></a>
+  {#if paths.lgPaths.length}
+  <a href="/" on:click|preventDefault={showBigPics}><img src="{paths.smPath}" alt="{genus} {species}" /></a>
   {:else}
-  <img {src} alt="{genus} {species}" />
+  <img src="{paths.smPath}" alt="{genus} {species}" />
   {/if}
   <div class="text">
     <div class="h1">{genus} {species}</div>

@@ -1,18 +1,15 @@
 <script lang="ts">
   import Modal from "./Modal.svelte";
 
-  export let plantId: number;
-  export let bigPicIds: string;
+  export let bigPicPaths: PicIdPath[] = [];
   export let isShowModal: boolean = false;
 
-  let ids: string[];
   let last: number;
   let ix = 0;
   let hasMultiple: boolean;
 
   $: {
-    ids = bigPicIds.split(",");
-    last = ids.length - 1;
+    last = bigPicPaths.length - 1;
     ix = 0;
     hasMultiple = last > 0;
   }
@@ -41,7 +38,7 @@
     {#if hasMultiple}
       <a href="/" class="arrow left" on:click|preventDefault|stopPropagation={() => changePic(-1)}><i class="fas fa-angle-left"></i></a>
     {/if}
-    <img src="/plantpics/p{plantId.toString().padStart(4, "0")}_{ids[ix].padStart(2, "0")}.jpg" alt="Botanica plant" />
+    <img src="{bigPicPaths[ix].path}" alt="Botanica plant" />
     {#if hasMultiple}
       <a href="/" class="arrow right" on:click|preventDefault|stopPropagation={() => changePic(1)}><i class="fas fa-angle-right"></i></a>
     {/if}

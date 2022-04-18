@@ -2,12 +2,12 @@
   import type { AxiosError } from "axios";
   import { httpClient as ax } from "../stores/httpclient-store";
   //import { currentParams } from "../stores/route-store";
+  import { picPaths } from "../stores/utils";
   
   let slug = "";
   let plant: IPlant | undefined = undefined;
   let isFound: boolean | undefined = undefined;
-  let smallPicSrc = "";
-  let bigPicIds: string[] = [];
+  let paths: PicPaths;
 
   let loadPlant = async (slug: string) => {
     if (!slug) {
@@ -21,11 +21,8 @@
 
       if (plant) {
         isFound = true;
-        smallPicSrc = plant.hasSmallPic ? `/plantpics/p${plant.plantId.toString().padStart(4, "0")}_sm.jpg` : "/plantpics/no-pic.jpg";
-        bigPicIds = plant.bigPicIds.split(",");
-        return;
+        paths = picPaths(plant.plantId, plant.pics);
       }
-      isFound = false;
     }
     catch (error) {
       let err = <AxiosError>error;
@@ -64,7 +61,7 @@
   {#if isFound === true && plant}
   <div class="plant">
     <div class="top">
-      <img src="{smallPicSrc}" alt="{plant.genus} {plant.species}" />
+      <img src="{paths.smPath}" alt="{plant.genus} {plant.species}" />
       <div class="title">
         <div class="genus">{plant.genus}</div>
         <div class="species">{plant.species}</div>
@@ -79,8 +76,8 @@
       {#if plant.isNwNative}<span class="nwn">Northwest Native.</span>{/if}
     </div>
 
-    {#each bigPicIds as id (id)}
-      <img class="bigpic" src="/plantpics/p{plant.plantId.toString().padStart(4, "0")}_{id.padStart(2, "0")}.jpg" alt="" />
+    {#each paths.lgPaths as bpp}
+      <img class="bigpic" src="{bpp.path}" alt="" />
     {/each}
   </div>
 {/if}

@@ -163,12 +163,10 @@
     .then((response: AxiosResponse<IPlantPicId>) => {
       let ppid = response.data;
       if (plantForPics) {
-        if (ppid.picId =="sm")
-          plantForPics.hasSmallPic = true;
-        else {
-          plantForPics.bigPicIds = plantForPics.bigPicIds ?
-            plantForPics.bigPicIds + "," + ppid.picId : ppid.picId;
-        }
+        let ppidList: IPlantPicId[] = (<IPlantPicId[]>(JSON.parse(plantForPics.pics) || [])).filter(a => a.picId !== ppid.picId);
+        ppidList = [...ppidList, ppid].sort((a, b) => a.picId - b.picId);
+        plantForPics.pics = JSON.stringify(ppidList);
+
         updatePlant(plantForPics);
       }
     })
@@ -182,11 +180,7 @@
     $ax.post("/api/admin/Pictures/DeletePicture", ppid)
     .then(() => {
       if (plantForPics) {
-        if (ppid.picId =="sm")
-          plantForPics.hasSmallPic = false;
-        else {
-          plantForPics.bigPicIds = plantForPics.bigPicIds.split(",").filter(a => a !== ppid.picId).join(",");
-        }
+        plantForPics.pics = JSON.stringify((<IPlantPicId[]>(JSON.parse(plantForPics.pics) || [])).filter(a => a.picId !== ppid.picId));
         updatePlant(plantForPics);
       }
     })
