@@ -10,7 +10,8 @@
     filterText: "",
     filterFlag: "",
     isListedOnly: false,
-    isNwNativeOnly: false
+    isNwNativeOnly: false,
+    isByRecentUpdate: false
   };
 
   const filterTypeList = ["genus", "all"];
@@ -21,13 +22,15 @@
     filterText: "",
     filterFlag: "",
     isListedOnly: false,
-    isNwNativeOnly: false
+    isNwNativeOnly: false,
+    isByRecentUpdate: false
   };
 
   const dispatch = createEventDispatcher();
 
   let filterPlants = () => {
-    let f = (p: IPlant) => {
+
+    const f = (p: IPlant) => {
 
       let passesText = true;
       if (paf.filterText) {
@@ -50,7 +53,25 @@
       return passesText && passesFlag && passesListedOnly && passesNativeOnly;
     };
 
+    // const byGenusSpecies = (a: IPlant, b: IPlant) => {
+    //   if ((a.genus + a.species).toLowerCase() < (b.genus + b.species).toLowerCase()) return -100;
+    //   if ((a.genus + a.species).toLowerCase() > (b.genus + b.species).toLowerCase()) return 100;
+    //   return 0;
+    // };
+
+    const byLastUpdateDesc = (a: IPlant, b: IPlant) => {
+      if (a.lastUpdate > b.lastUpdate) return -100;
+      if (a.lastUpdate < b.lastUpdate) return 100;
+      return 0;
+    };
+
     let filteredList = plants.filter(f);
+
+    if (paf.isByRecentUpdate)
+      filteredList = filteredList.sort(byLastUpdateDesc);
+
+    //console.log({filteredList});
+
     $plantAdminFilterStore = paf;
     itemCount = filteredList.length;
     dispatch("filterPlants", { filteredList });
@@ -61,6 +82,7 @@
     paf.filterFlag = "";
     paf.isListedOnly = false;
     paf.isNwNativeOnly = false;
+    paf.isByRecentUpdate = false;
     filterPlants();
   };
 
@@ -88,10 +110,11 @@
   <input type="text" class="genus-box" bind:value={paf.filterText} placeholder="Search {paf.filterType}" />
   <input type="text" class="flag-box" bind:value={paf.filterFlag} on:keyup={() => {if (paf.filterFlag && paf.filterFlag.length > 2) paf.filterFlag = paf.filterFlag.substring(0,2)}} placeholder="Flag" />
   <div class="sep">Listed:<input type="checkbox" bind:checked={paf.isListedOnly} /></div>
-  <div class="sep">NW&nbsp;Native:<input type="checkbox" bind:checked={paf.isNwNativeOnly} /></div>
+  <div class="sep">NWN:<input type="checkbox" bind:checked={paf.isNwNativeOnly} /></div>
+  <div class="sep">Recent:<input type="checkbox" bind:checked={paf.isByRecentUpdate} /></div>
   <div class="sep"><a href="/" on:click|preventDefault={filterPlants}>Go</a>-<a href="/" on:click|preventDefault={clearFilter}>Cancel</a></div>
   <div class="pager">
-    <Pager { itemCount } on:pageChanged />
+    <Pager { itemCount } isDateSorted={paf.isByRecentUpdate} on:pageChanged />
   </div>
 </div>
 

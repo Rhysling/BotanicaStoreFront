@@ -5,7 +5,8 @@ let init: PlantAdminFilter = {
   filterText: "",
   filterFlag: "",
   isListedOnly: false,
-  isNwNativeOnly: false
+  isNwNativeOnly: false,
+  isByRecentUpdate: false
 };
 
 export const plantAdminFilterStore = localStore<PlantAdminFilter>("plantadminfilter", init);

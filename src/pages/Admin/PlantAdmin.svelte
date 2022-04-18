@@ -13,13 +13,16 @@
   let plants: IPlant[] = [];
   let filteredList: IPlant[] = [];
   let pagedList: IPlant[] = [];
+  let currentStartIndex = 0;
+  let currentEndIndex = 0;
 
   let plantFilterIn: PlantAdminFilter = {
     filterType: "genus",
     filterText: "",
     filterFlag: "",
     isListedOnly: false,
-    isNwNativeOnly: false
+    isNwNativeOnly: false,
+    isByRecentUpdate: false
   };
 
   let editedPlant: IPlant | null;
@@ -89,7 +92,9 @@
 
   let handleChangePage = (event: CustomEvent<PageState>) => {
     let ps = event.detail;
-    pagedList = filteredList.slice(ps.startIndex, ps.endIndex);
+    currentStartIndex = ps.startIndex;
+    currentEndIndex = ps.endIndex;
+    pagedList = filteredList.slice(currentStartIndex, currentEndIndex);
 
     window.scroll({
 			top: 0,
@@ -100,6 +105,7 @@
 
   let handleFilterPlants = (event: CustomEvent<{filteredList: IPlant[]}>) => {
 		filteredList = event.detail.filteredList;
+    pagedList = filteredList.slice(currentStartIndex, currentEndIndex);
 	};
 
   let handleUpdatePlantToggle = (e: CustomEvent<PlantToggle>) => {

@@ -9,9 +9,7 @@
   export let itemsPerPage = 25;
   export let itemCount = 0;
   export let currentPage = 1;
-
-  let startIndex = 0;
-  let endIndex = 0;
+  export let isDateSorted = false;
 
   let prevItemsPerPage = 0;
   let prevItemCount = 0;
@@ -33,16 +31,18 @@
   };
 
   let changePage = (n: number) => {
-    currentPage = Math.min(Math.max(n, 1), pages);
-    startIndex = (currentPage - 1) * itemsPerPage;
-    endIndex = Math.min(startIndex + itemsPerPage, itemCount);
-    dispatch("pageChanged", {
+    let currentPage = Math.min(Math.max(n, 1), pages);
+    let startIndex = (currentPage - 1) * itemsPerPage;
+    let ps: PageState = {
       itemsPerPage,
       itemCount,
       currentPage,
       startIndex,
-      endIndex
-		});
+      endIndex: Math.min(startIndex + itemsPerPage, itemCount),
+      isDateSorted
+    };
+    
+    dispatch("pageChanged", ps);
   };
 
   $: if (!isBuilt || (prevItemCount !== itemCount) || (prevItemsPerPage !== itemsPerPage)) {

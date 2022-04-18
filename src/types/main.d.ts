@@ -28,6 +28,7 @@ type PageState = {
   currentPage: number;
   startIndex: number;
   endIndex: number;
+  isDateSorted: boolean;
 };
 
 type PicIdPath = {
@@ -67,6 +68,7 @@ type PlantAdminFilter = {
   filterFlag: string;
   isListedOnly: boolean;
   isNwNativeOnly: boolean;
+  isByRecentUpdate: boolean;
 };
 
 interface ILinkEdit extends ILink {
