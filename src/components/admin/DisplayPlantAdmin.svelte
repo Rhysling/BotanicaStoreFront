@@ -104,6 +104,9 @@
       <a href="/" on:click|preventDefault={() => toggleListed(!isListed)}>{isListed ? "Unlist" : "List"}</a>
     {/if}
   </div>
+  <div class="plantid-box">
+    {plantId}
+  </div>
   <img {src} alt="{genus} {species}" />
   <div class="text">
     <div class="h1">{genus} {species}</div>
@@ -196,6 +199,14 @@
         font-style: italic;
         font-weight: bold;
       }
+    }
+
+    .plantid-box {
+      position: absolute;
+      bottom: 0;
+      right: 0;
+      font-size: 0.8rem;
+      padding: 0.5rem;
     }
   }
 

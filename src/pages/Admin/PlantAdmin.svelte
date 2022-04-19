@@ -56,6 +56,11 @@
   };
 
   const updatePlant = (p: IPlant) => {
+    // Update date
+    let now = new Date();
+    p.lastUpdate = now.toISOString();
+    p.lastUpdateFormatted = now.toLocaleString();
+
     plants = plants.map(a => (a.plantId === p.plantId) ? p : a);
     filteredList = filteredList.map(a => (a.plantId === p.plantId) ? p : a);
     pagedList = pagedList.map(a => (a.plantId === p.plantId) ? p : a);
