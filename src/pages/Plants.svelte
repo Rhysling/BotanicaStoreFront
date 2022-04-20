@@ -16,11 +16,11 @@
     includeNotAvailable: true
   };
 
-  let itemsPerPage = 25;
   let itemCount = 0;
-  let currentPage = 1;
+  let itemsPerPage = 25;
   let startIndex = 0;
   let endIndex = 0;
+  let currentPageIn = 1;
 
   let bigPicPaths: PicIdPath[] = [];
   let isShowModal = false;
@@ -41,7 +41,7 @@
   };
 
   let handlePageChanged = (e: CustomEvent<PageState>) => {
-    currentPage = e.detail.currentPage;
+    currentPageIn = e.detail.currentPage;
     startIndex = e.detail.startIndex;
     endIndex = e.detail.endIndex
     pagedPlants = filteredPlants.slice(startIndex, endIndex);
@@ -78,7 +78,7 @@
     listedPlants = value;
     filterPlants();
     itemCount = filteredPlants.length;
-    currentPage = 1;
+    //currentPage = 1;
     startIndex = 0;
     endIndex = Math.min(startIndex + itemsPerPage, itemCount);
 
@@ -92,7 +92,7 @@
 <div class="filter-pager">
   <PlantListFilter  {...plantListFilter} on:filterPlants={handleFilterPlants} />
   <div class="pager">
-    <Pager {itemsPerPage} {currentPage} {itemCount} on:pageChanged={handlePageChanged} />
+    <Pager {itemsPerPage} {itemCount} {currentPageIn} on:pageChanged={handlePageChanged} />
   </div>
 </div>
 
@@ -105,7 +105,7 @@
 <div class="filter-pager">
   <PlantListFilter  {...plantListFilter} on:filterPlants={handleFilterPlants} />
   <div class="pager">
-    <Pager {itemsPerPage} {currentPage} {itemCount} on:pageChanged={handlePageChanged} />
+    <Pager {itemsPerPage} {itemCount} {currentPageIn} on:pageChanged={handlePageChanged} />
   </div>
 </div>
 

@@ -4,6 +4,7 @@
   import { plantAdminFilterStore } from "../../stores/plantadminfilter-store";
 
   export let plants: IPlant[] = [];
+  export let currentPageIn = 1;
 
   export let plantFilterIn: PlantAdminFilter = {
     filterType: "genus",
@@ -70,11 +71,10 @@
     if (paf.isByRecentUpdate)
       filteredList = filteredList.sort(byLastUpdateDesc);
 
-    //console.log({filteredList});
-
     $plantAdminFilterStore = paf;
     itemCount = filteredList.length;
     dispatch("filterPlants", { filteredList });
+    currentPageIn = -1; // Trigger rerun of Pager
   };
 
   let clearFilter = () => {
@@ -112,9 +112,9 @@
   <div class="sep">Listed:<input type="checkbox" bind:checked={paf.isListedOnly} /></div>
   <div class="sep">NWN:<input type="checkbox" bind:checked={paf.isNwNativeOnly} /></div>
   <div class="sep">Recent:<input type="checkbox" bind:checked={paf.isByRecentUpdate} /></div>
-  <div class="sep"><a href="/" on:click|preventDefault={filterPlants}>Go</a>-<a href="/" on:click|preventDefault={clearFilter}>Cancel</a></div>
+  <div class="sep"><a href="/" on:click|preventDefault={filterPlants}>Go</a>&nbsp;-&nbsp;<a href="/" on:click|preventDefault={clearFilter}>Cancel</a></div>
   <div class="pager">
-    <Pager { itemCount } isDateSorted={paf.isByRecentUpdate} on:pageChanged />
+    <Pager {itemCount} {currentPageIn} on:pageChanged />
   </div>
 </div>
 

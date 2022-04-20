@@ -28,7 +28,6 @@ type PageState = {
   currentPage: number;
   startIndex: number;
   endIndex: number;
-  isDateSorted: boolean;
 };
 
 type PicIdPath = {

@@ -15,6 +15,7 @@
   let pagedList: IPlant[] = [];
   let currentStartIndex = 0;
   let currentEndIndex = 0;
+  let currentPageIn = 1;
 
   let plantFilterIn: PlantAdminFilter = {
     filterType: "genus",
@@ -100,6 +101,7 @@
     currentStartIndex = ps.startIndex;
     currentEndIndex = ps.endIndex;
     pagedList = filteredList.slice(currentStartIndex, currentEndIndex);
+    currentPageIn = ps.currentPage;
 
     window.scroll({
 			top: 0,
@@ -207,7 +209,7 @@
   <i class="fas fa-caret-right"></i>
   <a href="/" on:click|preventDefault={addPlant}>Add Plant</a>
 </div>
-<PlantFilterAdmin { plants } { plantFilterIn }
+<PlantFilterAdmin { plants } { plantFilterIn } { currentPageIn }
   on:filterPlants={handleFilterPlants}
   on:pageChanged={handleChangePage}
 />
