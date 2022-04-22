@@ -19,12 +19,12 @@
 </div>
 
 <style lang="scss">
-	@import "../styles/_custom-variables.scss";
+  @import "../styles/_custom-variables.scss";
 
-	.content {
+  .content {
     font-family: 'Arrus-BT-Bold', 'Times New Roman', Times, serif;
-		font-size: 0.9rem;
-		margin: 2rem;
+    font-size: 0.9rem;
+    margin: 2rem;
 
     .title {
       font-size: 1.1rem;
@@ -51,7 +51,5 @@
       height: auto;
     }
 
-	}
-
-
+  }
 </style>

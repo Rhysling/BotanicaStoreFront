@@ -33,7 +33,9 @@ fs.readFile(".\\public\\index.html", "utf8")
 		return a
 			.replace(/bundle\.css/g, bundleName + ".css")
 			.replace(/bundle\.js/g, bundleName + ".js")
-			.replace(/(<script>\s*var\sbaseURL\s=\s")[^"]+([^<]*<\/script>)/gm, "$1$2");
+			// .replace(/(<script>\s*var\sbaseURL\s=\s")[^"]+([^<]*<\/script>)/gm, "$1$2"); //appVersionKey = "version key"
+			.replace(/var\sbaseURL\s=\s"[^"]+";/gm, 'var baseURL = "";')
+			.replace(/var\sappVersionKey\s=\s"[^"]+";/gm, 'var appVersionKey = "' + key + '";');
 	})
 	.then((a) => {
 		fs.writeFile(".\\public-busted\\index.html", a, "utf8");

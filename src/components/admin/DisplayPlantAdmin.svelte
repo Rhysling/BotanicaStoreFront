@@ -3,6 +3,7 @@
   import { httpClient as ax } from "../../stores/httpclient-store";
   import { createEventDispatcher } from 'svelte';
   import { picPaths } from "../../stores/utils";
+  import Swal from "sweetalert2";
 
   export let plant: IPlant;
 
@@ -41,7 +42,7 @@
     isListed,
     isFeatured,
     flag,
-    lastUpdateFormatted 
+    lastUpdateFormatted
   } = plant);
 
   let paths: PicPaths;
@@ -82,13 +83,36 @@
     });
   };
 
-  let editPictures = (plantId: number) => {
+  const editPictures = (plantId: number) => {
     dispatch("editPictures", plantId);
   };
 
-  let editPlant = (plantId: number) => {
+  const editPlant = (plantId: number) => {
     dispatch("editPlant", plantId);
-};
+  };
+
+  const deletePlant = async (plantId: number) => {
+    try {
+      const result: any = await Swal.fire({
+        title: `Delete ${genus} ${species} (${plantId})?`,
+        showCancelButton: true,
+        confirmButtonText: 'Yes',
+        customClass: {
+          confirmButton: "primary swal-confirm-button",
+          cancelButton: "swal-confirm-button"
+        },
+        buttonsStyling: false
+      });
+
+      if (result.isConfirmed) {
+        dispatch("deletePlant", plantId);
+      }
+    }
+    catch (error) {
+      console.error(error);
+    }
+
+  };
 
 </script>
 
@@ -132,6 +156,8 @@
     <div class="edit">
       <i class="fas fa-caret-right"></i>
       <a href="/" on:click|preventDefault={() => editPlant(plantId)}>Edit Plant</a>
+      <i class="fas fa-caret-right"></i> <i class="fas fa-caret-right"></i> <i class="fas fa-caret-right"></i>
+      <a href="/" on:click|preventDefault={() => deletePlant(plantId)}>Delete Plant</a>
     </div>
   </div>
 </div>

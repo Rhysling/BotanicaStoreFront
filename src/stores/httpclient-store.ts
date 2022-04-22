@@ -5,8 +5,8 @@ import { user } from "./user-store";
 declare var baseURL: string;
 
 export const httpClient = derived(
-	user,
-	$user => {
+  user,
+  $user => {
     let opts = { baseURL };
 
     if ($user.token)

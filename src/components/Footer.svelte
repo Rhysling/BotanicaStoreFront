@@ -1,4 +1,5 @@
 <script>
+  import { getAppVersion } from "../stores/utils";
 
   export let path = "/";
 
@@ -24,6 +25,7 @@
   </div>
   <div class="f2">
     <a href="/" on:click|preventDefault={scrollToTop}>Top</a> | &copy;2001-{yr} Pamela Harlow
+    <div class="version">{ getAppVersion() }</div>
   </div>
   <br />
 </footer>
@@ -42,10 +44,18 @@
   }
 
   .f2 {
+    position: relative;
     font-size: 0.75rem;
     text-align: center;
     width: 100%;
     margin-top: 0.5rem;
+  }
+
+  .version {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    font-size: 0.6rem;
   }
 
 </style>

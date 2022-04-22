@@ -18,3 +18,6 @@ export const picPaths = (plantId: number, pics: string) => {
 
   return { smPath, lgPaths };
 };
+
+declare var appVersionKey: string;
+export const getAppVersion = () => appVersionKey;

@@ -94,6 +94,18 @@
     });
   };
 
+  const deletePlant = (plantId: number) => {
+    $ax.post(`/api/admin/Plants/Delete?plantId=${plantId}`)
+    .then(() => {
+        plants = plants.filter(a => a.plantId !== plantId);
+        filteredList = filteredList.filter(a => a.plantId !== plantId);
+        pagedList = pagedList.filter(a => a.plantId !== plantId);
+    })
+    .catch(function (e: AxiosError) {
+      console.error(e);
+    });
+  };
+
   // Component handlers ***
 
   let handleChangePage = (event: CustomEvent<PageState>) => {
@@ -154,6 +166,10 @@
     }
 
     savePlant(e.detail);
+  };
+
+  let handleDeletePlant = (e: CustomEvent<number>) => {
+    deletePlant(e.detail);
   };
 
   // Plant pics
@@ -220,6 +236,7 @@
         plant={p}
         on:updatePlantToggle={handleUpdatePlantToggle}
         on:editPlant={handleEditPlant}
+        on:deletePlant={handleDeletePlant}
         on:editPictures={handleEditPictures}
       />
     </div>
