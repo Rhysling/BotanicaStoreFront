@@ -24,7 +24,7 @@
 
   let bigPicPaths: PicIdPath[] = [];
   let isShowModal = false;
-  
+
 
   let showBigPics = (e: CustomEvent<PicIdPath[]>) => {
     bigPicPaths = e.detail;
@@ -53,7 +53,7 @@
     let plf = plantListFilter;
 
     let f = (p: IvwListedPlant) => {
-      let passesText = 
+      let passesText =
         plf.filterText === "" ||
         p.genus.toLowerCase().startsWith(plf.filterText.toLowerCase()) ||
         p.species.toLowerCase().startsWith(plf.filterText.toLowerCase()) ||
@@ -66,8 +66,12 @@
       return passesText && passesAvailable && passesNwNative;
     };
 
-    filteredPlants =  listedPlants.filter(f);
+    filteredPlants = listedPlants.filter(f);
     itemCount = filteredPlants.length;
+    currentPageIn = 1;
+    startIndex = 0;
+    endIndex = Math.min(startIndex + itemsPerPage, itemCount);
+    pagedPlants = filteredPlants.slice(startIndex, endIndex);
   };
 
 

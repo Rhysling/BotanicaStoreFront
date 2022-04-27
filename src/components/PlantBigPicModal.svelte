@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { onMount, onDestroy } from 'svelte';
   import Modal from "./Modal.svelte";
 
   export let bigPicPaths: PicIdPath[] = [];
@@ -14,7 +15,7 @@
     hasMultiple = last > 0;
   }
 
-  let changePic = (n: number) => {
+  const changePic = (n: number) => {
     let i = ix + n;
 
     if (i < 0) {
@@ -29,6 +30,27 @@
 
     ix = i;
   };
+
+  const moveByArrow = (e: KeyboardEvent) => {
+    if (!isShowModal || !hasMultiple) return;
+
+    if (e.key == "ArrowRight") {
+      changePic(1);
+      return;
+    }
+
+    if (e.key == "ArrowLeft") {
+      changePic(-1);
+    }
+  };
+
+  onMount(() => {
+    document.addEventListener("keydown", moveByArrow);
+  });
+
+  onDestroy(() => {
+    document.removeEventListener("keydown", moveByArrow);
+});
 
 </script>
 

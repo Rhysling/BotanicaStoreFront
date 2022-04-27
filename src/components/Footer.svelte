@@ -25,7 +25,7 @@
   </div>
   <div class="f2">
     <a href="/" on:click|preventDefault={scrollToTop}>Top</a> | &copy;2001-{yr} Pamela Harlow
-    <div class="version">{ getAppVersion() }</div>
+    <div class="version">{ getAppVersion().slice(2) }</div>
   </div>
   <br />
 </footer>
@@ -40,7 +40,6 @@
     text-align: center;
     width: 100%;
     margin-top: 1rem;
-
   }
 
   .f2 {
