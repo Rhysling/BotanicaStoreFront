@@ -123,6 +123,9 @@
   };
 
   let handleFilterPlants = (event: CustomEvent<{filteredList: IPlant[]}>) => {
+    currentStartIndex = 0;
+    currentEndIndex = 25;
+    currentPageIn = 1;
 		filteredList = event.detail.filteredList;
     pagedList = filteredList.slice(currentStartIndex, currentEndIndex);
 	};
