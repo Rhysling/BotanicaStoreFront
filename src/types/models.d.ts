@@ -89,14 +89,14 @@ interface IPlant {
 	pictureLocation: INullable<string>;
 	isNwNative: boolean;
 	pics: string;
-	//hasSmallPic: boolean;
-	//bigPicIds: string;
 	isListed: boolean;
 	isFeatured: boolean;
 	slug: string;
 	lastUpdate: string;
 	flag: INullable<string>;
 	lastUpdateFormatted: string;
+	cardLine1: INullable<string>;
+	cardLine2: INullable<string>;
 }
 
 interface IPlantPicId {

@@ -3,11 +3,12 @@
   import { httpClient as ax } from "../stores/httpclient-store";
   //import { currentParams } from "../stores/route-store";
   import { picPaths } from "../stores/utils";
-  
+
   let slug = "";
   let plant: IPlant | undefined = undefined;
   let isFound: boolean | undefined = undefined;
   let paths: PicPaths;
+  let resultText = "Plant not found.";
 
   let loadPlant = async (slug: string) => {
     if (!slug) {
@@ -22,14 +23,15 @@
       if (plant) {
         isFound = true;
         paths = picPaths(plant.plantId, plant.pics);
+        return;
       }
+
+      isFound = false;
     }
     catch (error) {
       let err = <AxiosError>error;
-      if (err.code == "404") {
-        isFound = false;
-        return;
-      }
+      resultText = (err.response?.status == 404) ? "Plant not found." : "Something went wrong.";
+      isFound = false;
       console.error({err});
     }
 
@@ -44,7 +46,7 @@
     }
     slug = match[1];
   };
-  
+
   findSlug();
   loadPlant(slug);
 
@@ -55,7 +57,7 @@
 {/if}
 
 {#if isFound === false}
-  <div class="notice">Plant not found.</div>
+  <div class="notice">{resultText}</div>
 {/if}
 
   {#if isFound === true && plant}
@@ -63,8 +65,8 @@
     <div class="top">
       <img src="{paths.smPath}" alt="{plant.genus} {plant.species}" />
       <div class="title">
-        <div class="genus">{plant.genus}</div>
-        <div class="species">{plant.species}</div>
+        <div class="genus">{plant.cardLine1}</div>
+        <div class="species">{plant.cardLine2}</div>
         {#if plant.family}<div class="family">{plant.family}</div>{/if}
       </div>
     </div>
