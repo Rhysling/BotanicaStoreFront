@@ -2,13 +2,14 @@
   import type { AxiosError } from "axios";
   import { httpClient as ax } from "../stores/httpclient-store";
   //import { currentParams } from "../stores/route-store";
-  import { picPaths } from "../stores/utils";
+  import { picPaths, getBaseURL } from "../stores/utils";
 
   let slug = "";
   let plant: IPlant | undefined = undefined;
   let isFound: boolean | undefined = undefined;
   let paths: PicPaths;
   let resultText = "Plant not found.";
+  let baseURL = getBaseURL();
 
   let loadPlant = async (slug: string) => {
     if (!slug) {
@@ -17,7 +18,7 @@
     }
 
     try {
-      const response = await $ax.get<IPlant>(`${window.location.origin}/api/ListedPlants/FindBySlug?slug=${slug}`);
+      const response = await $ax.get<IPlant>(`${baseURL || window.location.origin}/api/ListedPlants/FindBySlug?slug=${slug}`);
       plant = response.data;
 
       if (plant) {
