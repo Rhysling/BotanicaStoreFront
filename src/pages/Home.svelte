@@ -5,7 +5,7 @@
   import { isLoggedIn } from "../stores/user-store.js";
   import { isShowHowWlWorks } from "../stores/wishlist-store.js";
   import HomeFeaturedPlant from "../components/HomeFeaturedPlant.svelte";
-  
+
 	let nextSale: ICalendar | null = null;
 
 	$ax.get("/api/Calendar/GetNext")
@@ -75,13 +75,14 @@
 						<div class="location">{nextSale.location}</div>
 					</div>
 				</div>
+				<a
+					href="/"
+					on:click={(e) => navTo(e, "/calendar")}>See Calendar of Upcoming Plant Sales</a>
 			{:else}
 			<div class="title">No Events Posted</div>
 			<div>Please check back again as plant sale season approaches.</div>
+			<div>&nbsp;</div>
 			{/if}
-			<a
-				href="/"
-				on:click={(e) => navTo(e, "/calendar")}>See Calendar of Upcoming Plant Sales</a>
 		</div>
 	</div>
 </div>
@@ -137,7 +138,7 @@
 			height: auto;
 			margin: 0 auto;
 		}
-		
+
 		.small {
 			font-size: 0.7rem;
 			text-align: center;
@@ -185,7 +186,7 @@
 		flex: 0 0 auto;
 		border: 1px solid black;
 		padding: 0.4rem;
-		
+
 		> a {
 			display: block;
 		}
@@ -207,7 +208,7 @@
       font-size: 0.8rem;
     }
 
-		
+
     .title {
       font-size: 1.1rem;
 			font-weight: bold;

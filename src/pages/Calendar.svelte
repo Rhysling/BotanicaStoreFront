@@ -31,7 +31,10 @@
       </div>
     </div>
   {:else}
-    No listings.
+	<div class="no-listings">
+		<div class="no-listings-title">No listings.</div>
+		<div class="no-listings-subtitle">Please check back again as plant sale season approaches.</div>
+	</div>
   {/each}
 </div>
 
@@ -105,5 +108,25 @@
   .is-special {
     background-color: #eeffee;
   }
+
+	.no-listings {
+		width: 100%;
+		padding: 5rem 0;
+
+		.no-listings-title {
+			font-weight: bold;
+			font-size: 2.5rem;
+			width: 100%;
+			text-align: center;
+		}
+
+		.no-listings-subtitle {
+			font-weight: bold;
+			font-size: 1.25rem;
+			margin: 1rem 0 0;
+			width: 100%;
+			text-align: center;
+		}
+	}
 
 </style>
