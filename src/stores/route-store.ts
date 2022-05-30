@@ -115,6 +115,13 @@ let getBaseRoutes = (): Route => {
 						page: "ColorCards",
 						path: "/color-cards",
 						isAdmin: true
+					},
+					{
+						title: "Pic Audit",
+						navName: "Pic Audit",
+						page: "PicAudit",
+						path: "/pic-audit",
+						isAdmin: true
 					}
 				]
 			}
@@ -291,7 +298,7 @@ export const navTo = function (e: MouseEvent | null, pathName: string, params?: 
 	currentPath.set(pathName);
 	document.title = `Botanica - ${r.title}`;
 
-	window.history.pushState({}, pathName, url);	
+	window.history.pushState({}, pathName, url);
 };
 
 // Back Button

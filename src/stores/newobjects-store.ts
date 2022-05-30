@@ -20,7 +20,9 @@ let plant = {
 	slug: "",
 	lastUpdate: "1950-01-01",
 	flag: "",
-	lastUpdateFormatted: "None"
+	lastUpdateFormatted: "None",
+	cardLine1: null,
+	cardLine2: null
 };
 
 export const newPlant = readable(plant, function start(set) {

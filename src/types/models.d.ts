@@ -12,6 +12,13 @@ type INullable<T> = T | null | undefined;
 
 // NAMESPACE: BotanicaStoreBack.Models.Core
 
+interface IPicAuditResult {
+	oldOrphanCount: number;
+	orphanPicNames: string[];
+	missingPicNames: string[];
+	plantIdsMissingPics: number[];
+}
+
 interface IPlantIdName {
 	plantId: number;
 	plantName: string;

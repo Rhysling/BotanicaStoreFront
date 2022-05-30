@@ -20,12 +20,13 @@
 	import ShoppingListAdmin from "./pages/admin/ShoppingListAdmin.svelte";
 	import UserAdmin from "./pages/admin/UserAdmin.svelte";
 	import ColorCards from "./pages/admin/ColorCards.svelte";
+	import PicAudit from "./pages/admin/PicAudit.svelte";
 
 	import { currentRoute, navFromUrl } from "./stores/route-store.js";
 	import { user } from "./stores/user-store.js";
 	import { wishListStore as wls } from "./stores/wishlist-store.js";
   import { availablePlantsStore as aps } from "./stores/availableplants-store";
-	
+
 	let path = "/";
 	let page = "Home";
 
@@ -54,7 +55,8 @@
 		LinksAdmin,
 		ShoppingListAdmin,
 		UserAdmin,
-		ColorCards
+		ColorCards,
+		PicAudit
 	};
 
 	$: {
@@ -89,6 +91,6 @@
 	}
 
 	@media only screen and (max-width: $bp-small) {
-		
+
 	}
 </style>

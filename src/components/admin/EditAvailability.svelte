@@ -1,6 +1,6 @@
 <script lang="ts">
   import { onMount } from 'svelte';
-  import type { AxiosError, AxiosResponse } from "axios";
+  import type { AxiosResponse } from "axios";
   import { httpClient as ax } from "../../stores/httpclient-store";
   import Modal from "../Modal.svelte";
   import { createEventDispatcher } from 'svelte';
@@ -15,7 +15,7 @@
   let epp: PlantPriceMatrix[] = [];
   let editError = "";
   let isValid = true;
-  
+
 let mapOriginalToDisplay = (vw: IvwPlantPriceMatrix[]): PlantPriceMatrix[] => {
   return vw.map(a => (
     {
@@ -76,11 +76,11 @@ let mapOriginalToDisplay = (vw: IvwPlantPriceMatrix[]): PlantPriceMatrix[] => {
       let data = {plantId: editPlantId, summaryAvailable, summaryPriced};
       dispatch("finishEdit", data);
     })
-    .catch(function (e: AxiosError) {
+    .catch(e => {
       editError = e.response?.data?.title || "No title provided.";
-      console.error(e);
+      console.error({e});
     });
-    
+
   };
 
   let cancel = () => {

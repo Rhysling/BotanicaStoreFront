@@ -39,7 +39,7 @@
     font-size: 28px;
     font-weight: bold;
     z-index: 110;
-    
+
     &:hover,
     &:focus {
       color: black;

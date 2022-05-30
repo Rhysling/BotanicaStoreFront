@@ -88,10 +88,10 @@
 
       editedPlant = null;
     })
-    .catch(function (e: AxiosError) {
-      editError = (e.response?.data?.title || "No title provided.") + " See log.";
-      console.error(e);
-    });
+    .catch(e => {
+			editError = (e.response?.data?.title || "No title provided.") + " See log.";
+			console.error({e});
+		});
   };
 
   const deletePlant = (plantId: number) => {
