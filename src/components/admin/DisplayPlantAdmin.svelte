@@ -21,7 +21,7 @@
   let pics: string;
 	let isListed: boolean;
 	let isFeatured: boolean;
-  //let slug: string;
+  let slug: string;
 	//let lastUpdate: any;
 	let flag: INullable<string>;
 	let lastUpdateFormatted: string;
@@ -41,6 +41,7 @@
     pics,
     isListed,
     isFeatured,
+		slug,
     flag,
     lastUpdateFormatted
   } = plant);
@@ -151,6 +152,8 @@
       {bpc ? bpc : "No"} big picture{bpc === 1 ? "" : "s"}.
       <i class="fas fa-caret-right"></i>
       <a href="/" on:click|preventDefault={() => editPictures(plantId)}>Edit Pictures</a>
+			<i class="fas fa-caret-right"></i>
+      <a href="/plant/{slug}" target="_blank">Permalink</a>
     </div>
     <div class="extra">Last update: {lastUpdateFormatted}. Flag: {flag ? flag : "none"}.</div>
     <div class="edit">
