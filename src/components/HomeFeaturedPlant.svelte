@@ -1,22 +1,24 @@
 <script lang="ts">
-  import { navTo } from "../stores/route-store.js";
-  import { listedPlants } from "../stores/listedplants-store";
-  import { picPaths } from "../stores/utils";
+	import { navTo } from "../stores/route-store.js";
+	import { listedPlants } from "../stores/listedplants-store";
+	import { picPaths } from "../stores/utils";
 
-  let fp: IvwListedPlant | undefined;
-  let pn = ""
-  let src = "";
-  let paths: PicPaths;
+	let fp: IvwListedPlant | undefined;
+	let pn = "";
+	let src = "";
+	let slug = "";
+	let paths: PicPaths;
 
-  $: {
-    fp = $listedPlants.find(p => p.isFeatured);
+	$: {
+		fp = $listedPlants.find(p => p.isFeatured);
 
-    if (fp) {
-      pn = fp.genus + ((fp.species) ? " " + fp.species : "");
-      paths = picPaths(fp.plantId, fp.pics);
-      src = paths.smPath;
-    }
-  }
+		if (fp) {
+			pn = fp.genus + ((fp.species) ? " " + fp.species : "");
+			paths = picPaths(fp.plantId, fp.pics);
+			src = paths.smPath;
+			slug = fp.slug;
+		}
+	}
 
 </script>
 
@@ -40,6 +42,7 @@
         {fp.description}
         <span class="plant-habit">{fp.plantSize || ""} {fp.plantType || ""} {fp.plantZone || ""}</span>
       </div>
+			<a href="/plant/{slug}" target="_blank">Permalink</a>
       <a href="/" on:click={(e) => navTo(e, "/plants")}>
         See List of Available Plants
       </a>
@@ -121,6 +124,7 @@
 
 		a {
 			display: block;
+			margin-bottom: 0.5rem;
 		}
 	}
 </style>
