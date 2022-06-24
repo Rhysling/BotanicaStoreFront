@@ -80,9 +80,9 @@
 					href="/"
 					on:click={(e) => navTo(e, "/calendar")}>See Calendar of Upcoming Plant Sales</a>
 			{:else}
-			<div class="title">No Events Posted</div>
-			<div>Please check back again as plant sale season approaches.</div>
-			<div>&nbsp;</div>
+				<div class="title">No Events Posted</div>
+				<div>Please check back as plant sale season approaches.</div>
+				<div>&nbsp;</div>
 			{/if}
 		</div>
 	</div>

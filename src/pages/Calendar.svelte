@@ -33,7 +33,7 @@
   {:else}
 	<div class="no-listings">
 		<div class="no-listings-title">No listings.</div>
-		<div class="no-listings-subtitle">Please check back again as plant sale season approaches.</div>
+		<div class="no-listings-subtitle">Please check back as plant sale season approaches.</div>
 	</div>
   {/each}
 </div>
