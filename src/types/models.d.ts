@@ -89,7 +89,7 @@ interface IPlant {
 	species: string;
 	family: INullable<string>;
 	description: INullable<string>;
-	webDescription: INullable<string>;
+	notes: INullable<string>;
 	plantSize: INullable<string>;
 	plantType: INullable<string>;
 	plantZone: INullable<string>;

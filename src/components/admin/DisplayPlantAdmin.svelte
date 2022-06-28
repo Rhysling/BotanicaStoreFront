@@ -12,7 +12,7 @@
 	let species: string;
 	let family: INullable<string>;
 	let description: INullable<string>;
-  let webDescription: INullable<string>;
+	let notes: INullable<string>;
 	let plantSize: INullable<string>;
 	let plantType: INullable<string>;
 	let plantZone: INullable<string>;
@@ -32,7 +32,7 @@
     species,
     family,
     description,
-    webDescription,
+    notes,
     plantSize,
     plantType,
     plantZone,
@@ -139,8 +139,8 @@
     <div class="description">
       <strong>Description: </strong>{description || "none"}
     </div>
-    {#if webDescription}
-      <div class="description"><strong>Web Description: </strong>{webDescription}</div>
+    {#if notes}
+      <div class="description"><strong>Notes: </strong>{notes}</div>
     {/if}
     <div class="details">
       {plantZone || ""} {plantSize || ""} {plantType || ""} {isNwNative ? "NW Native" : ""}

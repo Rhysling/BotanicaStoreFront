@@ -60,7 +60,7 @@
     </div>
     <input type="text" bind:value={ep.family} placeholder="Family" />
     <textarea bind:value={ep.description} placeholder="Description"></textarea>
-    <textarea bind:value={ep.webDescription} placeholder="Web Description"></textarea>
+    <textarea bind:value={ep.notes} placeholder="Notes"></textarea>
     <input class="sm" type="text" bind:value={ep.plantSize} placeholder="Size" />
     <input class="sm" type="text" bind:value={ep.plantType} placeholder="Type" />
     <input class="sm" type="text" bind:value={ep.plantZone} placeholder="Zone" />

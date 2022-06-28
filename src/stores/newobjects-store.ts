@@ -6,7 +6,7 @@ let plant = {
 	species: "",
 	family: "",
 	description: "",
-	webDescription: "",
+	notes: "",
 	plantSize: "",
 	plantType: "",
 	plantZone: "",
