@@ -1,58 +1,91 @@
 <script lang="ts">
 	import type { AxiosResponse } from "axios";
-  import { httpClient as ax } from "../stores/httpclient-store";
-  import { navTo, isLiveOnlineShopping } from "../stores/route-store.js";
-  import { isLoggedIn } from "../stores/user-store.js";
-  import { isShowHowWlWorks } from "../stores/wishlist-store.js";
-  import HomeFeaturedPlant from "../components/HomeFeaturedPlant.svelte";
+	import { httpClient as ax } from "../stores/httpclient-store";
+	import { navTo, isLiveOnlineShopping } from "../stores/route-store.js";
+	import { isLoggedIn } from "../stores/user-store.js";
+	import { isShowHowWlWorks } from "../stores/wishlist-store.js";
+	import HomeFeaturedPlant from "../components/HomeFeaturedPlant.svelte";
 
 	let nextSale: ICalendar | null = null;
 
-	$ax.get("/api/Calendar/GetNext")
-		.then((response: AxiosResponse<ICalendar>) => nextSale = response.data)
-		.catch((err) => console.error({err}));
-
+	$ax
+		.get("/api/Calendar/GetNext")
+		.then((response: AxiosResponse<ICalendar>) => (nextSale = response.data))
+		.catch((err) => console.error({ err }));
 
 	let goToShoppingList = (e: MouseEvent) => {
 		e.preventDefault();
-		if ($isLoggedIn)
-			navTo(e, "/shopping-list");
-		else
-			$isShowHowWlWorks = true;
+		if ($isLoggedIn) navTo(e, "/shopping-list");
+		else $isShowHowWlWorks = true;
 	};
-
 </script>
 
 <div class="content">
 	<div class="left">
-		<div class="card-oldfriend">
-			<img src="{window.location.origin}/assets/img/bench-350x230.jpg" alt="Hello, old friend" />
+		<div class="card-announcement">
+			<p class="title">Special for the Fall Foliage Festival</p>
+			<p class="txt">
+				Attending the Fall Foliage Festival? I can bring anything from the
+				website for you to purchase at the festival!
+			</p>
+			<p class="txt">
+				Some of the plants are now dormant, the perfect time to plant them.
+			</p>
+			<p class="txt">
+				Let me know what interests you and I'll get back to you with sizes and
+				prices.
+			</p>
+			<p class="txt">
+				I do need a few days notice. If you wait until the last couple of days
+				before the sale, I may not be able to accommodate you. (I do not live
+				near the nursery and have no internet there.)
+			</p>
+			<p class="txt">
+				<a href="mailto:pamela@polson.com?subject=Botanica Inquiry"
+					>pamela@polson.com</a
+				>
+			</p>
+			<p class="txt">Hope to see you there!</p>
+		</div>
+		<div class="card-oldfriend" style="display:none;">
+			<img
+				src="{window.location.origin}/assets/img/bench-350x230.jpg"
+				alt="Hello, old friend"
+			/>
 			<div class="small" style="display:none;">An old friend...</div>
 			<div>&nbsp;</div>
 		</div>
-		<div class="card-special">
+		<div class="card-special" style="display:none;">
 			<div class="title" style="display:none;">
 				Now Available at<br />
 				Seattle Audubon
 			</div>
-			<div>
-				<img src="/assets/img/botanica-logo-512x512.png" alt="Botanica" style="max-width:100%;height:auto;" />
+			<div style="display:none;">
+				<img
+					src="/assets/img/botanica-logo-512x512.png"
+					alt="Botanica"
+					style="max-width:100%;height:auto;"
+				/>
 			</div>
 		</div>
 	</div>
 	<div class="right">
 		{#if $isLiveOnlineShopping}
-		<div class="card-shop">
-			<div class="t1">Shop Online!</div>
-			<div class="t2">
-				<strong>Botanica Plants</strong> are now available for pickup in the Wallingford neighborhood (Seattle, WA).
+			<div class="card-shop">
+				<div class="t1">Shop Online!</div>
+				<div class="t2">
+					<strong>Botanica Plants</strong> are now available for pickup in the Wallingford
+					neighborhood (Seattle, WA).
+				</div>
+				<div>
+					Create your &quot;shopping list&quot; here. We will prepare your
+					order, cooridnate with you on any changes or adjustments, and let you
+					know when it is ready for pickup.
+				</div>
+				<a href="/" on:click={(e) => goToShoppingList(e)}
+					>Start your plant shopping list...</a
+				>
 			</div>
-			<div>
-				Create your &quot;shopping list&quot; here. We will prepare your order, cooridnate with
-				you on any changes or adjustments, and let you know when it is ready for pickup.
-			</div>
-			<a href="/" on:click={(e) => goToShoppingList(e)}>Start your plant shopping list...</a>
-		</div>
 		{/if}
 		<HomeFeaturedPlant />
 		<div class="card-calendar">
@@ -61,12 +94,15 @@
 				{#if nextSale.isSpecial}
 					<div class="special-title">* * * Special Sale * * *</div>
 				{/if}
-				<div class="item" class:is-special={nextSale.isSpecial === true ? true : undefined}>
+				<div
+					class="item"
+					class:is-special={nextSale.isSpecial === true ? true : undefined}
+				>
 					<div class="dates">
 						<div class="date">{nextSale.beginDateFormatted}</div>
 						{#if nextSale.endDate}
-						<div class="date-sep">through</div>
-						<div class="date">{nextSale.endDateFormatted}</div>
+							<div class="date-sep">through</div>
+							<div class="date">{nextSale.endDateFormatted}</div>
 						{/if}
 						<div class="time">{nextSale.eventTime}</div>
 					</div>
@@ -76,9 +112,9 @@
 						<div class="location">{nextSale.location}</div>
 					</div>
 				</div>
-				<a
-					href="/"
-					on:click={(e) => navTo(e, "/calendar")}>See Calendar of Upcoming Plant Sales</a>
+				<a href="/" on:click={(e) => navTo(e, "/calendar")}
+					>See Calendar of Upcoming Plant Sales</a
+				>
 			{:else}
 				<div class="title">No Events Posted</div>
 				<div>Please check back as plant sale season approaches.</div>
@@ -99,7 +135,8 @@
 		font-size: 0.9rem;
 	}
 
-	.left, .right {
+	.left,
+	.right {
 		display: flex;
 		flex-flow: column nowrap;
 	}
@@ -128,6 +165,15 @@
 		text-align: center;
 		width: 100%;
 		margin: 0.5rem 0;
+	}
+
+	.txt {
+		margin: 0.5rem 1rem;
+	}
+
+	.card-announcement {
+		background-color: #b8ef00;
+		height: 100%;
 	}
 
 	.card-oldfriend {
@@ -197,46 +243,45 @@
 		}
 
 		.date {
-      font-size: 0.9rem;
-    }
+			font-size: 0.9rem;
+		}
 
-    .date-sep {
-      font-size: 0.8rem;
-      color: lighten($text-color, 5%);
-    }
+		.date-sep {
+			font-size: 0.8rem;
+			color: lighten($text-color, 5%);
+		}
 
-    .time {
-      font-size: 0.8rem;
-    }
+		.time {
+			font-size: 0.8rem;
+		}
 
-
-    .title {
-      font-size: 1.1rem;
+		.title {
+			font-size: 1.1rem;
 			font-weight: bold;
 			text-align: center;
 			width: 100%;
 			margin: 0.5rem 0;
-    }
+		}
 
 		.special-title {
 			color: $main-color;
-      font-size: 1rem;
+			font-size: 1rem;
 			font-weight: bold;
 			text-align: center;
 			width: 100%;
 			margin: 0.5rem 0;
-    }
+		}
 
-    .description {
-      font-size: 0.9rem;
+		.description {
+			font-size: 0.9rem;
 			margin-bottom: 0.4rem;
-    }
+		}
 
-    .location {
-      font-size: 0.85rem;
-      color: #8B4513;
+		.location {
+			font-size: 0.85rem;
+			color: #8b4513;
 			margin-bottom: 0.4rem;
-    }
+		}
 	}
 
 	@media screen and (max-width: $bp-small) {
@@ -256,7 +301,5 @@
 				}
 			}
 		}
-
 	}
-
 </style>
