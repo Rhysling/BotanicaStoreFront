@@ -23,31 +23,20 @@
 <div class="content">
 	<div class="left">
 		<div class="card-announcement">
-			<p class="title">Special for the Fall Foliage Festival</p>
+			<p class="title">Plants are Available All Year</p>
 			<p class="txt">
-				Attending the Fall Foliage Festival? I can bring anything from the
-				website for you to purchase at the festival!
+				See something you like? Email for details.
 			</p>
 			<p class="txt">
-				Some of the plants are now dormant, the perfect time to plant them.
-			</p>
-			<p class="txt">
-				Let me know what interests you and I'll get back to you with sizes and
-				prices.
-			</p>
-			<p class="txt">
-				I do need a few days notice. If you wait until the last couple of days
-				before the sale, I may not be able to accommodate you. (I do not live
-				near the nursery and have no internet there.)
+				Pickup in the Wallingford neighborhood of Seattle.
 			</p>
 			<p class="txt">
 				<a href="mailto:pamela@polson.com?subject=Botanica Inquiry"
 					>pamela@polson.com</a
 				>
 			</p>
-			<p class="txt">Hope to see you there!</p>
 		</div>
-		<div class="card-oldfriend" style="display:none;">
+		<div class="card-oldfriend">
 			<img
 				src="{window.location.origin}/assets/img/bench-350x230.jpg"
 				alt="Hello, old friend"
@@ -60,7 +49,7 @@
 				Now Available at<br />
 				Seattle Audubon
 			</div>
-			<div style="display:none;">
+			<div>
 				<img
 					src="/assets/img/botanica-logo-512x512.png"
 					alt="Botanica"
@@ -172,7 +161,7 @@
 	}
 
 	.card-announcement {
-		background-color: #b8ef00;
+		background-color: #edbdff;
 		height: 100%;
 	}
 
