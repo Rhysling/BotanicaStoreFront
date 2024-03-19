@@ -24,11 +24,12 @@
 	<div class="left">
 		<div class="card-announcement">
 			<p class="title">Plants are Available All Year</p>
+			<p class="txt">See something you like? Email for details.</p>
+			<p class="txt">Pickup in the Wallingford neighborhood of Seattle.</p>
+			<p class="title">Or pick up at a Plant Sale</p>
 			<p class="txt">
-				See something you like? Email for details.
-			</p>
-			<p class="txt">
-				Pickup in the Wallingford neighborhood of Seattle.
+				Let me know ahead of time, and I can bring the plants you want – no
+				obligation.
 			</p>
 			<p class="txt">
 				<a href="mailto:pamela@polson.com?subject=Botanica Inquiry"
@@ -153,7 +154,7 @@
 		color: $main-color;
 		text-align: center;
 		width: 100%;
-		margin: 0.5rem 0;
+		margin: 0.8rem 0 0.5rem;
 	}
 
 	.txt {
@@ -161,8 +162,8 @@
 	}
 
 	.card-announcement {
-		background-color: #edbdff;
-		height: 100%;
+		background-color: #f6deff;
+		flex: 1 1 auto;
 	}
 
 	.card-oldfriend {
