@@ -43,7 +43,6 @@
 				alt="Hello, old friend"
 			/>
 			<div class="small" style="display:none;">An old friend...</div>
-			<div>&nbsp;</div>
 		</div>
 		<div class="card-special" style="display:none;">
 			<div class="title" style="display:none;">
@@ -136,7 +135,7 @@
 
 		& > div {
 			margin: 0 2px 2px 0;
-			padding: 0.3rem;
+			padding: 0;
 		}
 	}
 
