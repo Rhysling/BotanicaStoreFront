@@ -152,8 +152,8 @@
 		font-weight: bold;
 		color: $main-color;
 		text-align: center;
-		width: 100%;
-		margin: 0.8rem 0 0.5rem;
+		text-wrap: balance;
+		margin: 0.8rem 0.5rem 0.5rem;
 	}
 
 	.txt {
