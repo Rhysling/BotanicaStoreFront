@@ -60,4 +60,4 @@
 	.unpin {
 		transform: translateY(-100%);
 	}
-</svelte:window>
+</style>
