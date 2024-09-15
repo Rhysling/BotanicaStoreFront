@@ -1,7 +1,6 @@
-<script>
+<script lang="ts">
 	import { onMount } from "svelte";
 
-	import GlobalCss from "./components/GlobalCss.svelte";
 	import Header from "./components/Header.svelte";
 	import Footer from "./components/Footer.svelte";
 
@@ -22,25 +21,12 @@
 	import ColorCards from "./pages/admin/ColorCards.svelte";
 	import PicAudit from "./pages/admin/PicAudit.svelte";
 
-	import { currentRoute, navFromUrl } from "./stores/route-store.js";
-	import { user } from "./stores/user-store.js";
-	import { wishListStore as wls } from "./stores/wishlist-store.js";
-  import { availablePlantsStore as aps } from "./stores/availableplants-store";
+	import { currentRoute, navFromUrl } from "./stores/route-store";
+	import { user } from "./stores/user-store";
+	import { wishListStore as wls } from "./stores/wishlist-store";
+	import { availablePlantsStore as aps } from "./stores/availableplants-store";
 
-	let path = "/";
-	let page = "Home";
-
-	if ($user.userId)
-		wls.init();
-
-	aps.init();
-
-	onMount(() => {
-		navFromUrl();
-	});
-
-
-	let pages = {
+	const pages = {
 		Home,
 		Plants,
 		Plant,
@@ -56,32 +42,42 @@
 		ShoppingListAdmin,
 		UserAdmin,
 		ColorCards,
-		PicAudit
+		PicAudit,
 	};
+
+	type PK = keyof typeof pages;
+
+	let path = "/";
+	let page: PK = "Home";
+
+	if ($user.userId) wls.init();
+
+	aps.init();
+
+	onMount(() => {
+		navFromUrl();
+	});
 
 	$: {
 		path = $currentRoute.path;
-		page = $currentRoute?.page ?? "Home";
+		page = <PK>($currentRoute?.page ?? "Home");
 
 		window.scroll({
 			top: 0,
 			left: 0,
-			behavior: "smooth"
+			behavior: "smooth",
 		});
 	}
-
 </script>
 
-<GlobalCss />
 <main>
 	<Header />
-	<svelte:component this={ pages[page] } />
-	<Footer { path } />
-
+	<svelte:component this={pages[page]} />
+	<Footer {path} />
 </main>
 
 <style lang="scss">
-  @import "./styles/_custom-variables.scss";
+	@import "./styles/_custom-variables.scss";
 
 	main {
 		background-color: #fff;
@@ -91,6 +87,5 @@
 	}
 
 	@media only screen and (max-width: $bp-small) {
-
 	}
 </style>

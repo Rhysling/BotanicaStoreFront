@@ -119,6 +119,7 @@
 {/if}
 
 <Modal {isShowModal} on:setmodal={setModal}>
+	<!-- svelte-ignore a11y-click-events-have-key-events a11y-no-static-element-interactions -->
 	<div class="modal-content" on:click={(e) => e.stopPropagation()}>
 		<div class="title">Provide your email address to register.</div>
 		<div class="subtitle">We almost never email.</div>

@@ -1,8 +1,6 @@
-const fs = require("fs-extra");
+import fs from "fs-extra";
 
-// console.log("__dirname: ", __dirname);
-
-let formatNum = function (num, len) {
+const formatNum = (num, len) => {
 	let str = num.toString(10);
 	let sl = str.length;
 
@@ -11,8 +9,8 @@ let formatNum = function (num, len) {
 	return str;
 };
 
-var d = new Date();
-var key =
+let d = new Date();
+let key =
 	formatNum(d.getFullYear(), 4) +
 	formatNum(d.getMonth() + 1, 2) +
 	formatNum(d.getDate(), 2) +
@@ -20,56 +18,19 @@ var key =
 	formatNum(d.getHours(), 2) +
 	formatNum(d.getMinutes(), 2) +
 	formatNum(d.getSeconds(), 2);
-console.log("Key: ", key);
 
-var bundleName = "bundle-" + key;
+let baseUrl = "https://botanicaplants.com";
 
-fs.ensureDirSync(".\\public-busted");
-fs.emptyDirSync(".\\public-busted");
-fs.ensureDirSync(".\\public-busted\\build");
+console.log({ key });
 
-fs.readFile(".\\public\\index.html", "utf8")
+fs.readFile(".\\dist\\index.html", "utf8")
 	.then((a) => {
 		return a
-			.replace(/bundle\.css/g, bundleName + ".css")
-			.replace(/bundle\.js/g, bundleName + ".js")
-			// .replace(/(<script>\s*var\sbaseURL\s=\s")[^"]+([^<]*<\/script>)/gm, "$1$2"); //appVersionKey = "version key"
-			.replace(/var\sbaseURL\s=\s"[^"]+";/gm, 'var baseURL = "";')
+			.replace(/(<script>\s*var\sbaseURL\s=\s")[^"]+([^<]*<\/script>)/gm, `$1${baseUrl}$2`)
+			.replace(/(<script>[^]*var\sappIsProduction\s=\s)false([^<]*<\/script>)/gm, "$1true$2")
 			.replace(/var\sappVersionKey\s=\s"[^"]+";/gm, 'var appVersionKey = "' + key + '";');
 	})
 	.then((a) => {
-		fs.writeFile(".\\public-busted\\index.html", a, "utf8");
+		fs.writeFile(".\\dist\\index.html", a, "utf8");
 	});
 
-fs.readFile(".\\public\\build\\bundle.css", "utf8")
-	.then((a) => {
-		return a.replace(/bundle\.css/g, bundleName + ".css");
-	})
-	.then((a) => {
-		fs.writeFile(".\\public-busted\\build\\" + bundleName + ".css", a, "utf8");
-	});
-
-// fs.readFile(".\\public\\build\\bundle.css.map", "utf8")
-// 	.then((a) => {
-// 		return a.replace(/bundle\.css/g, bundleName + ".css");
-// 	})
-// 	.then((a) => {
-// 		fs.writeFile(".\\public-busted\\build\\" + bundleName + ".css.map", a, "utf8");
-// 	})
-// 	.catch((e) => console.log({bundleCssMapErr: e}));
-
-fs.readFile(".\\public\\build\\bundle.js", "utf8")
-	.then((a) => {
-		return a.replace(/bundle\.js/g, bundleName + ".js");
-	})
-	.then((a) => {
-		fs.writeFile(".\\public-busted\\build\\" + bundleName + ".js", a, "utf8");
-	});
-
-fs.readFile(".\\public\\build\\bundle.js.map", "utf8")
-	.then((a) => {
-		return a.replace(/bundle\.js/g, bundleName + ".js");
-	})
-	.then((a) => {
-		fs.writeFile(".\\public-busted\\build\\" + bundleName + ".js.map", a, "utf8");
-	});

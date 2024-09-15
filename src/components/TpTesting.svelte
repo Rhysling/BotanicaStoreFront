@@ -1,8 +1,8 @@
-<script lang="js">
+<script lang="ts">
 	let foo = [1, 2, 3];
 
-	const arrow = (e) => {
-		switch(e.key) {
+	const arrow = (e: KeyboardEvent) => {
+		switch (e.key) {
 			case "ArrowRight":
 				alert("Right Arrow");
 				break;
@@ -10,11 +10,9 @@
 				alert("Left Arrow");
 				break;
 			default:
-				// noop
+			// noop
 		}
-
 	};
-
 </script>
 
 <svelte:window on:keydown={(e) => arrow(e)} />

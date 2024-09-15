@@ -1,4 +1,5 @@
 /node_modules/
+/dist/
 /public/build/
 /public-busted/
 
@@ -7,4 +8,5 @@ tools/
 secrets/
 ts-validation.txt
 
+/.vscode/
 .DS_Store

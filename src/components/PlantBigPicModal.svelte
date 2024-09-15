@@ -42,21 +42,31 @@
 			changePic(-1);
 		}
 	};
-
 </script>
 
 <svelte:window on:keydown={(e) => moveByArrow(e)} />
 <Modal {isShowModal} on:setmodal>
 	{#if isShowModal}
-	<div class="frame" on:click={(e) => e.stopPropagation()}>
-		{#if hasMultiple}
-			<a href="/" class="arrow left" on:click|preventDefault|stopPropagation={() => changePic(-1)}><i class="fas fa-angle-left"></i></a>
-		{/if}
-		<img src="{bigPicPaths[ix].path}" alt="Botanica plant" />
-		{#if hasMultiple}
-			<a href="/" class="arrow right" on:click|preventDefault|stopPropagation={() => changePic(1)}><i class="fas fa-angle-right"></i></a>
-		{/if}
-	</div>
+		<!-- svelte-ignore a11y-click-events-have-key-events a11y-no-static-element-interactions -->
+		<div class="frame" on:click={(e) => e.stopPropagation()}>
+			{#if hasMultiple}
+				<a
+					href="/"
+					class="arrow left"
+					on:click|preventDefault|stopPropagation={() => changePic(-1)}
+					><i class="fas fa-angle-left"></i></a
+				>
+			{/if}
+			<img src={bigPicPaths[ix].path} alt="Botanica plant" />
+			{#if hasMultiple}
+				<a
+					href="/"
+					class="arrow right"
+					on:click|preventDefault|stopPropagation={() => changePic(1)}
+					><i class="fas fa-angle-right"></i></a
+				>
+			{/if}
+		</div>
 	{/if}
 </Modal>
 
@@ -111,5 +121,4 @@
 			}
 		}
 	}
-
 </style>
