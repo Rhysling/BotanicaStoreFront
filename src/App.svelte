@@ -1,3 +1,5 @@
+<svelte:options runes={true} />
+
 <script lang="ts">
 	import { onMount } from "svelte";
 
@@ -47,8 +49,18 @@
 
 	type PK = keyof typeof pages;
 
-	let path = "/";
-	let page: PK = "Home";
+	let path = $derived($currentRoute.path || "/");
+	let pageName = $derived($currentRoute?.page ?? "Home") as PK;
+	let CurrentPage = $derived(pages[pageName]);
+
+	$effect(() => {
+		pageName;
+		window.scroll({
+			top: 0,
+			left: 0,
+			behavior: "smooth",
+		});
+	});
 
 	if ($user.userId) wls.init();
 
@@ -57,22 +69,11 @@
 	onMount(() => {
 		navFromUrl();
 	});
-
-	$: {
-		path = $currentRoute.path;
-		page = <PK>($currentRoute?.page ?? "Home");
-
-		window.scroll({
-			top: 0,
-			left: 0,
-			behavior: "smooth",
-		});
-	}
 </script>
 
 <main>
 	<Header />
-	<svelte:component this={pages[page]} />
+	<CurrentPage />
 	<Footer {path} />
 </main>
 

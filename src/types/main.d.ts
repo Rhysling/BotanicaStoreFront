@@ -1,49 +1,49 @@
 type Route = {
-  title: string;
-  navName?: string;
-  page: string;
-  path: string;
-  isAdmin?: boolean;
-  isHidden?: boolean;
-  isExpanded?: boolean;
-  hasParam?: boolean;
-  children?: Route[];
+	title: string;
+	navName?: string;
+	page: string;
+	path: string;
+	isAdmin?: boolean;
+	isHidden?: boolean;
+	isExpanded?: boolean;
+	hasParam?: boolean;
+	children?: Route[];
 };
 
 
 type UserClient = {
-  userId: number;
-  email: string;
-  fullName: string;
-  token: string;
-  isAdmin: boolean;
-  taxRate: number;
+	userId: number;
+	email: string;
+	fullName: string;
+	token: string;
+	isAdmin: boolean;
+	taxRate: number;
 };
 
 type JsonValue = string | number | boolean | null | JsonValue[] | { [key: string]: JsonValue };
 
 type PageState = {
-  itemsPerPage: number;
-  itemCount: number;
-  currentPage: number;
-  startIndex: number;
-  endIndex: number;
+	itemsPerPage: number;
+	itemCount: number;
+	currentPage: number;
+	startIndex: number;
+	endIndex: number;
 };
 
 type PicIdPath = {
-  picId: number;
-  path: string;
+	picId: number;
+	path: string;
 };
 
 type PicPaths = {
-  smPath: string;
-  lgPaths: PicIdPath[];
+	smPath: string;
+	lgPaths: PicIdPath[];
 };
 
 type PlantToggle = {
-  plantId: number;
-  val: boolean;
-  column?: "isListed" | "isFeatured"
+	plantId: number;
+	val: boolean;
+	column?: "isListed" | "isFeatured"
 };
 
 type PlantPriceMatrix = {
@@ -57,19 +57,19 @@ type PlantPriceMatrix = {
 
 type PlantFilter = {
 	filterText: string;
-  isNwNativeOnly: boolean;
-  includeNotAvailable: boolean;
+	isNwNativeOnly: boolean;
+	includeNotAvailable: boolean;
 };
 
 type PlantAdminFilter = {
-  filterType: "genus" | "all";
+	filterType: "genus" | "all";
 	filterText: string;
-  filterFlag: string;
-  isListedOnly: boolean;
-  isNwNativeOnly: boolean;
-  isByRecentUpdate: boolean;
+	filterFlag: string;
+	isListedOnly: boolean;
+	isNwNativeOnly: boolean;
+	isByRecentUpdate: boolean;
 };
 
 interface ILinkEdit extends ILink {
-  sortOrderEntered: string;
+	sortOrderEntered?: string;
 }
