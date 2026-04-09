@@ -1,5 +1,4 @@
 <script lang="ts">
-	import type { AxiosError } from "axios";
 	import { httpClient as ax } from "../stores/httpclient-store";
 	//import { currentParams } from "../stores/route-store";
 	import { picPaths, getBaseURL } from "../stores/utils";
@@ -19,7 +18,7 @@
 
 		try {
 			const response = await $ax.get<IPlant>(
-				`${baseURL || window.location.origin}/api/ListedPlants/FindBySlug?slug=${slug}`,
+				`${baseURL}/api/ListedPlants/FindBySlug?slug=${slug}`,
 			);
 			plant = response.data;
 
@@ -90,7 +89,7 @@
 {/if}
 
 <style lang="scss">
-	@import "../styles/_custom-variables.scss";
+	@use "../styles/_custom-variables.scss" as c;
 	.notice {
 		width: 100%;
 		text-align: center;
@@ -106,6 +105,7 @@
 	.top {
 		display: flex;
 		align-items: center;
+		text-wrap: balance;
 
 		img {
 			width: 150px;
@@ -146,7 +146,7 @@
 		.nwn {
 			font-weight: bold;
 			font-style: italic;
-			color: $main-color;
+			color: c.$main-color;
 		}
 	}
 
@@ -155,10 +155,10 @@
 		width: min(750px, 100%);
 		height: auto;
 		margin: 1rem auto;
-		border: 1px solid $main-color;
+		border: 1px solid c.$main-color;
 	}
 
-	@media screen and (max-width: $bp-small) {
+	@media screen and (max-width: c.$bp-small) {
 		.plant {
 			margin: 1rem;
 		}

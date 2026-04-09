@@ -290,7 +290,7 @@
 {/if}
 
 <style lang="scss">
-	@import "../../styles/_custom-variables.scss";
+	@use "../../styles/_custom-variables.scss" as c;
 
 	.add-plant {
 		margin-top: 0.5em;

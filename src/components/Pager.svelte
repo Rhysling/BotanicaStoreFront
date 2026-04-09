@@ -95,7 +95,7 @@
 </div>
 
 <style lang="scss">
-	@import "../styles/_custom-variables.scss";
+	@use "../styles/_custom-variables.scss" as c;
 
 	div {
 		font-size: 0.8rem;
@@ -108,7 +108,7 @@
 
 	.disabled {
 		cursor: default;
-		color: $text-disabled;
+		color: c.$text-disabled;
 
 		&:hover {
 			text-decoration: none;

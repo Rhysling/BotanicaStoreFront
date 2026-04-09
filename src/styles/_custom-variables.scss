@@ -1,6 +1,8 @@
+@use "sass:color";
+
 // Set your brand colors
-$main-color: rgb(70,69,5);
-$second-color: rgb(50,67,115);
+$main-color: rgb(70, 69, 5);
+$second-color: rgb(50, 67, 115);
 $text-color: #333;
 $text-reverse-color: #eee;
 $text-disabled: #999;
@@ -19,4 +21,4 @@ $bp-small: 560px;
 
 $link: $main-color;
 $link-visited: $main-color;
-$link-hover: darken($main-color, 15%);
+$link-hover: color.scale($main-color, $lightness: -15%, $space: oklch);

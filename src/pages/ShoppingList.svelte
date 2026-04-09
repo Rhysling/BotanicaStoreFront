@@ -339,7 +339,8 @@
 </Modal>
 
 <style lang="scss">
-	@import "../styles/_custom-variables.scss";
+	@use "../styles/_custom-variables.scss" as c;
+	@use "sass:color";
 
 	.container {
 		position: relative;
@@ -348,7 +349,7 @@
 		max-width: 610px;
 		background-color: antiquewhite;
 
-		@media screen and (max-width: $bp-small) {
+		@media screen and (max-width: c.$bp-small) {
 			margin: 1rem 0;
 		}
 	}
@@ -418,11 +419,11 @@
 
 				a {
 					display: inline-block;
-					color: $main-color;
+					color: c.$main-color;
 					margin-right: 0.25em;
 
 					&[data-disabled] {
-						color: $text-disabled;
+						color: c.$text-disabled;
 						cursor: default;
 					}
 				}
@@ -470,12 +471,12 @@
 		}
 
 		.wl-add {
-			border: 2px solid $main-color;
+			border: 2px solid c.$main-color;
 			border-radius: 5px;
 			background-color: #eeffee;
 			padding: 0.6rem;
 
-			@media screen and (max-width: $bp-small) {
+			@media screen and (max-width: c.$bp-small) {
 				font-size: 0.9rem;
 			}
 
@@ -530,16 +531,24 @@
 	}
 
 	.error-input {
-		box-shadow: 0 0 2px 2px $error-secondary;
-		border: 1px solid $error-primary;
-		color: darken($error-primary, 10%);
-		background-color: lighten($error-secondary, 5%);
+		box-shadow: 0 0 2px 2px c.$error-secondary;
+		border: 1px solid c.$error-primary;
+		color: color.scale(c.$error-primary, $lightness: -10%, $space: oklch);
+		background-color: color.scale(
+			c.$error-secondary,
+			$lightness: 5%,
+			$space: oklch
+		);
 	}
 
 	.error-box {
-		border: 1px solid $error-primary;
-		color: darken($error-primary, 10%);
-		background-color: lighten($error-secondary, 5%);
+		border: 1px solid c.$error-primary;
+		color: color.scale(c.$error-primary, $lightness: -10%, $space: oklch);
+		background-color: color.scale(
+			c.$error-secondary,
+			$lightness: 5%,
+			$space: oklch
+		);
 	}
 
 	.pot-size-container {
@@ -558,7 +567,7 @@
 			margin: 0 auto;
 		}
 
-		@media screen and (max-width: $bp-small) {
+		@media screen and (max-width: c.$bp-small) {
 			top: 2rem;
 			right: 2rem;
 			bottom: 2rem;

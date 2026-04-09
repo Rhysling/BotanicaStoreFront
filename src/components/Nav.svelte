@@ -78,7 +78,8 @@
 <svelte:body on:click={() => setOpenRoot(false)} />
 
 <style lang="scss">
-	@import "../styles/_custom-variables.scss";
+	@use "../styles/_custom-variables.scss" as c;
+	@use "sass:color";
 
 	.icon::after {
 		display: inline-block;
@@ -91,7 +92,7 @@
 
 	nav {
 		display: flex;
-		background-color: $nav-bg-color;
+		background-color: c.$nav-bg-color;
 
 		a {
 			display: block;
@@ -106,13 +107,17 @@
 		// }
 
 		a:hover {
-			background-color: darken($nav-bg-color, 10%);
+			background-color: color.scale(
+				c.$nav-bg-color,
+				$lightness: -10%,
+				$space: oklch
+			);
 		}
 
 		a.selected {
 			color: #eee;
 			box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.6);
-			background-color: $main-color;
+			background-color: c.$main-color;
 			cursor: default;
 
 			&:hover {
@@ -134,7 +139,7 @@
 		.dropdown-content {
 			display: none;
 			position: absolute;
-			background-color: $nav-drop-bg-color;
+			background-color: c.$nav-drop-bg-color;
 			min-width: 160px;
 			box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
 			padding: 0.5em 0.75em;
@@ -147,11 +152,15 @@
 			}
 
 			a:hover {
-				background-color: darken($nav-drop-bg-color, 10%);
+				background-color: color.scale(
+					c.$nav-drop-bg-color,
+					$lightness: -10%,
+					$space: oklch
+				);
 			}
 
 			a.selected:hover {
-				background-color: $main-color;
+				background-color: c.$main-color;
 			}
 		}
 
@@ -168,10 +177,10 @@
 		display: none;
 	}
 
-	@media screen and (max-width: $bp-small) {
+	@media screen and (max-width: c.$bp-small) {
 		.nav-toggle {
 			display: block;
-			background-color: $nav-bg-color;
+			background-color: c.$nav-bg-color;
 			padding: 0.5em;
 
 			i {

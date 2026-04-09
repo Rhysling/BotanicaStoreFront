@@ -103,7 +103,7 @@
 </div>
 
 <style lang="scss">
-	@import "../../styles/_custom-variables.scss";
+	@use "../../styles/_custom-variables.scss" as c;
 
 	.editor {
 		padding: 3rem;
@@ -162,11 +162,11 @@
 	}
 
 	.dz-frame {
-		border: 2px solid $main-color;
+		border: 2px solid c.$main-color;
 		margin: 0.5rem 0 0 0;
 
 		&:hover {
-			box-shadow: 0 0 2px 2px $main-color;
+			box-shadow: 0 0 2px 2px c.$main-color;
 		}
 	}
 </style>

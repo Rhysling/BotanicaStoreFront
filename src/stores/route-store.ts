@@ -1,5 +1,6 @@
 import { writable, derived, get } from "svelte/store";
 import { user } from "./user-store";
+import { getBaseURL } from "./utils";
 
 let getBaseRoutes = (): Route => {
 
@@ -31,7 +32,7 @@ let getBaseRoutes = (): Route => {
 						page: "Links",
 						path: "/links",
 						children: []
-					},{
+					}, {
 						title: "About Botanica",
 						page: "About",
 						path: "/about",
@@ -129,14 +130,12 @@ let getBaseRoutes = (): Route => {
 	};
 };
 
-function filterAdminRoutes (node: Route) {
+function filterAdminRoutes(node: Route) {
 	if (node.children)
 		node.children = node.children.filter(a => a.isAdmin !== true).map(a => filterAdminRoutes(a));
 
 	return node;
 }
-
-
 
 function findRoute(routeRoot: Route, path: string): Route | undefined {
 	let cr: Route | undefined;
@@ -167,6 +166,8 @@ function findRoute(routeRoot: Route, path: string): Route | undefined {
 	return cr;
 }
 
+const baseUrl = getBaseURL();
+
 // Stores
 
 export const routes = derived(user, ($user) => {
@@ -195,8 +196,8 @@ export const currentRoute = derived([routes, currentPath], ([$routes, $currentPa
 let paramStringToObj = (inp: string) => {
 	let entries = (new URLSearchParams(inp)).entries();
 	let p: any = {};
-	for(let [key, val] of entries) {
-		switch(val) {
+	for (let [key, val] of entries) {
+		switch (val) {
 			case "true":
 				p[key] = true;
 				break;
@@ -218,8 +219,8 @@ let objToParamString = (inp: any) => {
 	if (!entries.length) return "";
 
 	let p = new URLSearchParams();
-	for(let [key, val] of entries) {
-		if (val === null || val === undefined || val ==="") continue;
+	for (let [key, val] of entries) {
+		if (val === null || val === undefined || val === "") continue;
 		p.append(key, <string>val);
 	}
 
@@ -233,7 +234,7 @@ export const navFromUrl = function () {
 	let r = findRoute(get(routes), pathName);
 
 	if (!r) {
-		window.location.replace(window.location.origin);
+		window.location.replace(baseUrl);
 		currentPath.set("/");
 		return;
 	}
@@ -244,7 +245,7 @@ export const navFromUrl = function () {
 		const re = /.*\/([^\/]+)\/?$/;
 		let match = pathName.match(re);
 		if (!match) {
-			window.location.replace(window.location.origin);
+			window.location.replace(baseUrl);
 			return;
 		}
 		p = { id: match[1] };
@@ -266,11 +267,11 @@ export const paramsFromUrl = () => {
 
 export const navTo = function (e: MouseEvent | null, pathName: string, params?: any) {
 	e && e.preventDefault();
-	let url = window.location.origin + pathName;
+	let url = baseUrl + pathName;
 
 	let r = findRoute(get(routes), pathName);
 	if (!r) {
-		window.location.replace(window.location.origin);
+		window.location.replace(baseUrl);
 		currentPath.set("/");
 		return;
 	}
@@ -279,7 +280,7 @@ export const navTo = function (e: MouseEvent | null, pathName: string, params?: 
 		const re = /.*\/([^\/]+)\/?$/;
 		let match = pathName.match(re);
 		if (!match) {
-			window.location.replace(window.location.origin);
+			window.location.replace(baseUrl);
 			return;
 		}
 		params = { id: match[1] };
@@ -310,6 +311,6 @@ window.onpopstate = () => {
 	if (r) {
 		currentPath.set(pathName);
 	} else {
-		window.location.replace(window.location.origin);
+		window.location.replace(baseUrl);
 	}
 };

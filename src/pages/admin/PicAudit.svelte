@@ -162,7 +162,7 @@
 {/if}
 
 <style lang="scss">
-	@import "../../styles/_custom-variables.scss";
+	@use "../../styles/_custom-variables.scss" as c;
 
 	.section {
 		margin: 1.5rem 0 0.5rem;

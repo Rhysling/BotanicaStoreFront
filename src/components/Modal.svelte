@@ -28,7 +28,7 @@
 </div>
 
 <style lang="scss">
-	@import "../styles/_custom-variables.scss";
+	@use "../styles/_custom-variables.scss" as c;
 
 	.modal {
 		position: fixed;

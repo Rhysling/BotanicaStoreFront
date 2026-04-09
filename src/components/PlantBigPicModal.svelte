@@ -71,7 +71,7 @@
 </Modal>
 
 <style lang="scss">
-	@import "../styles/_custom-variables.scss";
+	@use "../styles/_custom-variables.scss" as c;
 
 	.frame {
 		position: relative;

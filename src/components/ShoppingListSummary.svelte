@@ -58,14 +58,14 @@
 </Modal>
 
 <style lang="scss">
-	@import "../styles/_custom-variables.scss";
+	@use "../styles/_custom-variables.scss" as c;
 
 	.container {
 		margin: 5rem;
 		padding: 3rem 0;
 		background-color: antiquewhite;
 
-		@media screen and (max-width: $bp-small) {
+		@media screen and (max-width: c.$bp-small) {
 			margin: 2rem;
 		}
 	}

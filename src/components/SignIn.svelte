@@ -170,7 +170,7 @@
 </Modal>
 
 <style lang="scss">
-	@import "../styles/_custom-variables.scss";
+	@use "../styles/_custom-variables.scss" as c;
 
 	.modal-content {
 		position: relative;
@@ -201,7 +201,7 @@
 		margin-top: 1rem;
 		padding-left: 35%;
 
-		@media screen and (max-width: $bp-small) {
+		@media screen and (max-width: c.$bp-small) {
 			padding-left: 3rem;
 		}
 

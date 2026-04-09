@@ -124,7 +124,8 @@
 {/if}
 
 <style lang="scss">
-	@import "../../styles/_custom-variables.scss";
+	@use "../../styles/_custom-variables.scss" as c;
+	@use "sass:color";
 
 	.search {
 		display: flex;
@@ -133,7 +134,7 @@
 		font-size: 0.8rem;
 		margin-top: 0.5em;
 		padding: 0.2rem 0.4rem;
-		background-color: $beige-lighter;
+		background-color: c.$beige-lighter;
 
 		input {
 			position: relative;
@@ -154,7 +155,7 @@
 		border: 1px solid black;
 		font-size: 0.9rem;
 
-		@media screen and (max-width: $bp-small) {
+		@media screen and (max-width: c.$bp-small) {
 			margin: 0.4rem 0 0;
 		}
 
@@ -168,7 +169,7 @@
 	.title {
 		font-size: 1rem;
 		font-weight: bold;
-		color: $main-color;
+		color: c.$main-color;
 	}
 
 	.url {
@@ -184,11 +185,11 @@
 	}
 
 	.is-deleted {
-		color: $text-disabled;
-		background-color: $text-reverse-color;
+		color: c.$text-disabled;
+		background-color: c.$text-reverse-color;
 
 		.title {
-			color: lighten($main-color, 5%);
+			color: color.scale(c.$main-color, $lightness: 5%, $space: oklch);
 		}
 	}
 

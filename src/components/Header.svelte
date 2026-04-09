@@ -3,13 +3,14 @@
 	import Headroom from "./Headroom.svelte"; // Thanks to "svelte-headroom"
 	import UserBar from "./UserBar.svelte";
 	import Nav from "./Nav.svelte";
+	import { getBaseURL } from "../stores/utils";
 </script>
 
 <div class="page-head" class:subpage={$currentPath != "/"}>
 	<a href="/" on:click={(e) => navTo(e, "/")}>
 		<img
 			class="logo"
-			src="{window.location.origin}/assets/img/botanica-logo-512x512.png"
+			src="{getBaseURL()}/assets/img/botanica-logo-512x512.png"
 			alt="Botanica"
 		/>
 	</a>
@@ -19,7 +20,7 @@
 	</div>
 	<img
 		class="logo"
-		src="{window.location.origin}/assets/img/botanica-logo-512x512.png"
+		src="{getBaseURL()}/assets/img/botanica-logo-512x512.png"
 		alt="Botanica"
 	/>
 </div>
@@ -36,7 +37,8 @@
 </Headroom>
 
 <style lang="scss">
-	@import "../styles/_custom-variables.scss";
+	@use "../styles/_custom-variables.scss" as c;
+	@use "sass:color";
 
 	.page-head {
 		display: flex;
@@ -59,7 +61,7 @@
 			font-size: clamp(30px, 11vw - 3px, 85px);
 			text-transform: uppercase;
 			text-align: center;
-			color: $second-color;
+			color: c.$second-color;
 		}
 
 		.page-name {
@@ -78,13 +80,13 @@
 
 		.botanica {
 			font-size: 30px;
-			color: $second-color;
+			color: c.$second-color;
 		}
 
 		.page-name {
 			display: block;
 			font-size: clamp(30px, 13vw - 50px, 45px);
-			color: darken($main-color, 5%);
+			color: color.scale(c.$main-color, $lightness: -5%, $space: oklch);
 		}
 	}
 
@@ -94,10 +96,11 @@
 		font-size: 0.75rem;
 		width: 100%;
 		text-align: center;
+		text-wrap: balance;
 		margin-bottom: 0.5rem;
 	}
 
-	@media screen and (max-width: $bp-small) {
+	@media screen and (max-width: c.$bp-small) {
 		.page-head {
 			display: block;
 

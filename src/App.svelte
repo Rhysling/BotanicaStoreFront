@@ -78,7 +78,7 @@
 </main>
 
 <style lang="scss">
-	@import "./styles/_custom-variables.scss";
+	@use "./styles/_custom-variables.scss" as c;
 
 	main {
 		background-color: #fff;
@@ -87,6 +87,6 @@
 		margin: 0 auto;
 	}
 
-	@media only screen and (max-width: $bp-small) {
+	@media only screen and (max-width: c.$bp-small) {
 	}
 </style>

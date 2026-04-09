@@ -170,7 +170,8 @@
 </Modal>
 
 <style lang="scss">
-	@import "../../styles/_custom-variables.scss";
+	@use "../../styles/_custom-variables.scss" as c;
+	@use "sass:color";
 
 	.editor {
 		margin: 5rem 5rem;
@@ -214,15 +215,19 @@
 		}
 
 		.error {
-			color: $error-primary;
+			color: c.$error-primary;
 			font-size: 0.9rem;
 		}
 
 		.error-box {
-			box-shadow: 0 0 2px 2px $error-secondary;
-			border: 1px solid $error-primary;
-			color: darken($error-primary, 10%);
-			background-color: lighten($error-secondary, 5%);
+			box-shadow: 0 0 2px 2px c.$error-secondary;
+			border: 1px solid c.$error-primary;
+			color: color.scale(c.$error-primary, $lightness: -10%, $space: oklch);
+			background-color: color.scale(
+				c.$error-secondary,
+				$lightness: 5%,
+				$space: oklch
+			);
 		}
 
 		.buttons {

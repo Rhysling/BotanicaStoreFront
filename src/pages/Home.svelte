@@ -1,10 +1,12 @@
 <script lang="ts">
 	import type { AxiosResponse } from "axios";
+	import DOMPurify from "dompurify";
 	import { httpClient as ax } from "../stores/httpclient-store";
 	import { navTo, isLiveOnlineShopping } from "../stores/route-store.js";
 	import { isLoggedIn } from "../stores/user-store.js";
 	import { isShowHowWlWorks } from "../stores/wishlist-store.js";
 	import HomeFeaturedPlant from "../components/HomeFeaturedPlant.svelte";
+	import { getBaseURL } from "../stores/utils";
 
 	let nextSale: ICalendar | null = null;
 
@@ -39,7 +41,7 @@
 		</div>
 		<div class="card-oldfriend">
 			<img
-				src="{window.location.origin}/assets/img/bench-350x230.jpg"
+				src="{getBaseURL()}/assets/img/bench-350x230.jpg"
 				alt="Hello, old friend"
 			/>
 			<div class="small" style="display:none;">An old friend...</div>
@@ -97,7 +99,9 @@
 					</div>
 					<div class="details">
 						<div class="title">{nextSale.title}</div>
-						<div class="description">{@html nextSale.description}</div>
+						<div class="description">
+							{@html DOMPurify.sanitize(nextSale.description)}
+						</div>
 						<div class="location">{nextSale.location}</div>
 					</div>
 				</div>
@@ -114,7 +118,8 @@
 </div>
 
 <style lang="scss">
-	@import "../styles/_custom-variables.scss";
+	@use "../styles/_custom-variables.scss" as c;
+	@use "sass:color";
 
 	.content {
 		display: flex;
@@ -150,7 +155,7 @@
 
 	.title {
 		font-weight: bold;
-		color: $main-color;
+		color: c.$main-color;
 		text-align: center;
 		text-wrap: balance;
 		margin: 0.8rem 0.5rem 0.5rem;
@@ -210,7 +215,7 @@
 		}
 
 		.t2 {
-			color: $second-color;
+			color: c.$second-color;
 		}
 
 		a {
@@ -237,7 +242,7 @@
 
 		.date-sep {
 			font-size: 0.8rem;
-			color: lighten($text-color, 5%);
+			color: color.scale(c.$text-color, $lightness: 5%, $space: oklch);
 		}
 
 		.time {
@@ -253,7 +258,7 @@
 		}
 
 		.special-title {
-			color: $main-color;
+			color: c.$main-color;
 			font-size: 1rem;
 			font-weight: bold;
 			text-align: center;
@@ -273,7 +278,7 @@
 		}
 	}
 
-	@media screen and (max-width: $bp-small) {
+	@media screen and (max-width: c.$bp-small) {
 		.content {
 			display: block;
 
