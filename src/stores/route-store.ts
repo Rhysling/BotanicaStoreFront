@@ -1,6 +1,5 @@
 import { writable, derived, get } from "svelte/store";
 import { user } from "./user-store";
-import { getBaseURL } from "./utils";
 
 let getBaseRoutes = (): Route => {
 
@@ -166,8 +165,6 @@ function findRoute(routeRoot: Route, path: string): Route | undefined {
 	return cr;
 }
 
-const baseUrl = getBaseURL();
-
 // Stores
 
 export const routes = derived(user, ($user) => {
@@ -234,7 +231,7 @@ export const navFromUrl = function () {
 	let r = findRoute(get(routes), pathName);
 
 	if (!r) {
-		window.location.replace(baseUrl);
+		window.location.replace("/");
 		currentPath.set("/");
 		return;
 	}
@@ -245,7 +242,7 @@ export const navFromUrl = function () {
 		const re = /.*\/([^\/]+)\/?$/;
 		let match = pathName.match(re);
 		if (!match) {
-			window.location.replace(baseUrl);
+			window.location.replace("/");
 			return;
 		}
 		p = { id: match[1] };
@@ -267,11 +264,12 @@ export const paramsFromUrl = () => {
 
 export const navTo = function (e: MouseEvent | null, pathName: string, params?: any) {
 	e && e.preventDefault();
-	let url = baseUrl + pathName;
+	//let url = baseUrl + pathName;
+	let url = pathName;
 
 	let r = findRoute(get(routes), pathName);
 	if (!r) {
-		window.location.replace(baseUrl);
+		window.location.replace("/");
 		currentPath.set("/");
 		return;
 	}
@@ -280,7 +278,7 @@ export const navTo = function (e: MouseEvent | null, pathName: string, params?: 
 		const re = /.*\/([^\/]+)\/?$/;
 		let match = pathName.match(re);
 		if (!match) {
-			window.location.replace(baseUrl);
+			window.location.replace("/");
 			return;
 		}
 		params = { id: match[1] };
@@ -311,6 +309,6 @@ window.onpopstate = () => {
 	if (r) {
 		currentPath.set(pathName);
 	} else {
-		window.location.replace(baseUrl);
+		window.location.replace("/");
 	}
 };

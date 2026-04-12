@@ -3,14 +3,13 @@
 	import Headroom from "./Headroom.svelte"; // Thanks to "svelte-headroom"
 	import UserBar from "./UserBar.svelte";
 	import Nav from "./Nav.svelte";
-	import { getBaseURL } from "../stores/utils";
 </script>
 
 <div class="page-head" class:subpage={$currentPath != "/"}>
 	<a href="/" on:click={(e) => navTo(e, "/")}>
 		<img
 			class="logo"
-			src="{getBaseURL()}/assets/img/botanica-logo-512x512.png"
+			src="/assets/img/botanica-logo-512x512.png"
 			alt="Botanica"
 		/>
 	</a>
@@ -20,7 +19,7 @@
 	</div>
 	<img
 		class="logo"
-		src="{getBaseURL()}/assets/img/botanica-logo-512x512.png"
+		src="/assets/img/botanica-logo-512x512.png"
 		alt="Botanica"
 	/>
 </div>

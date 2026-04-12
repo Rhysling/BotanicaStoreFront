@@ -40,10 +40,7 @@
 			</p>
 		</div>
 		<div class="card-oldfriend">
-			<img
-				src="{getBaseURL()}/assets/img/bench-350x230.jpg"
-				alt="Hello, old friend"
-			/>
+			<img src="/assets/img/bench-350x230.jpg" alt="Hello, old friend" />
 			<div class="small" style="display:none;">An old friend...</div>
 		</div>
 		<div class="card-special" style="display:none;">
