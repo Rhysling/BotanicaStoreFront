@@ -53,6 +53,7 @@
 				<a
 					href="/"
 					class="arrow left"
+					title="Left"
 					on:click|preventDefault|stopPropagation={() => changePic(-1)}
 					><i class="fas fa-angle-left"></i></a
 				>
@@ -62,6 +63,7 @@
 				<a
 					href="/"
 					class="arrow right"
+					title="Right"
 					on:click|preventDefault|stopPropagation={() => changePic(1)}
 					><i class="fas fa-angle-right"></i></a
 				>

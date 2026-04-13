@@ -14,6 +14,7 @@
 <div
 	class="modal"
 	role="dialog"
+	tabindex="0"
 	on:click={() => setModal(false)}
 	style="display:{isShowModal ? 'block' : 'none'}"
 >

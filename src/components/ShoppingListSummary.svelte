@@ -50,7 +50,12 @@
 
 <Modal isShowModal={$isShowHowWlWorks} on:setmodal={cancel}>
 	<!-- svelte-ignore a11y-click-events-have-key-events a11y-no-noninteractive-element-interactions -->
-	<div class="container" on:click={(e) => e.stopPropagation()} role="dialog">
+	<div
+		class="container"
+		on:click={(e) => e.stopPropagation()}
+		role="dialog"
+		tabindex="0"
+	>
 		<div class="content">
 			<div class="modal-title">[Describe how the Shopping List works...]</div>
 		</div>
