@@ -1,3 +1,5 @@
+<svelte:options runes={true} />
+
 <script lang="ts">
 	import { listedPlants as lp } from "../stores/listedplants-store";
 	import { onDestroy } from "svelte";
@@ -7,23 +9,26 @@
 	import PlantBigPicModal from "../components/PlantBigPicModal.svelte";
 
 	let listedPlants: IvwListedPlant[] = [];
-	let filteredPlants: IvwListedPlant[] = [];
-	let pagedPlants: IvwListedPlant[] = [];
+	let filteredPlants: IvwListedPlant[] = $state([]);
+	let pagedPlants: IvwListedPlant[] = $derived.by(() =>
+		filteredPlants.slice(startIndex, endIndex),
+	);
 
-	let plantListFilter: PlantFilter = {
+	let plantListFilter: PlantFilter = $state({
 		filterText: "",
 		isNwNativeOnly: false,
 		includeNotAvailable: true,
-	};
+	});
 
-	let itemCount = 0;
+	let itemCount = $derived(filteredPlants.length);
 	let itemsPerPage = 25;
-	let startIndex = 0;
-	let endIndex = 0;
-	let currentPageIn = 1;
+	let startIndex = $state(0);
+	let endIndex = $derived(Math.min(startIndex + itemsPerPage, itemCount));
 
-	let bigPicPaths: PicIdPath[] = [];
-	let isShowModal = false;
+	let currentPageIn = $state(1);
+
+	let bigPicPaths: PicIdPath[] = $state([]);
+	let isShowModal = $state(false);
 
 	let showBigPics = (e: CustomEvent<PicIdPath[]>) => {
 		bigPicPaths = e.detail;
@@ -65,11 +70,8 @@
 		};
 
 		filteredPlants = listedPlants.filter(f);
-		itemCount = filteredPlants.length;
 		currentPageIn = 1;
 		startIndex = 0;
-		endIndex = Math.min(startIndex + itemsPerPage, itemCount);
-		pagedPlants = filteredPlants.slice(startIndex, endIndex);
 	};
 
 	// *** Init ***
@@ -78,12 +80,6 @@
 	const unsubscribe = lp.subscribe((value) => {
 		listedPlants = value;
 		filterPlants();
-		itemCount = filteredPlants.length;
-		//currentPage = 1;
-		startIndex = 0;
-		endIndex = Math.min(startIndex + itemsPerPage, itemCount);
-
-		pagedPlants = filteredPlants.slice(startIndex, endIndex);
 	});
 
 	onDestroy(unsubscribe);

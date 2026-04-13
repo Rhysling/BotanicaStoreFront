@@ -41,6 +41,7 @@
 			endIndex: Math.min(startIndex + itemsPerPage, itemCount),
 		};
 		dispatch("pageChanged", ps);
+		window.scrollTo({ top: 0, behavior: "smooth" });
 	};
 
 	const setPage = (n: number) => {

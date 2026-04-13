@@ -1,3 +1,5 @@
+<svelte:options runes={true} />
+
 <script lang="ts">
 	import type { AxiosResponse } from "axios";
 	import DOMPurify from "dompurify";
@@ -7,7 +9,7 @@
 	import { isShowHowWlWorks } from "../stores/wishlist-store.js";
 	import HomeFeaturedPlant from "../components/HomeFeaturedPlant.svelte";
 
-	let nextSale: ICalendar | null = null;
+	let nextSale: ICalendar | null = $state(null);
 
 	$ax
 		.get("/api/Calendar/GetNext")
@@ -69,7 +71,7 @@
 					order, cooridnate with you on any changes or adjustments, and let you
 					know when it is ready for pickup.
 				</div>
-				<a href="/" on:click={(e) => goToShoppingList(e)}
+				<a href="/" onclick={(e) => goToShoppingList(e)}
 					>Start your plant shopping list...</a
 				>
 			</div>
@@ -101,7 +103,7 @@
 						<div class="location">{nextSale.location}</div>
 					</div>
 				</div>
-				<a href="/" on:click={(e) => navTo(e, "/calendar")}
+				<a href="/" onclick={(e) => navTo(e, "/calendar")}
 					>See Calendar of Upcoming Plant Sales</a
 				>
 			{:else}
