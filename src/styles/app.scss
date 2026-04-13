@@ -37,11 +37,12 @@ body {
 
 a,
 a:visited {
-	color: rgb(0, 100, 200);
+	color: c.$link-color;
 	text-decoration: none;
 }
 
 a:hover {
+	color: c.$link-hover;
 	text-decoration: underline;
 }
 

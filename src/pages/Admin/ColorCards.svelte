@@ -1,7 +1,7 @@
 <script lang="ts">
 	import type { AxiosResponse } from "axios";
 	import { httpClient as ax } from "../../stores/httpclient-store";
-	import { navTo } from "../../stores/route-store";
+	import { navTo } from "../../stores/route-store.svelte";
 	import Swal from "sweetalert2";
 
 	let list: IvwFlagSummary[] = [];

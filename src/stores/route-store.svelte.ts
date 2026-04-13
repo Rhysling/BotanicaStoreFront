@@ -1,5 +1,7 @@
-import { writable, derived, get } from "svelte/store";
+import { fromStore } from "svelte/store";
 import { user } from "./user-store";
+
+// --- Pure helper functions ---
 
 let getBaseRoutes = (): Route => {
 
@@ -165,30 +167,7 @@ function findRoute(routeRoot: Route, path: string): Route | undefined {
 	return cr;
 }
 
-// Stores
-
-export const routes = derived(user, ($user) => {
-	let r = getBaseRoutes();
-
-	if (!$user.isAdmin)
-		r = filterAdminRoutes(r)
-
-	return r;
-});
-
-export const currentPath = writable("/");
-export const currentParams = writable<any>({});
-export const isLiveOnlineShopping = writable(false);
-
-export const currentRoute = derived([routes, currentPath], ([$routes, $currentPath]) => {
-	let r = findRoute($routes, $currentPath);
-	if (r) return r;
-
-	$currentPath = "/";
-	return $routes;
-});
-
-// Param functions
+// --- Param functions ---
 
 let paramStringToObj = (inp: string) => {
 	let entries = (new URLSearchParams(inp)).entries();
@@ -224,15 +203,45 @@ let objToParamString = (inp: any) => {
 	return "?" + p.toString();
 };
 
-// Public Functions
+// --- Reactive state ---
+
+const userFromStore = fromStore(user);
+
+let _currentPath = $state("/");
+let _currentParams = $state<any>({});
+let _isLiveOnlineShopping = $state(false);
+
+const _routes = $derived.by(() => {
+	let r = getBaseRoutes();
+	if (!userFromStore.current.isAdmin) r = filterAdminRoutes(r);
+	return r;
+});
+
+const _currentRoute = $derived.by(() => {
+	let r = findRoute(_routes, _currentPath);
+	return r ?? _routes;
+});
+
+// --- Public store object ---
+
+export const routeStore = {
+	get currentPath() { return _currentPath; },
+	get currentParams() { return _currentParams; },
+	get isLiveOnlineShopping() { return _isLiveOnlineShopping; },
+	set isLiveOnlineShopping(v: boolean) { _isLiveOnlineShopping = v; },
+	get routes() { return _routes; },
+	get currentRoute() { return _currentRoute; },
+};
+
+// --- Public functions ---
 
 export const navFromUrl = function () {
 	let pathName = window.location.pathname;
-	let r = findRoute(get(routes), pathName);
+	let r = findRoute(_routes, pathName);
 
 	if (!r) {
 		window.location.replace("/");
-		currentPath.set("/");
+		_currentPath = "/";
 		return;
 	}
 
@@ -251,26 +260,25 @@ export const navFromUrl = function () {
 		p = paramStringToObj(window.location.search);
 	}
 
-	currentPath.set(pathName);
-	currentParams.set(p);
+	_currentPath = pathName;
+	_currentParams = p;
 	document.title = `Botanica - ${r.title}`;
 };
 
 export const paramsFromUrl = () => {
 	const p = paramStringToObj(window.location.search);
-	currentParams.set(p);
+	_currentParams = p;
 	return p;
 };
 
 export const navTo = function (e: MouseEvent | null, pathName: string, params?: any) {
 	e && e.preventDefault();
-	//let url = baseUrl + pathName;
 	let url = pathName;
 
-	let r = findRoute(get(routes), pathName);
+	let r = findRoute(_routes, pathName);
 	if (!r) {
 		window.location.replace("/");
-		currentPath.set("/");
+		_currentPath = "/";
 		return;
 	}
 
@@ -282,32 +290,32 @@ export const navTo = function (e: MouseEvent | null, pathName: string, params?: 
 			return;
 		}
 		params = { id: match[1] };
-		currentParams.set(params);
+		_currentParams = params;
 	}
 	else {
 		if (params) {
 			url += objToParamString(params);
-			currentParams.set(params);
+			_currentParams = params;
 		}
 		else {
-			currentParams.set({});
+			_currentParams = {};
 		}
 	}
 
-	currentPath.set(pathName);
+	_currentPath = pathName;
 	document.title = `Botanica - ${r.title}`;
 
 	window.history.pushState({}, pathName, url);
 };
 
-// Back Button
+// --- Back button ---
 
 window.onpopstate = () => {
 	let pathName = window.location.pathname;
-	let r = findRoute(get(routes), pathName);
+	let r = findRoute(_routes, pathName);
 
 	if (r) {
-		currentPath.set(pathName);
+		_currentPath = pathName;
 	} else {
 		window.location.replace("/");
 	}

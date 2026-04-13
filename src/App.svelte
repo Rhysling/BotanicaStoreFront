@@ -23,7 +23,7 @@
 	import ColorCards from "./pages/admin/ColorCards.svelte";
 	import PicAudit from "./pages/admin/PicAudit.svelte";
 
-	import { currentRoute, navFromUrl } from "./stores/route-store";
+	import { routeStore, navFromUrl } from "./stores/route-store.svelte";
 	import { user } from "./stores/user-store";
 	import { wishListStore as wls } from "./stores/wishlist-store";
 	import { availablePlantsStore as aps } from "./stores/availableplants-store";
@@ -49,8 +49,8 @@
 
 	type PK = keyof typeof pages;
 
-	let path = $derived($currentRoute.path || "/");
-	let pageName = $derived($currentRoute?.page ?? "Home") as PK;
+	let path = $derived(routeStore.currentRoute.path || "/");
+	let pageName = $derived(routeStore.currentRoute?.page ?? "Home") as PK;
 	let CurrentPage = $derived(pages[pageName]);
 
 	$effect(() => {

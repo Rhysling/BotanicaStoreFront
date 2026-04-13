@@ -18,7 +18,6 @@ $error-secondary: rgb(255, 212, 209);
 
 $bp-small: 560px;
 
-
-$link: $main-color;
-$link-visited: $main-color;
-$link-hover: color.scale($main-color, $lightness: -15%, $space: oklch);
+$link-color: rgb(0, 100, 200);
+$link-visited: $link-color;
+$link-hover: color.scale($link-color, $lightness: -15%, $space: oklch);

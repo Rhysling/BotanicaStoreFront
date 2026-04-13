@@ -5,7 +5,7 @@
 		isShowHowWlWorks,
 	} from "../stores/wishlist-store";
 	import { user, isLoggedIn } from "../stores/user-store";
-	import { navTo, isLiveOnlineShopping } from "../stores/route-store.js";
+	import { navTo, routeStore } from "../stores/route-store.svelte";
 	import Modal from "./Modal.svelte";
 
 	let linkText = "";
@@ -38,7 +38,7 @@
 	// *** Initialize
 </script>
 
-{#if $isLiveOnlineShopping}
+{#if routeStore.isLiveOnlineShopping}
 	{#if $isLoggedIn}
 		<a href="/" on:click={(e) => navTo(e, "/shopping-list")}>{linkText}</a>
 	{:else}

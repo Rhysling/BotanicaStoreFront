@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { createEventDispatcher } from "svelte";
 	import { isLoggedIn } from "../stores/user-store";
-	import { navTo } from "../stores/route-store.js";
+	import { navTo } from "../stores/route-store.svelte";
 	import { picPaths } from "../stores/utils";
 
 	export let plant: IvwListedPlant;

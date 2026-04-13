@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { navTo } from "../stores/route-store.js";
+	import { navTo } from "../stores/route-store.svelte";
 	import { listedPlants } from "../stores/listedplants-store";
 	import { picPaths } from "../stores/utils";
 

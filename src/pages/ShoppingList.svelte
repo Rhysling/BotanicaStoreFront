@@ -9,7 +9,7 @@
 		availablePlantNames as apn,
 	} from "../stores/availableplants-store";
 	import { user } from "../stores/user-store";
-	import { navTo, currentParams } from "../stores/route-store";
+	import { navTo, routeStore } from "../stores/route-store.svelte";
 
 	let isEditMode = false;
 	let isValid = true;
@@ -84,8 +84,8 @@
 	let apsFiltered: IvwPlantsAvailable[] = [];
 	let apnAll: IPlantIdName[] = [plantToAdd, ...$apn];
 
-	if ($currentParams && $currentParams.plantId) {
-		let p = apnAll.find((a) => a.plantId === $currentParams.plantId);
+	if (routeStore?.currentParams?.plantId) {
+		let p = apnAll.find((a) => a.plantId === routeStore.currentParams.plantId);
 		if (p) plantToAdd = p;
 	}
 

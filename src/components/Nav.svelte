@@ -1,11 +1,11 @@
 <script lang="ts">
-	import { routes, navTo, currentPath } from "../stores/route-store.js";
+	import { routeStore, navTo } from "../stores/route-store.svelte.js";
 
 	let allRoutes: Route[];
 	$: {
 		allRoutes = [
-			{ ...$routes },
-			...($routes.children?.filter((a) => !a.isHidden) || []),
+			{ ...routeStore.routes },
+			...(routeStore.routes.children?.filter((a) => !a.isHidden) || []),
 		];
 		allRoutes[0].children = [];
 	}
@@ -45,10 +45,9 @@
 	<nav>
 		{#each allRoutes as r}
 			{#if r.children && r.children.length}
-				<a
-					href="/"
-					on:click|preventDefault|stopPropagation={() =>
-						toggleOpenDropdown(r.path)}
+				<!-- svelte-ignore a11y-click-events-have-key-events a11y-no-static-element-interactions -->
+				<div
+					on:click|stopPropagation={() => toggleOpenDropdown(r.path)}
 					class="dropdown"
 					class:open={r.isExpanded ? true : undefined}
 				>
@@ -58,17 +57,17 @@
 							<a
 								href="/"
 								on:click={(e) => nav(e, c.path)}
-								class:selected={c.path === $currentPath}
+								class:selected={c.path === routeStore.currentPath}
 								>{c.navName || c.page}</a
 							>
 						{/each}
 					</div>
-				</a>
+				</div>
 			{:else}
 				<a
 					href="/"
 					on:click={(e) => nav(e, r.path)}
-					class:selected={r.path === $currentPath}>{r.navName || r.page}</a
+					class:selected={r.path === routeStore.currentPath}>{r.navName || r.page}</a
 				>
 			{/if}
 		{/each}
@@ -94,7 +93,9 @@
 		display: flex;
 		background-color: c.$nav-bg-color;
 
-		a {
+		a,
+		.dropdown {
+			color: c.$link-color;
 			display: block;
 			box-shadow: 0px 6px 12px 0px rgba(0, 0, 0, 0.2);
 			border-radius: 5px;
@@ -106,12 +107,15 @@
 		//   margin: 0.5em 0.5em 0.5em 0.25rem;
 		// }
 
-		a:hover {
+		a:hover,
+		.dropdown:hover {
+			color: c.$link-hover;
 			background-color: color.scale(
 				c.$nav-bg-color,
 				$lightness: -10%,
 				$space: oklch
 			);
+			cursor: pointer;
 		}
 
 		a.selected {

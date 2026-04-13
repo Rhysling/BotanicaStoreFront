@@ -8,7 +8,7 @@
 	import PlantPicsAdmin from "../../components/admin/PlantPicsAdmin.svelte";
 	import { newPlant } from "../../stores/newobjects-store";
 	import { plantAdminFilterStore } from "../../stores/plantadminfilter-store";
-	import { paramsFromUrl } from "../../stores/route-store";
+	import { paramsFromUrl } from "../../stores/route-store.svelte";
 
 	let plants: IPlant[] = [];
 	let filteredList: IPlant[] = [];

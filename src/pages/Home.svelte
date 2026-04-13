@@ -2,11 +2,10 @@
 	import type { AxiosResponse } from "axios";
 	import DOMPurify from "dompurify";
 	import { httpClient as ax } from "../stores/httpclient-store";
-	import { navTo, isLiveOnlineShopping } from "../stores/route-store.js";
+	import { navTo, routeStore } from "../stores/route-store.svelte";
 	import { isLoggedIn } from "../stores/user-store.js";
 	import { isShowHowWlWorks } from "../stores/wishlist-store.js";
 	import HomeFeaturedPlant from "../components/HomeFeaturedPlant.svelte";
-	import { getBaseURL } from "../stores/utils";
 
 	let nextSale: ICalendar | null = null;
 
@@ -58,7 +57,7 @@
 		</div>
 	</div>
 	<div class="right">
-		{#if $isLiveOnlineShopping}
+		{#if routeStore.isLiveOnlineShopping}
 			<div class="card-shop">
 				<div class="t1">Shop Online!</div>
 				<div class="t2">
