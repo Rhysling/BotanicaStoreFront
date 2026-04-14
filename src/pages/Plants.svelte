@@ -44,11 +44,9 @@
 		filterPlants();
 	};
 
-	let handlePageChanged = (e: CustomEvent<PageState>) => {
-		currentPageIn = e.detail.currentPage;
-		startIndex = e.detail.startIndex;
-		endIndex = e.detail.endIndex;
-		pagedPlants = filteredPlants.slice(startIndex, endIndex);
+	let handlePageChanged = (ps: PageState) => {
+		currentPageIn = ps.currentPage;
+		startIndex = ps.startIndex;
 	};
 
 	let filterPlants = () => {
@@ -92,7 +90,7 @@
 			{itemsPerPage}
 			{itemCount}
 			{currentPageIn}
-			on:pageChanged={handlePageChanged}
+			onPageChanged={handlePageChanged}
 		/>
 	</div>
 </div>
@@ -110,7 +108,7 @@
 			{itemsPerPage}
 			{itemCount}
 			{currentPageIn}
-			on:pageChanged={handlePageChanged}
+			onPageChanged={handlePageChanged}
 		/>
 	</div>
 </div>

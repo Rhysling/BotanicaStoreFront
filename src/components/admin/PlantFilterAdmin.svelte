@@ -1,12 +1,10 @@
+<svelte:options runes={true} />
+
 <script lang="ts">
 	import Pager from "../../components/Pager.svelte";
-	import { createEventDispatcher } from "svelte";
 	import { plantAdminFilterStore } from "../../stores/plantadminfilter-store";
 
-	export let plants: IPlant[] = [];
-	export let currentPageIn = 1;
-
-	export let plantFilterIn: PlantAdminFilter = {
+	const pafBase: PlantAdminFilter = {
 		filterType: "genus",
 		filterText: "",
 		filterFlag: "",
@@ -14,20 +12,25 @@
 		isNwNativeOnly: false,
 		isByRecentUpdate: false,
 	};
+
+	let {
+		plants = [],
+		currentPageIn = 1,
+		plantFilterIn = { ...pafBase },
+		handleFilterPlants = () => {},
+		handleChangePage = () => {},
+	}: {
+		plants?: IPlant[];
+		currentPageIn?: number;
+		plantFilterIn?: PlantAdminFilter;
+		handleFilterPlants?: (filteredList: IPlant[]) => void;
+		handleChangePage?: (ps: PageState) => void;
+	} = $props();
 
 	const filterTypeList = ["genus", "all"];
-	let itemCount = 0;
+	let itemCount = $state(0);
 
-	let paf: PlantAdminFilter = {
-		filterType: "genus",
-		filterText: "",
-		filterFlag: "",
-		isListedOnly: false,
-		isNwNativeOnly: false,
-		isByRecentUpdate: false,
-	};
-
-	const dispatch = createEventDispatcher();
+	let paf: PlantAdminFilter = $state({ ...pafBase });
 
 	let filterPlants = () => {
 		const f = (p: IPlant) => {
@@ -79,29 +82,23 @@
 
 		$plantAdminFilterStore = paf;
 		itemCount = filteredList.length;
-		dispatch("filterPlants", { filteredList });
+		handleFilterPlants(filteredList);
 		currentPageIn = -1; // Trigger rerun of Pager
 	};
 
 	let clearFilter = () => {
-		paf.filterText = "";
-		paf.filterFlag = "";
-		paf.isListedOnly = false;
-		paf.isNwNativeOnly = false;
-		paf.isByRecentUpdate = false;
+		paf = { ...pafBase };
 		filterPlants();
 	};
 
-	const updateFilter = (f: PlantAdminFilter | undefined | null) => {
-		if (f) {
-			paf = { ...f };
-		}
-		if (plants.length > 0) {
+	let hasRun = false;
+	$effect(() => {
+		if (!hasRun && plants.length) {
+			paf = { ...plantFilterIn };
 			filterPlants();
+			hasRun = true;
 		}
-	};
-
-	$: updateFilter(plantFilterIn);
+	});
 </script>
 
 <div class="search">
@@ -122,7 +119,7 @@
 		type="text"
 		class="flag-box"
 		bind:value={paf.filterFlag}
-		on:keyup={() => {
+		onkeyup={() => {
 			if (paf.filterFlag && paf.filterFlag.length > 2)
 				paf.filterFlag = paf.filterFlag.substring(0, 2);
 		}}
@@ -138,13 +135,22 @@
 		Recent:<input type="checkbox" bind:checked={paf.isByRecentUpdate} />
 	</div>
 	<div class="sep">
-		<a href="/" on:click|preventDefault={filterPlants}>Go</a>&nbsp;-&nbsp;<a
+		<a
 			href="/"
-			on:click|preventDefault={clearFilter}>Cancel</a
+			onclick={(e) => {
+				e.preventDefault();
+				filterPlants();
+			}}>Go</a
+		>&nbsp;-&nbsp;<a
+			href="/"
+			onclick={(e) => {
+				e.preventDefault();
+				clearFilter();
+			}}>Cancel</a
 		>
 	</div>
 	<div class="pager">
-		<Pager {itemCount} {currentPageIn} on:pageChanged />
+		<Pager {itemCount} {currentPageIn} onPageChanged={handleChangePage} />
 	</div>
 </div>
 

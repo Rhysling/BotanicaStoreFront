@@ -1,3 +1,5 @@
+<svelte:options runes={true} />
+
 <script lang="ts">
 	import { onMount } from "svelte";
 	import type { AxiosError, AxiosResponse } from "axios";
@@ -10,26 +12,26 @@
 	import { plantAdminFilterStore } from "../../stores/plantadminfilter-store";
 	import { paramsFromUrl } from "../../stores/route-store.svelte";
 
-	let plants: IPlant[] = [];
-	let filteredList: IPlant[] = [];
-	let pagedList: IPlant[] = [];
-	let currentStartIndex = 0;
-	let currentEndIndex = 0;
-	let currentPageIn = 1;
+	let plants: IPlant[] = $state([]);
+	let filteredList: IPlant[] = $state([]);
+	let pagedList: IPlant[] = $state([]);
+	let currentStartIndex = $state(0);
+	let currentEndIndex = $state(0);
+	let currentPageIn = $state(1);
 
-	let plantFilterIn: PlantAdminFilter = {
+	let plantFilterIn: PlantAdminFilter = $state({
 		filterType: "genus",
 		filterText: "",
 		filterFlag: "",
 		isListedOnly: false,
 		isNwNativeOnly: false,
 		isByRecentUpdate: false,
-	};
+	});
 
-	let editedPlant: IPlant | null;
-	let editError = "";
+	let editedPlant: IPlant | null = $state(null);
+	let editError = $state("");
 
-	let plantForPics: IPlant | null;
+	let plantForPics: IPlant | null = $state(null);
 
 	let loadPlants = () => {
 		$ax
@@ -116,8 +118,7 @@
 
 	// Component handlers ***
 
-	let handleChangePage = (event: CustomEvent<PageState>) => {
-		let ps = event.detail;
+	let handleChangePage = (ps: PageState) => {
 		currentStartIndex = ps.startIndex;
 		currentEndIndex = ps.endIndex;
 		pagedList = filteredList.slice(currentStartIndex, currentEndIndex);
@@ -130,11 +131,11 @@
 		});
 	};
 
-	let handleFilterPlants = (event: CustomEvent<{ filteredList: IPlant[] }>) => {
+	let handleFilterPlants = (filteredListIn: IPlant[]) => {
 		currentStartIndex = 0;
 		currentEndIndex = 25;
 		currentPageIn = 1;
-		filteredList = event.detail.filteredList;
+		filteredList = filteredListIn;
 		pagedList = filteredList.slice(currentStartIndex, currentEndIndex);
 	};
 
@@ -250,14 +251,20 @@
 
 <div class="add-plant">
 	<i class="fas fa-caret-right"></i>
-	<a href="/" on:click|preventDefault={addPlant}>Add Plant</a>
+	<a
+		href="/"
+		onclick={(e) => {
+			e.preventDefault();
+			addPlant();
+		}}>Add Plant</a
+	>
 </div>
 <PlantFilterAdmin
 	{plants}
 	{plantFilterIn}
 	{currentPageIn}
-	on:filterPlants={handleFilterPlants}
-	on:pageChanged={handleChangePage}
+	{handleFilterPlants}
+	{handleChangePage}
 />
 <div>
 	{#each pagedList as p (p.plantId)}

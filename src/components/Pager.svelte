@@ -1,36 +1,38 @@
-<script lang="ts">
-	import { createEventDispatcher } from "svelte";
+<svelte:options runes={true} />
 
+<script lang="ts">
 	type kvp = {
 		label: string;
 		value: number;
 	};
 
-	export let itemCount = 0;
-	export let currentPageIn = 1;
-	export let itemsPerPage = 25;
+	let {
+		itemCount = 0,
+		currentPageIn = 1,
+		itemsPerPage = 25,
+		onPageChanged,
+	}: {
+		itemCount?: number;
+		currentPageIn?: number;
+		itemsPerPage?: number;
+		onPageChanged?: (ps: PageState) => void;
+	} = $props();
 
-	const dispatch = createEventDispatcher();
-
-	let pages = 1;
-	let pagelist: kvp[] = [];
-	let selectedPage = currentPageIn;
-
-	const buildList = (ic: number) => {
-		pages = Math.max(Math.ceil(ic / itemsPerPage), 1);
-		pagelist = [];
+	let pages = $derived(Math.max(Math.ceil(itemCount / itemsPerPage), 1));
+	let pagelist: kvp[] = $derived.by(() => {
+		let pl: kvp[] = [];
 		for (let i = 0; i < pages; i += 1) {
-			pagelist.push({ label: `Page ${i + 1}`, value: i + 1 });
+			pl.push({ label: `Page ${i + 1}`, value: i + 1 });
 		}
+		return pl;
+	});
 
-		selectedPage = 1;
-	};
+	let selectedPage = $state(1);
 
 	const changePage = (n: number) => {
 		if (n < 1) return;
 		let currentPage = Math.min(Math.max(n, 1), pages);
 		let startIndex = (currentPage - 1) * itemsPerPage;
-
 		selectedPage = currentPage;
 
 		let ps: PageState = {
@@ -40,7 +42,7 @@
 			startIndex,
 			endIndex: Math.min(startIndex + itemsPerPage, itemCount),
 		};
-		dispatch("pageChanged", ps);
+		onPageChanged?.(ps);
 		window.scrollTo({ top: 0, behavior: "smooth" });
 	};
 
@@ -49,32 +51,37 @@
 			changePage(1);
 			return;
 		}
-
-		let currentPage = Math.min(Math.max(n, 1), pages);
-		selectedPage = currentPage;
+		selectedPage = Math.min(Math.max(n, 1), pages);
 	};
 
-	$: buildList(itemCount);
-	$: setPage(currentPageIn);
-	$: isFirst = selectedPage === 1;
-	$: isLast = selectedPage === pages;
+	$effect(() => {
+		setPage(currentPageIn);
+	});
+
+	let isFirst = $derived(selectedPage === 1);
+	let isLast = $derived(selectedPage === pages);
 </script>
 
-<!-- svelte-ignore a11y-no-onchange -->
 <div>
 	<a
 		href="/"
-		on:click|preventDefault={() => changePage(1)}
+		onclick={(e) => {
+			e.preventDefault();
+			changePage(1);
+		}}
 		class:disabled={isFirst}
 		title="first"><i class="fas fa-angle-double-left"></i></a
 	>
 	<a
 		href="/"
-		on:click|preventDefault={() => changePage(selectedPage - 1)}
+		onclick={(e) => {
+			e.preventDefault();
+			changePage(selectedPage - 1);
+		}}
 		class:disabled={isFirst}
 		title="previous"><i class="fas fa-angle-left"></i></a
 	>
-	<select bind:value={selectedPage} on:change={() => changePage(selectedPage)}>
+	<select bind:value={selectedPage} onchange={() => changePage(selectedPage)}>
 		{#each pagelist as p}
 			<option value={p.value}>
 				{p.label}
@@ -83,13 +90,19 @@
 	</select>
 	<a
 		href="/"
-		on:click|preventDefault={() => changePage(selectedPage + 1)}
+		onclick={(e) => {
+			e.preventDefault();
+			changePage(selectedPage + 1);
+		}}
 		class:disabled={isLast}
 		title="next"><i class="fas fa-angle-right"></i></a
 	>
 	<a
 		href="/"
-		on:click|preventDefault={() => changePage(pages)}
+		onclick={(e) => {
+			e.preventDefault();
+			changePage(pages);
+		}}
 		class:disabled={isLast}
 		title="last"><i class="fas fa-angle-double-right"></i></a
 	>

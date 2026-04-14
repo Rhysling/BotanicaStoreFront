@@ -34,8 +34,7 @@
 
 	// Component handlers ***
 
-	let handleChangePage = (event: CustomEvent<PageState>) => {
-		let ps = event.detail;
+	let handleChangePage = (ps: PageState) => {
 		pagedList = filteredList.slice(ps.startIndex, ps.endIndex);
 
 		window.scroll({
@@ -45,10 +44,8 @@
 		});
 	};
 
-	let handleFilterPlants = (
-		event: CustomEvent<{ filteredList: IvwPlantPriceSummary[] }>,
-	) => {
-		filteredList = event.detail.filteredList;
+	let handleFilterPlants = (filteredListIn: IvwPlantPriceSummary[]) => {
+		filteredList = filteredListIn;
 	};
 
 	let handleFinishEdit = (
@@ -90,8 +87,8 @@
 
 <AvailabilityFilter
 	{plants}
-	on:filterPlants={handleFilterPlants}
-	on:pageChanged={handleChangePage}
+	onFilterPlants={handleFilterPlants}
+	onPageChanged={handleChangePage}
 />
 <div>
 	{#each pagedList as p (p.plantId)}

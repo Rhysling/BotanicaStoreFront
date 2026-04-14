@@ -1,15 +1,24 @@
+<svelte:options runes={true} />
+
 <script lang="ts">
 	import Pager from "../../components/Pager.svelte";
-	import { createEventDispatcher } from "svelte";
 
-	export let plants: IvwPlantPriceSummary[] = [];
+	let {
+		plants = [],
+		onFilterPlants = () => {},
+		onPageChanged = () => {},
+	}: {
+		plants?: IvwPlantPriceSummary[];
+		currentPageIn?: number;
+		plantFilterIn?: PlantAdminFilter;
+		onFilterPlants?: (filteredList: IvwPlantPriceSummary[]) => void;
+		onPageChanged?: (ps: PageState) => void;
+	} = $props();
 
-	let filterGenus = "";
-	let isPriced = false;
-	let isAvailable = false;
-	let itemCount = 0;
-
-	const dispatch = createEventDispatcher();
+	let filterGenus = $state("");
+	let isPriced = $state(false);
+	let isAvailable = $state(false);
+	let itemCount = $state(0);
 
 	let filterPlants = () => {
 		let f = (p: IvwPlantPriceSummary) => {
@@ -23,7 +32,7 @@
 
 		let filteredList = plants.filter(f);
 		itemCount = filteredList.length;
-		dispatch("filterPlants", { filteredList });
+		onFilterPlants(filteredList);
 	};
 
 	let clearFilter = () => {
@@ -33,9 +42,11 @@
 		filterPlants();
 	};
 
-	$: if (plants.length > 0) {
-		filterPlants();
-	}
+	$effect(() => {
+		if (plants.length > 0) {
+			filterPlants();
+		}
+	});
 </script>
 
 <div class="search">
@@ -50,11 +61,23 @@
 	<input type="checkbox" class="filter-checkbox" bind:checked={isPriced} />
 	<div class="sep">Available only:</div>
 	<input type="checkbox" class="filter-checkbox" bind:checked={isAvailable} />
-	<a href="/" on:click|preventDefault={filterPlants}>Go</a>
+	<a
+		href="/"
+		onclick={(e) => {
+			e.preventDefault();
+			filterPlants();
+		}}>Go</a
+	>
 	<div class="sep">-</div>
-	<a href="/" on:click|preventDefault={clearFilter}>Cancel</a>
+	<a
+		href="/"
+		onclick={(e) => {
+			e.preventDefault();
+			clearFilter();
+		}}>Cancel</a
+	>
 	<div class="pager">
-		<Pager {itemCount} on:pageChanged />
+		<Pager {itemCount} {onPageChanged} />
 	</div>
 </div>
 
