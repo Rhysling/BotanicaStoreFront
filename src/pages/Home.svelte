@@ -68,7 +68,7 @@
 				</div>
 				<div>
 					Create your &quot;shopping list&quot; here. We will prepare your
-					order, cooridnate with you on any changes or adjustments, and let you
+					order, coordinate with you on any changes or adjustments, and let you
 					know when it is ready for pickup.
 				</div>
 				<a href="/" onclick={(e) => goToShoppingList(e)}

@@ -1,20 +1,31 @@
+<svelte:options runes={true} />
+
 <script lang="ts">
 	import { onMount } from "svelte";
 	import type { AxiosResponse } from "axios";
 	import { httpClient as ax } from "../../stores/httpclient-store";
 	import Modal from "../Modal.svelte";
-	import { createEventDispatcher } from "svelte";
 
-	export let editPlantId: number;
-	export let editPlantGenus = "";
-	export let editPlantSpecies = "";
+	let {
+		editPlantId,
+		editPlantGenus = "",
+		editPlantSpecies = "",
+		handleFinishEdit = () => {},
+	}: {
+		editPlantId: number;
+		editPlantGenus: string;
+		editPlantSpecies: string;
+		handleFinishEdit: (val: {
+			plantId: number;
+			summaryAvailable: string;
+			summaryPriced: string;
+		}) => void;
+	} = $props();
 
-	const dispatch = createEventDispatcher();
-
-	let eppOriginal: IvwPlantPriceMatrix[] = [];
-	let epp: PlantPriceMatrix[] = [];
-	let editError = "";
-	let isValid = true;
+	let eppOriginal: IvwPlantPriceMatrix[] = $state([]);
+	let epp: PlantPriceMatrix[] = $state([]);
+	let editError = $state("");
+	let isValid = $derived(!epp.some((a) => !validatePrice(a.price)));
 
 	let mapOriginalToDisplay = (
 		vw: IvwPlantPriceMatrix[],
@@ -49,8 +60,6 @@
 		return val < 999 && val > 0.005;
 	};
 
-	$: isValid = !epp.some((a) => !validatePrice(a.price));
-
 	let save = () => {
 		//   Make and save details to db
 		let pp: IPlantPrice[] = epp
@@ -79,7 +88,7 @@
 			)
 			.then(() => {
 				let data = { plantId: editPlantId, summaryAvailable, summaryPriced };
-				dispatch("finishEdit", data);
+				handleFinishEdit(data);
 			})
 			.catch((e) => {
 				editError = e.response?.data?.title || "No title provided.";
@@ -88,17 +97,18 @@
 	};
 
 	let cancel = () => {
-		dispatch("finishEdit", {
+		handleFinishEdit({
 			plantId: 0,
-			availableSummary: "",
-			otherSummary: "",
+			summaryAvailable: "",
+			summaryPriced: "",
 		});
 	};
 </script>
 
 <Modal isShowModal={true} on:setmodal={cancel}>
-	<!-- svelte-ignore a11y-click-events-have-key-events a11y-no-static-element-interactions -->
-	<div class="editor" on:click={(e) => e.stopPropagation()}>
+	<!-- svelte-ignore a11y_click_events_have_key_events a11y-no-static-element-interactions -->
+	<!-- svelte-ignore a11y_no_noninteractive_element_interactions -->
+	<div class="editor" role="form" onclick={(e) => e.stopPropagation()}>
 		<div class="title">
 			{editPlantGenus}
 			{editPlantSpecies} ({editPlantId})
@@ -141,10 +151,10 @@
 		{/each}
 
 		<div class="buttons">
-			<button on:click={save} class="primary" disabled={isValid === false}
+			<button onclick={save} class="primary" disabled={isValid === false}
 				>Save</button
 			>
-			<button on:click={cancel}>Cancel</button>
+			<button onclick={cancel}>Cancel</button>
 		</div>
 	</div>
 </Modal>

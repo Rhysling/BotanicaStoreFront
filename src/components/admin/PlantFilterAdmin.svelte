@@ -91,12 +91,12 @@
 		filterPlants();
 	};
 
-	let hasRun = false;
+	let runCount = 0;
 	$effect(() => {
-		if (!hasRun && plants.length) {
+		if (runCount < 1 && plants.length) {
 			paf = { ...plantFilterIn };
 			filterPlants();
-			hasRun = true;
+			runCount += 1;
 		}
 	});
 </script>

@@ -1,3 +1,5 @@
+<svelte:options runes={true} />
+
 <script lang="ts">
 	import { onMount } from "svelte";
 	import type { AxiosResponse } from "axios";
@@ -5,13 +7,13 @@
 	import AvailabilityFilter from "../../components/admin/AvailabilityFilter.svelte";
 	import EditAvailability from "../../components/admin/EditAvailability.svelte";
 
-	let plants: IvwPlantPriceSummary[] = [];
-	let filteredList: IvwPlantPriceSummary[] = [];
-	let pagedList: IvwPlantPriceSummary[] = [];
+	let plants: IvwPlantPriceSummary[] = $state([]);
+	let filteredList: IvwPlantPriceSummary[] = $state([]);
+	let pagedList: IvwPlantPriceSummary[] = $state([]);
 
-	let editPlantId = 0;
-	let editPlantGenus = "";
-	let editPlantSpecies = "";
+	let editPlantId = $state(0);
+	let editPlantGenus = $state("");
+	let editPlantSpecies = $state("");
 
 	let loadPlants = () => {
 		$ax
@@ -48,16 +50,12 @@
 		filteredList = filteredListIn;
 	};
 
-	let handleFinishEdit = (
-		e: CustomEvent<{
-			plantId: number;
-			summaryAvailable: string;
-			summaryPriced: string;
-		}>,
-	) => {
-		let d = e.detail;
-
-		if (d.plantId == 0) {
+	let handleFinishEdit = (d: {
+		plantId: number;
+		summaryAvailable: string;
+		summaryPriced: string;
+	}) => {
+		if (d.plantId === 0) {
 			editPlantId = 0;
 			return;
 		}
@@ -96,8 +94,10 @@
 			<div class="description">
 				<a
 					href="/"
-					on:click|preventDefault={() =>
-						editPlant(p.plantId, p.genus, p.species)}>{p.genus} {p.species}</a
+					onclick={(e) => {
+						e.preventDefault();
+						editPlant(p.plantId, p.genus, p.species);
+					}}>{p.genus} {p.species}</a
 				>
 			</div>
 			<div class="value">
@@ -112,7 +112,7 @@
 		{editPlantId}
 		{editPlantGenus}
 		{editPlantSpecies}
-		on:finishEdit={handleFinishEdit}
+		{handleFinishEdit}
 	/>
 {/if}
 

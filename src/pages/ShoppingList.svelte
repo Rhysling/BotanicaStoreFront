@@ -109,7 +109,7 @@
 
 	let addItem = (plantId: number, potSizeId: number, qtyEntered: string) => {
 		let ap = apsFiltered.find(
-			(a) => a.plantId === plantId && a.potSizeId == potSizeId,
+			(a) => a.plantId === plantId && a.potSizeId === potSizeId,
 		);
 
 		if (ap) {
@@ -130,7 +130,7 @@
 
 	let cancelAddItem = (plantId: number, potSizeId: number) => {
 		let ap = apsFiltered.find(
-			(a) => a.plantId === plantId && a.potSizeId == potSizeId,
+			(a) => a.plantId === plantId && a.potSizeId === potSizeId,
 		);
 
 		if (ap) {

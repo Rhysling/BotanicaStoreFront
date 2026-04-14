@@ -1,16 +1,47 @@
+<svelte:options runes={true} />
+
 <script lang="ts">
 	import Modal from "../Modal.svelte";
-	import { createEventDispatcher } from "svelte";
 
-	export let plant: IPlant;
-	export let editError = "";
+	const newPlant: IPlant = {
+		plantId: 0,
+		genus: "",
+		species: "",
+		family: null,
+		description: null,
+		notes: null,
+		plantSize: null,
+		plantType: null,
+		plantZone: null,
+		pictureLocation: null,
+		isNwNative: false,
+		pics: "[]",
+		isListed: false,
+		isFeatured: false,
+		slug: "",
+		lastUpdate: "",
+		flag: null,
+		lastUpdateFormatted: "",
+		cardLine1: null,
+		cardLine2: null,
+	};
 
-	const dispatch = createEventDispatcher();
+	let {
+		plant,
+		editError = "",
+		handleEditPlantModal = () => {},
+		handleFinishEdit = () => {},
+	}: {
+		plant: IPlant;
+		editError?: string;
+		handleEditPlantModal: (isOpen: boolean) => void;
+		handleFinishEdit: (plant: Partial<IPlant>) => void;
+	} = $props();
 
-	let ep = { ...plant };
-	let isValid: boolean | null = null;
-	let isValidGenus = true;
-	let isValidSpecies = true;
+	let ep: IPlant = $state({ ...newPlant });
+	let isValid: boolean | null = $state(null);
+	let isValidGenus = $state(true);
+	let isValidSpecies = $state(true);
 
 	let validate = () => {
 		isValidGenus = !!ep.genus && ep.genus.length > 1;
@@ -20,17 +51,27 @@
 
 	let save = () => {
 		validate();
-		if (isValid) dispatch("finishEdit", ep);
+		if (isValid) handleFinishEdit(ep);
 	};
 
 	let cancel = () => {
-		dispatch("finishEdit", { plantId: -1 });
+		handleFinishEdit({ plantId: -1 });
 	};
+
+	// Startup
+	let hasRun = false;
+	$effect(() => {
+		if (!hasRun) {
+			ep = { ...plant };
+			hasRun = true;
+		}
+	});
 </script>
 
 <Modal isShowModal={true} on:setmodal>
-	<!-- svelte-ignore a11y-click-events-have-key-events a11y-no-static-element-interactions -->
-	<div class="editor" on:click={(e) => e.stopPropagation()}>
+	<!-- svelte-ignore a11y_click_events_have_key_events a11y-no-static-element-interactions -->
+	<!-- svelte-ignore a11y_no_noninteractive_element_interactions -->
+	<div class="editor" role="form" onclick={(e) => e.stopPropagation()}>
 		<div class="title">Add / Edit Plant</div>
 		{#if editError}
 			<div class="error">
@@ -51,7 +92,7 @@
 			<input
 				type="text"
 				bind:value={ep.genus}
-				on:change={validate}
+				onchange={validate}
 				placeholder="Genus"
 			/>
 			{#if !isValidGenus}<span class="error">Required</span>{/if}
@@ -60,7 +101,7 @@
 			<input
 				type="text"
 				bind:value={ep.species}
-				on:change={validate}
+				onchange={validate}
 				placeholder="Species"
 			/>
 			{#if !isValidSpecies}<span class="error">Required</span>{/if}
@@ -99,16 +140,16 @@
 			class="xs"
 			type="text"
 			bind:value={ep.flag}
-			on:keyup={() => {
+			onkeyup={() => {
 				if (ep.flag && ep.flag.length > 2) ep.flag = ep.flag.substring(0, 2);
 			}}
 			placeholder="Flag"
 		/>
 		<div class="buttons">
-			<button on:click={save} class="primary" disabled={isValid === false}
+			<button onclick={save} class="primary" disabled={isValid === false}
 				>Save</button
 			>
-			<button on:click={cancel}>Cancel</button>
+			<button onclick={cancel}>Cancel</button>
 		</div>
 	</div>
 </Modal>

@@ -39,20 +39,21 @@
 			.then(function (response: AxiosResponse<IPlant[]>) {
 				plants = response.data;
 			})
-			.then(() => {
-				const pu = paramsFromUrl();
-				if (Object.entries(pu).length) {
-					plantFilterIn = { ...plantFilterIn, ...pu };
-				} else {
-					plantFilterIn = { ...$plantAdminFilterStore };
-				}
-			})
 			.catch(function (e) {
 				console.error(e);
 			});
 	};
 
-	onMount(loadPlants);
+	onMount(() => {
+		const pu = paramsFromUrl();
+		if (Object.entries(pu).length) {
+			plantFilterIn = { ...plantFilterIn, ...pu };
+			$plantAdminFilterStore = plantFilterIn;
+		} else {
+			plantFilterIn = { ...$plantAdminFilterStore };
+		}
+		loadPlants();
+	});
 
 	const addPlant = () => {
 		editedPlant = { ...$newPlant };
@@ -139,9 +140,7 @@
 		pagedList = filteredList.slice(currentStartIndex, currentEndIndex);
 	};
 
-	let handleUpdatePlantToggle = (e: CustomEvent<PlantToggle>) => {
-		let pt = e.detail;
-
+	let handleUpdatePlantToggle = (pt: PlantToggle) => {
 		if (pt.column) {
 			if (pt.column === "isFeatured") {
 				plants = plants.map((p) =>
@@ -169,35 +168,33 @@
 		}
 	};
 
-	let handleEditPlant = (e: CustomEvent<number>) => {
-		let plantId = e.detail;
+	let handleEditPlant = (plantId: number) => {
 		editedPlant = {
 			...(plants.find((p) => p.plantId === plantId) || $newPlant),
 		};
 		editError = "";
 	};
 
-	let handleEditPlantModal = (e: CustomEvent<{ val: boolean }>) => {
-		if (!e.detail.val) editedPlant = null;
+	let handleEditPlantModal = (val: boolean) => {
+		if (!val) editedPlant = null;
 	};
 
-	let handleFinishEdit = (e: CustomEvent<IPlant>) => {
-		if (e.detail.plantId < 0) {
+	let handleFinishEdit = (p: Partial<IPlant>) => {
+		if (p.plantId && p.plantId < 0) {
 			editedPlant = null;
 			return;
 		}
 
-		savePlant(e.detail);
+		savePlant(<IPlant>p);
 	};
 
-	let handleDeletePlant = (e: CustomEvent<number>) => {
-		deletePlant(e.detail);
+	let handleDeletePlant = (plantId: number) => {
+		deletePlant(plantId);
 	};
 
 	// Plant pics
 
-	let handleEditPictures = (e: CustomEvent<number>) => {
-		let plantId = e.detail;
+	let handleEditPictures = (plantId: number) => {
 		plantForPics = plants.find((p) => p.plantId === plantId) || $newPlant;
 	};
 
@@ -271,10 +268,10 @@
 		<div>
 			<DisplayPlantAdmin
 				plant={p}
-				on:updatePlantToggle={handleUpdatePlantToggle}
-				on:editPlant={handleEditPlant}
-				on:deletePlant={handleDeletePlant}
-				on:editPictures={handleEditPictures}
+				{handleUpdatePlantToggle}
+				{handleEditPlant}
+				{handleDeletePlant}
+				{handleEditPictures}
 			/>
 		</div>
 	{/each}
@@ -283,8 +280,8 @@
 	<EditPlantAdmin
 		plant={editedPlant}
 		{editError}
-		on:setmodal={handleEditPlantModal}
-		on:finishEdit={handleFinishEdit}
+		{handleEditPlantModal}
+		{handleFinishEdit}
 	/>
 {/if}
 {#if plantForPics}

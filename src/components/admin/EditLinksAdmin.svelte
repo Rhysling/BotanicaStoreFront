@@ -57,7 +57,7 @@
 		validateTitle(c.title);
 		validateUrl(c.url);
 		validateSortOrder(c.sortOrderEntered);
-		isValid = (valMsgTitle + valMsgUrl).length === 0;
+		isValid = (valMsgTitle + valMsgUrl + valMsgSortOrder).length === 0;
 	};
 
 	let save = () => {
