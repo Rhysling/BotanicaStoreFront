@@ -45,7 +45,7 @@
 	};
 </script>
 
-<Modal isShowModal={true} on:setmodal>
+<Modal isShowModal={true}>
 	<!-- svelte-ignore a11y-click-events-have-key-events a11y-no-static-element-interactions -->
 	<div class="editor" on:click={(e) => e.stopPropagation()}>
 		<div class="title">Edit Pictures</div>

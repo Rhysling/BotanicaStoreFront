@@ -21,6 +21,10 @@
 			.then(function (response: AxiosResponse<IvwPlantPriceSummary[]>) {
 				plants = response.data;
 			})
+			.then(() => {
+				filteredList = plants;
+				pagedList = filteredList.slice(0, 25);
+			})
 			.catch(function (e) {
 				console.error(e);
 			});

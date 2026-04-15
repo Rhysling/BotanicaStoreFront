@@ -48,7 +48,7 @@
 	{/if}
 {/if}
 
-<Modal isShowModal={$isShowHowWlWorks} on:setmodal={cancel}>
+<Modal isShowModal={$isShowHowWlWorks} setModal={cancel}>
 	<!-- svelte-ignore a11y-click-events-have-key-events a11y-no-noninteractive-element-interactions -->
 	<div
 		class="container"

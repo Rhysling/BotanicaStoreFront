@@ -105,7 +105,7 @@
 	};
 </script>
 
-<Modal isShowModal={true} on:setmodal={cancel}>
+<Modal isShowModal={true} setModal={cancel}>
 	<!-- svelte-ignore a11y_click_events_have_key_events a11y-no-static-element-interactions -->
 	<!-- svelte-ignore a11y_no_noninteractive_element_interactions -->
 	<div class="editor" role="form" onclick={(e) => e.stopPropagation()}>

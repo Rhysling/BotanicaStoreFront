@@ -109,7 +109,7 @@
 	});
 </script>
 
-<Modal isShowModal={true} on:setmodal>
+<Modal isShowModal={true}>
 	<!-- svelte-ignore a11y_click_events_have_key_events a11y-no-static-element-interactions -->
 	<!-- svelte-ignore a11y_no_static_element_interactions -->
 	<div class="editor" onclick={(e) => e.stopPropagation()}>

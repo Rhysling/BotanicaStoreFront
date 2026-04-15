@@ -1,31 +1,35 @@
+<svelte:options runes={true} />
+
 <script lang="ts">
-	import { createEventDispatcher } from "svelte";
+	import type { Snippet } from "svelte";
 
-	export let isShowModal = false;
-
-	const dispatch = createEventDispatcher();
-
-	function setModal(val: boolean) {
-		dispatch("setmodal", { val });
-	}
+	let {
+		isShowModal = false,
+		setModal = () => {},
+		children,
+	}: {
+		isShowModal: boolean;
+		setModal?: (isOpen: boolean) => void;
+		children: Snippet;
+	} = $props();
 </script>
 
-<!-- svelte-ignore a11y-click-events-have-key-events a11y-no-noninteractive-element-interactions -->
+<!-- svelte-ignore a11y_click_events_have_key_events a11y-no-noninteractive-element-interactions -->
 <div
 	class="modal"
 	role="dialog"
 	tabindex="0"
-	on:click={() => setModal(false)}
+	onclick={() => setModal(false)}
 	style="display:{isShowModal ? 'block' : 'none'}"
 >
 	<i
 		class="close fas fa-times"
 		role="button"
 		tabindex="0"
-		on:click={() => setModal(false)}
+		onclick={() => setModal(false)}
 		title="close"
 	></i>
-	<slot />
+	{@render children()}
 </div>
 
 <style lang="scss">

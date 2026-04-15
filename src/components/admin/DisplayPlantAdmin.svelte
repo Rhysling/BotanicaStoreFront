@@ -113,10 +113,11 @@
 		<div class="h1">{p.genus} {p.species}</div>
 		{#if p.family}<div class="h2">{p.family}</div>{/if}
 		<div class="description">
-			<strong>Description: </strong>{p.description || "none"}
+			<strong>Description:</strong>
+			{p.description || "none"}
 		</div>
 		{#if p.notes}
-			<div class="description"><strong>Notes: </strong>{p.notes}</div>
+			<div class="description"><strong>Notes:</strong> {p.notes}</div>
 		{/if}
 		<div class="details">
 			{p.plantZone || ""}

@@ -45,7 +45,7 @@
 </script>
 
 <svelte:window on:keydown={(e) => moveByArrow(e)} />
-<Modal {isShowModal} on:setmodal>
+<Modal {isShowModal}>
 	{#if isShowModal}
 		<!-- svelte-ignore a11y-click-events-have-key-events a11y-no-static-element-interactions -->
 		<div class="frame" on:click={(e) => e.stopPropagation()}>

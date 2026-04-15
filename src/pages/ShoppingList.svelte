@@ -331,7 +331,7 @@
 		</div>
 	{/if}
 </div>
-<Modal isShowModal={isShowPotSizes} on:setmodal={() => setModal(false)}>
+<Modal isShowModal={isShowPotSizes} {setModal}>
 	<div class="pot-size-container">
 		<div class="title">Pot Sizes</div>
 		<img src="./assets/img/pot-size-comparison.jpg" alt="Pot Size Comparison" />

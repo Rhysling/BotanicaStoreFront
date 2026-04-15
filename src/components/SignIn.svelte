@@ -1,3 +1,5 @@
+<svelte:options runes={true} />
+
 <script lang="ts">
 	import type { AxiosResponse } from "axios";
 	import Modal from "./Modal.svelte";
@@ -5,50 +7,42 @@
 	import { wishListStore as wls } from "../stores/wishlist-store.js";
 	import { httpClient as ax } from "../stores/httpclient-store";
 
-	$: isShowModal = false;
-	let showModal = (val: boolean) => (isShowModal = val);
+	const newUserLogin: IUserLogin = {
+		email: "",
+		fullName: "",
+		pw: "",
+	};
 
-	let setModal = (e: any) => {
-		isShowModal = e.detail.val;
+	//*** State ***//
+	let isShowModal = $state(false);
+	let userLogin: IUserLogin = $state({ ...newUserLogin });
+	let isValidEmail: ValidationState = $state(undefined);
+	let emailValidationMessage = $state("");
+	let submitErrorMessage = $state("");
+	let isShowName = $state(false);
+	let isShowPw = $state(false);
+
+	const setModal = (isOpen: boolean) => {
+		isShowModal = isOpen;
 		resetUserLogin();
 	};
 
-	let userLogin: IUserLogin;
-
-	let isValidEmail: boolean | null = null; // null / true / false
-	let emailValidationMessage = "";
-	let submitErrorMessage = "";
-	let isShowName = false;
-	let isShowPw = false;
-
-	let showLogin = () => {
-		showModal(true);
+	const showLogin = () => {
+		setModal(true);
 		setTimeout(() => document.getElementById("login-email")?.focus(), 200);
 	};
 
-	let resetUserLogin = () => {
-		isValidEmail = null;
+	const resetUserLogin = () => {
+		userLogin = { ...newUserLogin };
+
+		isValidEmail = undefined;
 		emailValidationMessage = "";
 		submitErrorMessage = "";
-
 		isShowName = false;
 		isShowPw = false;
-
-		userLogin = {
-			email: "",
-			fullName: "",
-			pw: "",
-		};
 	};
 
-	resetUserLogin();
-
-	let signOut = () => {
-		user.logOut();
-		$wls = [];
-	};
-
-	let validateEmail = function () {
+	const validateEmail = () => {
 		emailValidationMessage = "";
 		userLogin.email = userLogin.email.trim();
 
@@ -72,12 +66,12 @@
 			setTimeout(() => document.getElementById("login-pw")?.focus(), 200);
 	};
 
-	let showName = () => {
+	const showName = () => {
 		isShowName = true;
 		setTimeout(() => document.getElementById("login-name")?.focus(), 200);
 	};
 
-	let signIn = function () {
+	const signIn = () => {
 		validateEmail();
 
 		if (!isValidEmail) return;
@@ -105,22 +99,37 @@
 			});
 	};
 
-	let cancel = function () {
-		resetUserLogin();
-		isShowModal = false;
+	const signOut = () => {
+		user.logOut();
+		$wls = [];
 	};
+
+	const cancel = () => setModal(false);
 </script>
 
 {#if $isLoggedIn}
 	{$user.fullName || $user.email}
-	<a href="/" on:click|preventDefault={signOut}>Sign out</a>
+	<a
+		href="/"
+		onclick={(e) => {
+			e.preventDefault();
+			signOut();
+		}}>Sign out</a
+	>
 {:else}
-	<a href="/" on:click|preventDefault={() => showLogin()}>Sign in</a>
+	<a
+		href="/"
+		onclick={(e) => {
+			e.preventDefault();
+			showLogin();
+		}}>Sign in</a
+	>
 {/if}
 
-<Modal {isShowModal} on:setmodal={setModal}>
-	<!-- svelte-ignore a11y-click-events-have-key-events a11y-no-static-element-interactions -->
-	<div class="modal-content" on:click={(e) => e.stopPropagation()}>
+<Modal {isShowModal} {setModal}>
+	<!-- svelte-ignore a11y_click_events_have_key_events a11y-no-static-element-interactions -->
+	<!-- svelte-ignore a11y_no_noninteractive_element_interactions -->
+	<div class="modal-content" role="form" onclick={(e) => e.stopPropagation()}>
 		<div class="title">Provide your email address to register.</div>
 		<div class="subtitle">We almost never email.</div>
 		<div class="content">
@@ -130,13 +139,16 @@
 				class="signin"
 				placeholder="Email"
 				bind:value={userLogin.email}
-				on:blur={validateEmail}
+				onblur={validateEmail}
 			/>
 			<div class="error">{emailValidationMessage}</div>
 
 			<a
 				href="/"
-				on:click|preventDefault={showName}
+				onclick={(e) => {
+					e.preventDefault();
+					showName();
+				}}
 				style="display:{isShowName ? 'none' : 'block'}"
 				>Optional: Include your name</a
 			>
@@ -158,12 +170,10 @@
 				bind:value={userLogin.pw}
 			/>
 
-			<button
-				on:click={signIn}
-				class="primary"
-				disabled={isValidEmail === false}>Go</button
+			<button onclick={signIn} class="primary" disabled={isValidEmail === false}
+				>Go</button
 			>
-			<button on:click={cancel}>Cancel</button>
+			<button onclick={cancel}>Cancel</button>
 			<div class="error">{submitErrorMessage}</div>
 		</div>
 	</div>

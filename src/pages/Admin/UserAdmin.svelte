@@ -1,9 +1,13 @@
+<svelte:options runes={true} />
+
 <script lang="ts">
+	import { onMount } from "svelte";
 	import type { AxiosResponse } from "axios";
 	import { httpClient as ax } from "../../stores/httpclient-store";
 
-	let master: IvwUserDetail[] = [];
-	let list: IvwUserDetail[] = [];
+	let master: IvwUserDetail[] = $state([]);
+	let list: IvwUserDetail[] = $state([]);
+
 	let fs = {
 		prop1: "",
 		prop2: "",
@@ -12,6 +16,7 @@
 	};
 
 	let filterList = (filterText: string) => {
+		// TODO: implement filter
 		list = master.filter((a) => true);
 	};
 
@@ -44,7 +49,7 @@
 
 	// *** Init ***
 
-	let init = () => {
+	onMount(() => {
 		$ax
 			.get("/api/admin/Users/GetDetails")
 			.then((response: AxiosResponse<IvwUserDetail[]>) => {
@@ -52,9 +57,7 @@
 			})
 			.then(() => filterList("todo"))
 			.catch((err) => console.error({ err }));
-	};
-
-	init();
+	});
 </script>
 
 <div class="summary">
@@ -69,34 +72,73 @@
 
 	<div class="title row">
 		<div>
-			<a href="/" on:click|preventDefault={() => sortList("userId")}>Id</a>
-		</div>
-		<div>
-			<a href="/" on:click|preventDefault={() => sortList("email")}>Email</a>
-		</div>
-		<div>
-			<a href="/" on:click|preventDefault={() => sortList("fullName")}
-				>Full Name</a
+			<a
+				href="/"
+				onclick={(e) => {
+					e.preventDefault();
+					sortList("userId");
+				}}>Id</a
 			>
 		</div>
 		<div>
-			<a href="/" on:click|preventDefault={() => sortList("createdDate")}
-				>Created</a
+			<a
+				href="/"
+				onclick={(e) => {
+					e.preventDefault();
+					sortList("email");
+				}}>Email</a
 			>
 		</div>
 		<div>
-			<a href="/" on:click|preventDefault={() => sortList("lastLoginDate")}
-				>Last Login</a
+			<a
+				href="/"
+				onclick={(e) => {
+					e.preventDefault();
+					sortList("fullName");
+				}}>Full Name</a
+			>
+		</div>
+		<div>
+			<a
+				href="/"
+				onclick={(e) => {
+					e.preventDefault();
+					sortList("createdDate");
+				}}>Created</a
+			>
+		</div>
+		<div>
+			<a
+				href="/"
+				onclick={(e) => {
+					e.preventDefault();
+					sortList("lastLoginDate");
+				}}>Last Login</a
 			>
 		</div>
 		<div class="sm">
-			<a href="/" on:click|preventDefault={() => sortList("countAll")}>All</a> /
-			<a href="/" on:click|preventDefault={() => sortList("countPending")}
-				>Pend</a
+			<a
+				href="/"
+				onclick={(e) => {
+					e.preventDefault();
+					sortList("countAll");
+				}}>All</a
 			>
 			/
-			<a href="/" on:click|preventDefault={() => sortList("countClosed")}
-				>Closed</a
+			<a
+				href="/"
+				onclick={(e) => {
+					e.preventDefault();
+					sortList("countPending");
+				}}>Pend</a
+			>
+			/
+			<a
+				href="/"
+				onclick={(e) => {
+					e.preventDefault();
+					sortList("countClosed");
+				}}>Closed</a
 			>
 		</div>
 	</div>
