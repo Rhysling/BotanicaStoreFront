@@ -1,34 +1,35 @@
+<svelte:options runes={true} />
+
 <script lang="ts">
 	import type { AxiosResponse } from "axios";
 	import { httpClient as ax } from "../../stores/httpclient-store";
 	import EditCalendarAdmin from "../../components/admin/EditCalendarAdmin.svelte";
 
-	let calMaster: ICalendar[] = [];
-	let calList: ICalendar[] = [];
-	let isFutureOnly = false;
-	let editedItem: ICalendar | null = null;
-	let editError = "";
+	const newItem: ICalendar = {
+		itemId: 0,
+		beginDate: "",
+		endDate: null,
+		eventTime: "",
+		title: "",
+		location: "",
+		description: "",
+		isSpecial: false,
+		beginDateFormatted: "",
+		endDateFormatted: "",
+	};
+
+	let calMaster: ICalendar[] = $state([]);
+	let calList: ICalendar[] = $state([]);
+	let isFutureOnly = $state(false);
+	let editedItem: ICalendar | null = $state(null);
+	let editError = $state("");
 
 	let editItem = (itemId: number) => {
 		if (itemId === 0) {
-			editedItem = {
-				itemId: 0,
-				beginDate: "",
-				endDate: null,
-				eventTime: "",
-				title: "",
-				location: "",
-				description: "",
-				isSpecial: false,
-				beginDateFormatted: "",
-				endDateFormatted: "",
-			};
-
+			editedItem = { ...newItem };
 			return;
 		}
-
-		let c = calList.find((a) => a.itemId == itemId);
-
+		let c = calMaster.find((a) => a.itemId == itemId);
 		if (c) editedItem = c;
 	};
 
@@ -61,19 +62,17 @@
 		else calList = calMaster;
 	};
 
-	let handleEditModal = (e: CustomEvent<{ val: boolean }>) => {
-		if (!e.detail.val) editedItem = null;
-	};
-
-	let handleFinishEdit = (e: CustomEvent<ICalendar>) => {
-		if (e.detail.itemId < 0) {
+	let handleFinishEdit = (item: Partial<ICalendar>) => {
+		if (item.itemId && item.itemId < 0) {
 			editedItem = null;
 			return;
 		}
-		saveItem(e.detail);
+		saveItem(<ICalendar>item);
 	};
 
-	$: filterList(isFutureOnly);
+	$effect(() => {
+		filterList(isFutureOnly);
+	});
 
 	// *** Init ***
 
@@ -105,7 +104,13 @@
 	</div>
 	<div class="right">
 		<i class="fas fa-caret-right"></i>
-		<a href="/" on:click|preventDefault={() => editItem(0)}>Add</a>
+		<a
+			href="/"
+			onclick={(e) => {
+				e.preventDefault();
+				editItem(0);
+			}}>Add</a
+		>
 	</div>
 </div>
 
@@ -122,9 +127,14 @@
 			</div>
 			<div class="details">
 				<div class="title">
-					<a href="/" on:click|preventDefault={() => editItem(c.itemId)}
-						>{c.title}</a
-					>
+					<a
+						href="/"
+						onclick={(e) => {
+							e.preventDefault();
+							editItem(c.itemId);
+						}}
+						>{c.title}
+					</a>
 				</div>
 				<div class="description">{@html c.description}</div>
 				<div class="location">{c.location}</div>
@@ -137,12 +147,7 @@
 </div>
 
 {#if editedItem}
-	<EditCalendarAdmin
-		item={editedItem}
-		{editError}
-		on:setmodal={handleEditModal}
-		on:finishEdit={handleFinishEdit}
-	/>
+	<EditCalendarAdmin item={editedItem} {editError} {handleFinishEdit} />
 {/if}
 
 <style lang="scss">

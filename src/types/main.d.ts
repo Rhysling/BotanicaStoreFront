@@ -22,6 +22,8 @@ type UserClient = {
 
 type JsonValue = string | number | boolean | null | JsonValue[] | { [key: string]: JsonValue };
 
+type ValidationState = boolean | undefined;
+
 type PageState = {
 	itemsPerPage: number;
 	itemCount: number;

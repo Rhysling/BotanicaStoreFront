@@ -1,36 +1,43 @@
+<svelte:options runes={true} />
+
 <script lang="ts">
+	import { onMount } from "svelte";
 	import type { AxiosResponse } from "axios";
 	import { httpClient as ax } from "../../stores/httpclient-store";
 	import EditLinksAdmin from "../../components/admin/EditLinksAdmin.svelte";
 
-	let master: ILink[] = [];
-	let list: ILink[] = [];
-	let includeDeleted = false;
-	let editedItem: ILinkEdit | null = null;
-	let editError = "";
+	const newItem: ILinkEdit = {
+		linkId: 0,
+		title: "",
+		description: "",
+		url: "",
+		sortOrder: 0,
+		isDeleted: false,
+		sortOrderEntered: "",
+	};
+
+	//*** State ***//
+	let master: ILink[] = $state([]);
+	let list: ILink[] = $state([]);
+	let includeDeleted = $state(false);
+	let editedItem: ILinkEdit | null = $state(null);
+	let editError = $state("");
 
 	let editItem = (linkId: number) => {
 		if (linkId == 0) {
-			editedItem = {
-				linkId: 0,
-				title: "",
-				description: "",
-				url: "",
-				sortOrder: 0,
-				isDeleted: false,
-				sortOrderEntered: "",
-			};
-
+			editedItem = { ...newItem };
 			return;
 		}
 
 		let item = list.find((a) => a.linkId == linkId);
-
-		if (item) {
-			let i: ILinkEdit = item;
-			i.sortOrderEntered = i.sortOrder.toString();
-			editedItem = i;
+		if (!item) {
+			editedItem = { ...newItem };
+			return;
 		}
+
+		let i: ILinkEdit = item;
+		i.sortOrderEntered = i.sortOrder.toString();
+		editedItem = i;
 	};
 
 	let saveItem = (item: ILink) => {
@@ -53,21 +60,16 @@
 		else list = master;
 	};
 
-	let handleEditModal = (e: CustomEvent<{ val: boolean }>) => {
-		if (!e.detail.val) editedItem = null;
-	};
-
-	let handleFinishEdit = (e: CustomEvent<ILink>) => {
-		if (e.detail.linkId < 0) {
+	let handleFinishEdit = (linkItem: Partial<ILink>) => {
+		if (linkItem.linkId !== undefined && linkItem.linkId < 0) {
 			editedItem = null;
 			return;
 		}
-		saveItem(e.detail);
+		saveItem(<ILink>linkItem);
 	};
 
 	// *** Init ***
-
-	let init = () => {
+	onMount(() => {
 		$ax
 			.get("/api/Links/GetAll?includeDeleted=true")
 			.then((response: AxiosResponse<ILink[]>) => {
@@ -75,9 +77,7 @@
 			})
 			.then(() => filterList(includeDeleted))
 			.catch((err) => console.error({ err }));
-	};
-
-	init();
+	});
 </script>
 
 <div class="search">
@@ -87,12 +87,18 @@
 			type="checkbox"
 			class="filter-box"
 			bind:checked={includeDeleted}
-			on:change={() => filterList(includeDeleted)}
+			onchange={() => filterList(includeDeleted)}
 		/>
 	</div>
 	<div class="right">
 		<i class="fas fa-caret-right"></i>
-		<a href="/" on:click|preventDefault={() => editItem(0)}>Add</a>
+		<a
+			href="/"
+			onclick={(e) => {
+				e.preventDefault();
+				editItem(0);
+			}}>Add</a
+		>
 	</div>
 </div>
 
@@ -106,7 +112,10 @@
 			<a
 				class="edit-link"
 				href="/"
-				on:click|preventDefault={() => editItem(a.linkId)}>Edit</a
+				onclick={(e) => {
+					e.preventDefault();
+					editItem(a.linkId);
+				}}>Edit</a
 			>
 		</div>
 	{:else}
@@ -115,12 +124,7 @@
 </div>
 
 {#if editedItem}
-	<EditLinksAdmin
-		item={editedItem}
-		{editError}
-		on:setmodal={handleEditModal}
-		on:finishEdit={handleFinishEdit}
-	/>
+	<EditLinksAdmin {editedItem} {editError} {handleFinishEdit} />
 {/if}
 
 <style lang="scss">

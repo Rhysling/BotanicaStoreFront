@@ -1,26 +1,49 @@
+<svelte:options runes={true} />
+
 <script lang="ts">
 	import Modal from "../Modal.svelte";
-	import { createEventDispatcher } from "svelte";
 
-	export let item: ICalendar | null;
-	export let editError = "";
+	let {
+		item,
+		editError = "",
+		handleFinishEdit = () => {},
+	}: {
+		item: ICalendar;
+		editError: string;
+		handleFinishEdit: (val: Partial<ICalendar>) => void;
+	} = $props();
 
-	const dispatch = createEventDispatcher();
+	const newItem: ICalendar = {
+		itemId: 0,
+		beginDate: "",
+		endDate: null,
+		eventTime: "",
+		title: "",
+		location: "",
+		description: "",
+		isSpecial: false,
+		beginDateFormatted: "",
+		endDateFormatted: "",
+	};
 
-	let c = { ...item };
+	//*** State ***//
+	let c = $state({ ...newItem });
 
-	let valMsgBeginDate = "";
-	let valMsgEndDate = "";
-	let valMsgTitle = "";
-	let isValid = true;
+	let valMsgBeginDate = $state("");
+	let valMsgEndDate = $state("");
+	let valMsgTitle = $state("");
+	let isValid: boolean = $derived(
+		(valMsgBeginDate + valMsgEndDate + valMsgTitle).length === 0,
+	);
 
-	let testRequired = (str: string) => {
+	//*** Validation Functions ***//
+	const testRequired = (str: string) => {
 		if (!str) return "Required.";
 		if (str.trim().length == 0) return "Required.";
 		return "";
 	};
 
-	let testIsDate = (str: string) => {
+	const testIsDate = (str: string) => {
 		if (!str) return "";
 		let d = Date.parse(str);
 		if (isNaN(d)) return "Not a valid date.";
@@ -30,7 +53,7 @@
 		return "";
 	};
 
-	let testIsAfter = (str: string, firstDate: string) => {
+	const testIsAfter = (str: string, firstDate: string) => {
 		if (!str) return "";
 		let d = Date.parse(str);
 		let df = Date.parse(firstDate);
@@ -38,40 +61,58 @@
 		return "";
 	};
 
-	let validateBeginDate = (str: string) => {
+	const validateBeginDate = (str: string) => {
 		valMsgBeginDate = [testRequired(str), testIsDate(str)].join(" ").trim();
 	};
 
-	let validateEndDate = (str: string, first: string) => {
+	const validateEndDate = (str: string, first: string) => {
 		valMsgEndDate = [testIsDate(str), testIsAfter(str, first)].join(" ").trim();
 	};
 
-	let validateTitle = (str: string) => {
+	const validateTitle = (str: string) => {
 		valMsgTitle = testRequired(str);
 	};
 
-	$: isValid = (valMsgBeginDate + valMsgEndDate + valMsgTitle).length === 0;
-
-	let validate = () => {
+	const validate = () => {
 		validateBeginDate(c.beginDate || "");
 		validateEndDate(c.endDate || "", c.beginDate || "");
 		validateTitle(c.title || "");
-		isValid = (valMsgBeginDate + valMsgEndDate + valMsgTitle).length === 0;
+		//isValid = (valMsgBeginDate + valMsgEndDate + valMsgTitle).length === 0;
 	};
 
-	let save = () => {
+	const resetValidation = () => {
+		valMsgBeginDate = "";
+		valMsgEndDate = "";
+		valMsgTitle = "";
+		isValid = true;
+	};
+
+	const save = () => {
 		validate();
-		if (isValid) dispatch("finishEdit", c);
+		if (isValid) handleFinishEdit(c);
 	};
 
-	let cancel = () => {
-		dispatch("finishEdit", { itemId: -1 });
+	const cancel = () => {
+		handleFinishEdit({ itemId: -1 });
+		c = { ...newItem };
+		resetValidation();
 	};
+
+	// Startup
+	let hasRun = false;
+	$effect(() => {
+		if (!hasRun) {
+			c = { ...item };
+			hasRun = true;
+			resetValidation();
+		}
+	});
 </script>
 
 <Modal isShowModal={true} on:setmodal>
-	<!-- svelte-ignore a11y-click-events-have-key-events a11y-no-static-element-interactions -->
-	<div class="editor" on:click={(e) => e.stopPropagation()}>
+	<!-- svelte-ignore a11y_click_events_have_key_events a11y-no-static-element-interactions -->
+	<!-- svelte-ignore a11y_no_static_element_interactions -->
+	<div class="editor" onclick={(e) => e.stopPropagation()}>
 		<div class="title">Add / Edit Calendar Item</div>
 		{#if editError}
 			<div class="error">
@@ -92,7 +133,7 @@
 				<input
 					type="text"
 					bind:value={c.beginDate}
-					on:blur={() => validateBeginDate(c.beginDate || "")}
+					onblur={() => validateBeginDate(c.beginDate || "")}
 					class:error-box={valMsgBeginDate ? true : null}
 					placeholder="Begin Date"
 				/>
@@ -106,7 +147,7 @@
 				<input
 					type="text"
 					bind:value={c.endDate}
-					on:blur={() => validateEndDate(c.endDate || "", c.beginDate || "")}
+					onblur={() => validateEndDate(c.endDate || "", c.beginDate || "")}
 					class:error-box={valMsgEndDate ? true : null}
 					placeholder="End Date"
 				/>
@@ -127,7 +168,7 @@
 				<input
 					type="text"
 					bind:value={c.title}
-					on:blur={() => validateTitle(c.title || "")}
+					onblur={() => validateTitle(c.title || "")}
 					class:error-box={valMsgTitle ? true : null}
 					placeholder="Title"
 				/>
@@ -160,11 +201,11 @@
 
 		<div class="buttons">
 			<button
-				on:click={save}
+				onclick={save}
 				class="primary"
 				disabled={isValid ? undefined : true}>Save</button
 			>
-			<button on:click={cancel}>Cancel</button>
+			<button onclick={cancel}>Cancel</button>
 		</div>
 	</div>
 </Modal>

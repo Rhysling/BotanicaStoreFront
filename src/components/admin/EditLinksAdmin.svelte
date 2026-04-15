@@ -1,18 +1,36 @@
+<svelte:options runes={true} />
+
 <script lang="ts">
 	import Modal from "../Modal.svelte";
-	import { createEventDispatcher } from "svelte";
 
-	export let item: ILinkEdit | null;
-	export let editError = "";
+	const newItem: ILinkEdit = {
+		linkId: 0,
+		title: "",
+		description: "",
+		url: "",
+		sortOrder: 0,
+		isDeleted: false,
+		sortOrderEntered: "",
+	};
 
-	const dispatch = createEventDispatcher();
+	let {
+		editedItem,
+		editError = "",
+		handleFinishEdit = () => {},
+	}: {
+		editedItem: ILinkEdit;
+		editError?: string;
+		handleFinishEdit: (linkItem: Partial<ILink>) => void;
+	} = $props();
 
-	let c = { ...item };
+	let c = $state({ ...newItem });
 
-	let valMsgTitle = "";
-	let valMsgUrl = "";
-	let valMsgSortOrder = "";
-	let isValid = true;
+	let valMsgTitle = $state("");
+	let valMsgUrl = $state("");
+	let valMsgSortOrder = $state("");
+	let isValid = $derived(
+		(valMsgTitle + valMsgUrl + valMsgSortOrder).length === 0,
+	);
 
 	let testRequired = (str: string | undefined) => {
 		if (!str) return "Required.";
@@ -51,13 +69,10 @@
 		if (!valMsgSortOrder) valMsgSortOrder = testIsPositiveInteger(str);
 	};
 
-	$: isValid = (valMsgTitle + valMsgUrl + valMsgSortOrder).length === 0;
-
 	let validate = () => {
 		validateTitle(c.title);
 		validateUrl(c.url);
 		validateSortOrder(c.sortOrderEntered);
-		isValid = (valMsgTitle + valMsgUrl + valMsgSortOrder).length === 0;
 	};
 
 	let save = () => {
@@ -65,18 +80,28 @@
 		if (isValid) {
 			c.description = c.description || "";
 			c.sortOrder = Number(c.sortOrderEntered);
-			dispatch("finishEdit", c);
+			handleFinishEdit(c);
 		}
 	};
 
 	let cancel = () => {
-		dispatch("finishEdit", { linkId: -1 });
+		handleFinishEdit({ linkId: -1 });
 	};
+
+	// Startup
+	let hasRun = false;
+	$effect(() => {
+		if (!hasRun) {
+			c = { ...editedItem };
+			hasRun = true;
+		}
+	});
 </script>
 
 <Modal isShowModal={true} on:setmodal>
-	<!-- svelte-ignore a11y-click-events-have-key-events a11y-no-static-element-interactions -->
-	<div class="editor" on:click={(e) => e.stopPropagation()}>
+	<!-- svelte-ignore a11y_click_events_have_key_events a11y-no-static-element-interactions -->
+	<!-- svelte-ignore a11y_no_noninteractive_element_interactions -->
+	<div class="editor" role="form" onclick={(e) => e.stopPropagation()}>
 		<div class="title">Add / Edit Link Item</div>
 		{#if editError}
 			<div class="error">
@@ -97,7 +122,7 @@
 				<input
 					type="text"
 					bind:value={c.title}
-					on:blur={() => validateTitle(c.title)}
+					onblur={() => validateTitle(c.title)}
 					class:error-box={valMsgTitle ? true : null}
 					placeholder="Title"
 				/>
@@ -111,7 +136,7 @@
 				<input
 					type="text"
 					bind:value={c.url}
-					on:blur={() => validateUrl(c.url)}
+					onblur={() => validateUrl(c.url)}
 					class:error-box={valMsgUrl ? true : null}
 					placeholder="URL"
 				/>
@@ -133,7 +158,7 @@
 				<input
 					type="text"
 					bind:value={c.sortOrderEntered}
-					on:blur={() => validateSortOrder(c.sortOrderEntered)}
+					onblur={() => validateSortOrder(c.sortOrderEntered)}
 					class:error-box={valMsgSortOrder ? true : null}
 					placeholder="Sort Order"
 				/>
@@ -150,11 +175,11 @@
 
 		<div class="buttons">
 			<button
-				on:click={save}
+				onclick={save}
 				class="primary"
 				disabled={isValid ? undefined : true}>Save</button
 			>
-			<button on:click={cancel}>Cancel</button>
+			<button onclick={cancel}>Cancel</button>
 		</div>
 	</div>
 </Modal>

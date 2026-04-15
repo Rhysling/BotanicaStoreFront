@@ -15,11 +15,9 @@
 				"/api/admin/Pictures/GetAudit",
 			);
 			auditResult = response.data;
-			//console.log({auditResult});
 			plants = [];
 			editPlantId = 0;
 		} catch (error) {
-			//let err = <AxiosError>error;
 			console.error({ error });
 		}
 	};
