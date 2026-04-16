@@ -198,13 +198,13 @@
 		plantForPics = plants.find((p) => p.plantId === plantId) || $newPlant;
 	};
 
-	let handleCloseEditPictures = (e: CustomEvent<{ val: boolean }>) => {
-		if (!e.detail.val) plantForPics = null;
+	let handleCloseEditPictures = (isOpen: boolean) => {
+		if (!isOpen) plantForPics = null;
 	};
 
-	let handleSavePicture = (e: CustomEvent<FormData>) => {
+	let handleSavePicture = (form: FormData) => {
 		$ax
-			.post("/api/admin/Pictures/SavePicture", e.detail, {
+			.post("/api/admin/Pictures/SavePicture", form, {
 				headers: {
 					"Content-Type": "multipart/form-data",
 				},
@@ -216,9 +216,18 @@
 						JSON.parse(plantForPics.pics) || []
 					).filter((a: IPlantPicId) => a.picId !== ppid.picId);
 					ppidList = [...ppidList, ppid].sort((a, b) => a.picId - b.picId);
-					plantForPics.pics = JSON.stringify(ppidList);
+					const newPics = JSON.stringify(ppidList);
 
-					updatePlant(plantForPics);
+					// Preload the image so the <img> tag never shows a broken state
+					const imgPath = `/plantpics/p${ppid.plantId.toString().padStart(4, "0")}_${ppid.picId.toString().padStart(2, "0")}_${ppid.key}.jpg`;
+					const probe = new Image();
+					probe.onload = probe.onerror = () => {
+						if (plantForPics) {
+							plantForPics = { ...plantForPics, pics: newPics };
+							updatePlant(plantForPics);
+						}
+					};
+					probe.src = imgPath;
 				}
 			})
 			.catch((e: AxiosError) => {
@@ -226,17 +235,19 @@
 			});
 	};
 
-	let handleDeletePicture = (e: CustomEvent<IPlantPicId>) => {
-		let ppid = e.detail;
+	let handleDeletePicture = (ppid: IPlantPicId) => {
 		$ax
 			.post("/api/admin/Pictures/DeletePicture", ppid)
 			.then(() => {
 				if (plantForPics) {
-					plantForPics.pics = JSON.stringify(
-						(JSON.parse(plantForPics.pics) || []).filter(
-							(a: IPlantPicId) => a.picId !== ppid.picId,
+					plantForPics = {
+						...plantForPics,
+						pics: JSON.stringify(
+							(JSON.parse(plantForPics.pics) || []).filter(
+								(a: IPlantPicId) => a.picId !== ppid.picId,
+							),
 						),
-					);
+					};
 					updatePlant(plantForPics);
 				}
 			})
@@ -287,9 +298,9 @@
 {#if plantForPics}
 	<PlantPicsAdmin
 		plant={plantForPics}
-		on:setmodal={handleCloseEditPictures}
-		on:savePic={handleSavePicture}
-		on:deletePic={handleDeletePicture}
+		{handleCloseEditPictures}
+		{handleSavePicture}
+		{handleDeletePicture}
 	/>
 {/if}
 

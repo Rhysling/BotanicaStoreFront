@@ -30,8 +30,12 @@
 	let bigPicPaths: PicIdPath[] = $state([]);
 	let isShowModal = $state(false);
 
-	let showBigPics = (e: CustomEvent<PicIdPath[]>) => {
-		bigPicPaths = e.detail;
+	const setModal = (isOpen: boolean) => {
+		isShowModal = isOpen;
+	};
+
+	let showBigPics = (bigPicPathsIn: PicIdPath[]) => {
+		bigPicPaths = bigPicPathsIn;
 		isShowModal = true;
 	};
 
@@ -97,7 +101,7 @@
 
 <div id="plant-list">
 	{#each pagedPlants as p (p.plantId)}
-		<DisplayPlant plant={p} on:showBigPics={showBigPics} />
+		<DisplayPlant plant={p} {showBigPics} />
 	{/each}
 </div>
 
@@ -113,7 +117,7 @@
 	</div>
 </div>
 
-<PlantBigPicModal {bigPicPaths} {isShowModal} on:setmodal={handleSetModal} />
+<PlantBigPicModal {bigPicPaths} {isShowModal} {setModal} />
 
 <style lang="scss">
 	@use "../styles/_custom-variables.scss" as c;

@@ -1,55 +1,44 @@
+<svelte:options runes={true} />
+
 <script lang="ts">
-	import { createEventDispatcher } from "svelte";
 	import { isLoggedIn } from "../stores/user-store";
 	import { navTo } from "../stores/route-store.svelte";
 	import { picPaths } from "../stores/utils";
 
-	export let plant: IvwListedPlant;
+	let {
+		plant,
+		showBigPics,
+	}: {
+		plant: IvwListedPlant;
+		showBigPics: (bigPicPaths: PicIdPath[]) => void;
+	} = $props();
 
-	let plantId: number;
-	let genus: string;
-	let species: string;
-	let family: string;
-	let description: string;
-	let plantSize: string;
-	let plantType: string;
-	let plantZone: string;
+	let plantId = $derived(plant.plantId);
+	let genus = $derived(plant.genus);
+	let species = $derived(plant.species);
+	let family = $derived(plant.family);
+	let description = $derived(plant.description);
+	let plantSize = $derived(plant.plantSize);
+	let plantType = $derived(plant.plantType);
+	let plantZone = $derived(plant.plantZone);
 	// pictureLocation
-	let isNwNative: boolean;
-	let pics: string;
+	let isNwNative = $derived(plant.isNwNative);
+	let pics = $derived(plant.pics);
 	// isFeatured
-	let slug: string;
-	let availability: string;
+	let slug = $derived(plant.slug);
+	let availability = $derived(plant.availability);
 
-	$: ({
-		plantId,
-		genus,
-		species,
-		family,
-		description,
-		plantSize,
-		plantType,
-		plantZone,
-		isNwNative,
-		pics,
-		slug,
-		availability,
-	} = plant);
-
-	const dispatch = createEventDispatcher();
-
-	let paths: PicPaths;
-	$: paths = picPaths(plantId, pics);
-
-	let showBigPics = () => {
-		dispatch("showBigPics", paths.lgPaths);
-	};
+	let paths: PicPaths = $derived.by(() => picPaths(plantId, pics));
 </script>
 
 <div class="plant">
 	{#if paths.lgPaths.length}
-		<a href="/" on:click|preventDefault={showBigPics}
-			><img src={paths.smPath} alt="{genus} {species}" /></a
+		<a
+			href="/"
+			onclick={(e) => {
+				e.preventDefault();
+				showBigPics(paths.lgPaths);
+			}}><img src={paths.smPath} alt="{genus} {species}" /></a
 		>
 	{:else}
 		<img src={paths.smPath} alt="{genus} {species}" />
@@ -67,9 +56,7 @@
 		</div>
 		<div class="permalink">
 			<a href="/plant/{slug}" target="_blank">Permalink</a>
-			{#if false}<a
-					href="/"
-					on:click|preventDefault={(e) => navTo(e, "/plant/" + slug)}
+			{#if false}<a href="/" onclick={(e) => navTo(e, "/plant/" + slug)}
 					>Permalink</a
 				>{/if}
 		</div>
@@ -79,8 +66,7 @@
 				{#if $isLoggedIn}
 					<a
 						href="/"
-						on:click|preventDefault={(e) =>
-							navTo(e, "/shopping-list", { plantId })}
+						onclick={(e) => navTo(e, "/shopping-list", { plantId })}
 						title="Go to Shopping List">{availability}</a
 					>
 				{:else}

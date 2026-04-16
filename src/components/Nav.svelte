@@ -1,16 +1,18 @@
+<svelte:options runes={true} />
+
 <script lang="ts">
 	import { routeStore, navTo } from "../stores/route-store.svelte.js";
 
-	let allRoutes: Route[];
-	$: {
-		allRoutes = [
-			{ ...routeStore.routes },
-			...(routeStore.routes.children?.filter((a) => !a.isHidden) || []),
-		];
-		allRoutes[0].children = [];
-	}
+	let allRoutes: Route[] = $state([
+		{ ...routeStore.routes },
+		...(routeStore.routes.children?.filter((a) => !a.isHidden) || []),
+	]);
 
-	let isOpenRoot = false;
+	let isOpenRoot = $state(false);
+
+	$effect(() => {
+		allRoutes[0].children = [];
+	});
 
 	let setOpenRoot = (val: boolean) => {
 		isOpenRoot = val;
@@ -23,7 +25,6 @@
 		for (let r of allRoutes) {
 			r.isExpanded = r.path == pathName ? !r.isExpanded : false;
 		}
-		allRoutes = allRoutes;
 	};
 
 	let nav = (e: MouseEvent, path: string) => {
@@ -34,20 +35,30 @@
 </script>
 
 <div class="nav-vertical" class:open={isOpenRoot ? true : undefined}>
-	<!-- svelte-ignore a11y-click-events-have-key-events a11y-no-static-element-interactions -->
+	<!-- svelte-ignore a11y_click_events_have_key_events a11y_no_static_element_interactions -->
+	<!-- svelte-ignore a11y_no_noninteractive_element_interactions -->
 	<div
 		class="nav-toggle"
-		on:mouseenter={() => setOpenRoot(true)}
-		on:click|stopPropagation={() => setOpenRoot(!isOpenRoot)}
+		role="navigation"
+		onmouseenter={() => setOpenRoot(true)}
+		onclick={(e) => {
+			e.stopPropagation();
+			setOpenRoot(!isOpenRoot);
+		}}
 	>
 		<i class="fas fa-bars"></i>
 	</div>
 	<nav>
 		{#each allRoutes as r}
 			{#if r.children && r.children.length}
-				<!-- svelte-ignore a11y-click-events-have-key-events a11y-no-static-element-interactions -->
+				<!-- svelte-ignore a11y_click_events_have_key_events a11y_no_static_element_interactions -->
+				<!-- svelte-ignore a11y_no_noninteractive_element_interactions -->
 				<div
-					on:click|stopPropagation={() => toggleOpenDropdown(r.path)}
+					role="navigation"
+					onclick={(e) => {
+						e.stopPropagation();
+						toggleOpenDropdown(r.path);
+					}}
 					class="dropdown"
 					class:open={r.isExpanded ? true : undefined}
 				>
@@ -56,7 +67,10 @@
 						{#each r.children.filter((a) => !a.isHidden) as c}
 							<a
 								href="/"
-								on:click={(e) => nav(e, c.path)}
+								onclick={(e) => {
+									e.preventDefault();
+									nav(e, c.path);
+								}}
 								class:selected={c.path === routeStore.currentPath}
 								>{c.navName || c.page}</a
 							>
@@ -66,8 +80,12 @@
 			{:else}
 				<a
 					href="/"
-					on:click={(e) => nav(e, r.path)}
-					class:selected={r.path === routeStore.currentPath}>{r.navName || r.page}</a
+					onclick={(e) => {
+						e.preventDefault();
+						nav(e, r.path);
+					}}
+					class:selected={r.path === routeStore.currentPath}
+					>{r.navName || r.page}</a
 				>
 			{/if}
 		{/each}

@@ -1,18 +1,22 @@
+<svelte:options runes={true} />
+
 <script lang="ts">
 	import Modal from "./Modal.svelte";
 
-	export let bigPicPaths: PicIdPath[] = [];
-	export let isShowModal: boolean = false;
+	let {
+		bigPicPaths = [],
+		isShowModal = false,
+		setModal,
+	}: {
+		bigPicPaths: PicIdPath[];
+		isShowModal: boolean;
+		setModal: (isOpen: boolean) => void;
+	} = $props();
 
-	let last: number;
-	let ix = 0;
-	let hasMultiple: boolean;
+	let ix = $state(0);
 
-	$: {
-		last = bigPicPaths.length - 1;
-		ix = 0;
-		hasMultiple = last > 0;
-	}
+	let last = $derived(bigPicPaths.length - 1);
+	let hasMultiple = $derived(last > 0);
 
 	const changePic = (n: number) => {
 		let i = ix + n;
@@ -44,18 +48,22 @@
 	};
 </script>
 
-<svelte:window on:keydown={(e) => moveByArrow(e)} />
-<Modal {isShowModal}>
+<svelte:window onkeydown={(e) => moveByArrow(e)} />
+<Modal {isShowModal} {setModal}>
 	{#if isShowModal}
-		<!-- svelte-ignore a11y-click-events-have-key-events a11y-no-static-element-interactions -->
-		<div class="frame" on:click={(e) => e.stopPropagation()}>
+		<!-- svelte-ignore a11y_click_events_have_key_events a11y_no_static_element_interactions -->
+		<!-- svelte-ignore a11y_no_noninteractive_element_interactions -->
+		<div class="frame" role="banner" onclick={(e) => e.stopPropagation()}>
 			{#if hasMultiple}
 				<a
 					href="/"
 					class="arrow left"
 					title="Left"
-					on:click|preventDefault|stopPropagation={() => changePic(-1)}
-					><i class="fas fa-angle-left"></i></a
+					onclick={(e) => {
+						e.preventDefault();
+						e.stopPropagation();
+						changePic(-1);
+					}}><i class="fas fa-angle-left"></i></a
 				>
 			{/if}
 			<img src={bigPicPaths[ix].path} alt="Botanica plant" />
@@ -64,8 +72,11 @@
 					href="/"
 					class="arrow right"
 					title="Right"
-					on:click|preventDefault|stopPropagation={() => changePic(1)}
-					><i class="fas fa-angle-right"></i></a
+					onclick={(e) => {
+						e.preventDefault();
+						e.stopPropagation();
+						changePic(-1);
+					}}><i class="fas fa-angle-right"></i></a
 				>
 			{/if}
 		</div>
