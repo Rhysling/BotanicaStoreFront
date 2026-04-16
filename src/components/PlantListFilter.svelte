@@ -1,15 +1,20 @@
+<svelte:options runes={true} />
+
 <script lang="ts">
-	import { createEventDispatcher } from "svelte";
-	//import { plantListFilterDisplay as plfd, plantListFilterActive as plfa } from "../stores/listedplants-store";
-
-	export let filterText = "";
-	export let includeNotAvailable = true;
-	export let isNwNativeOnly = false;
-
-	const dispatch = createEventDispatcher();
+	let {
+		filterText = "",
+		includeNotAvailable = true,
+		isNwNativeOnly = false,
+		handleFilterPlants,
+	}: {
+		filterText: string;
+		includeNotAvailable: boolean;
+		isNwNativeOnly: boolean;
+		handleFilterPlants: (filter: PlantFilter) => void;
+	} = $props();
 
 	let filterPlants = () => {
-		dispatch("filterPlants", {
+		handleFilterPlants({
 			filterText,
 			includeNotAvailable,
 			isNwNativeOnly,
@@ -54,9 +59,21 @@
 <div class="sep">
 	<i class="fas fa-caret-left"></i><i class="fas fa-caret-right"></i>
 </div>
-<a href="/" on:click|preventDefault={filterPlants}>Go</a>
+<a
+	href="/"
+	onclick={(e) => {
+		e.preventDefault();
+		filterPlants();
+	}}>Go</a
+>
 <div class="sep">-</div>
-<a href="/" on:click|preventDefault={clearFilter}>Cancel</a>
+<a
+	href="/"
+	onclick={(e) => {
+		e.preventDefault();
+		clearFilter();
+	}}>Cancel</a
+>
 
 <style lang="scss">
 	@use "../styles/_custom-variables.scss" as c;

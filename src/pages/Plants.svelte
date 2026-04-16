@@ -43,8 +43,8 @@
 		isShowModal = e.detail.val;
 	};
 
-	let handleFilterPlants = (e: CustomEvent<PlantFilter>) => {
-		plantListFilter = e.detail;
+	let handleFilterPlants = (filter: PlantFilter) => {
+		plantListFilter = filter;
 		filterPlants();
 	};
 
@@ -88,7 +88,7 @@
 </script>
 
 <div class="filter-pager">
-	<PlantListFilter {...plantListFilter} on:filterPlants={handleFilterPlants} />
+	<PlantListFilter {...plantListFilter} {handleFilterPlants} />
 	<div class="pager">
 		<Pager
 			{itemsPerPage}
@@ -106,7 +106,7 @@
 </div>
 
 <div class="filter-pager">
-	<PlantListFilter {...plantListFilter} on:filterPlants={handleFilterPlants} />
+	<PlantListFilter {...plantListFilter} {handleFilterPlants} />
 	<div class="pager">
 		<Pager
 			{itemsPerPage}

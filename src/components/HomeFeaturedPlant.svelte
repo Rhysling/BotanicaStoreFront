@@ -1,24 +1,21 @@
+<svelte:options runes={true} />
+
 <script lang="ts">
 	import { navTo } from "../stores/route-store.svelte";
 	import { listedPlants } from "../stores/listedplants-store";
 	import { picPaths } from "../stores/utils";
 
-	let fp: IvwListedPlant | undefined;
-	let pn = "";
-	let src = "";
-	let slug = "";
-	let paths: PicPaths;
-
-	$: {
-		fp = $listedPlants.find((p) => p.isFeatured);
-
-		if (fp) {
-			pn = fp.genus + (fp.species ? " " + fp.species : "");
-			paths = picPaths(fp.plantId, fp.pics);
-			src = paths.smPath;
-			slug = fp.slug;
-		}
-	}
+	let fp: IvwListedPlant | undefined = $derived.by(() =>
+		$listedPlants.find((p) => p.isFeatured),
+	);
+	let pn = $derived.by(() =>
+		fp ? fp.genus + (fp.species ? " " + fp.species : "") : "",
+	);
+	let paths: PicPaths = $derived.by(() =>
+		fp ? picPaths(fp.plantId, fp.pics) : { smPath: "", lgPaths: [] },
+	);
+	let src = $derived(paths.smPath);
+	let slug = $derived.by(() => (fp ? fp.slug : ""));
 </script>
 
 <div class="card-plants">
@@ -44,7 +41,7 @@
 					>
 				</div>
 				<a href="/plant/{slug}" target="_blank">Permalink</a>
-				<a href="/" on:click={(e) => navTo(e, "/plants")}>
+				<a href="/" onclick={(e) => navTo(e, "/plants")}>
 					See List of Available Plants
 				</a>
 			</div>

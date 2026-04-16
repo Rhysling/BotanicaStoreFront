@@ -1,4 +1,6 @@
-<script>
+<svelte:options runes={true} />
+
+<script lang="ts">
 	import { routeStore, navTo } from "../stores/route-store.svelte";
 	import Headroom from "./Headroom.svelte"; // Thanks to "svelte-headroom"
 	import UserBar from "./UserBar.svelte";
@@ -6,7 +8,7 @@
 </script>
 
 <div class="page-head" class:subpage={routeStore.currentPath != "/"}>
-	<a href="/" on:click={(e) => navTo(e, "/")}>
+	<a href="/" onclick={(e) => navTo(e, "/")}>
 		<img
 			class="logo"
 			src="/assets/img/botanica-logo-512x512.png"

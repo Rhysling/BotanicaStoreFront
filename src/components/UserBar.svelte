@@ -1,3 +1,5 @@
+<svelte:options runes={true} />
+
 <script lang="ts">
 	import ShoppingListSummary from "./ShoppingListSummary.svelte";
 	import SignIn from "./SignIn.svelte";

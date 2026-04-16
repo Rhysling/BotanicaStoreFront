@@ -1,13 +1,16 @@
+<svelte:options runes={true} />
+
 <script lang="ts">
+	import { onMount } from "svelte";
 	import { httpClient as ax } from "../stores/httpclient-store";
 	//import { currentParams } from "../stores/route-store";
 	import { picPaths, getBaseURL } from "../stores/utils";
 
 	let slug = "";
-	let plant: IPlant | undefined = undefined;
-	let isFound: boolean | undefined = undefined;
-	let paths: PicPaths;
-	let resultText = "Plant not found.";
+	let plant: IPlant | undefined = $state(undefined);
+	let isFound: boolean | undefined = $state(undefined);
+	let paths: PicPaths | undefined = $state(undefined);
+	let resultText = $state("Plant not found.");
 	let baseURL = getBaseURL();
 
 	let loadPlant = async (slug: string) => {
@@ -50,8 +53,10 @@
 		slug = match[1];
 	};
 
-	findSlug();
-	loadPlant(slug);
+	onMount(() => {
+		findSlug();
+		loadPlant(slug);
+	});
 </script>
 
 {#if isFound === undefined}
@@ -65,7 +70,7 @@
 {#if isFound === true && plant}
 	<div class="plant">
 		<div class="top">
-			<img src={paths.smPath} alt="{plant.genus} {plant.species}" />
+			<img src={paths?.smPath} alt="{plant.genus} {plant.species}" />
 			<div class="title">
 				<div class="genus">{plant.cardLine1}</div>
 				<div class="species">{plant.cardLine2}</div>
@@ -82,7 +87,7 @@
 			{#if plant.isNwNative}<span class="nwn">Northwest Native.</span>{/if}
 		</div>
 
-		{#each paths.lgPaths as bpp}
+		{#each paths?.lgPaths as bpp}
 			<img class="bigpic" src={bpp.path} alt="" />
 		{/each}
 	</div>

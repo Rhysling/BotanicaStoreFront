@@ -1,13 +1,19 @@
+<svelte:options runes={true} />
+
 <script lang="ts">
 	import { slide } from "svelte/transition";
 	import type { AxiosResponse, AxiosError } from "axios";
 	import { httpClient as ax } from "../../stores/httpclient-store";
 	import PicGallery from "../../components/admin/PicGallery.svelte";
 
-	let auditResult: IPicAuditResult | undefined;
-	let plants: IPlant[] = [];
-	let missingMsg = "";
-	let editPlantId = 0;
+	let auditResult: IPicAuditResult | undefined = $state(undefined);
+	let plants: IPlant[] = $state([]);
+	let editPlantId = $state(0);
+	let missingMsg = $derived.by(() =>
+		auditResult?.missingPicNames.length
+			? `${auditResult?.missingPicNames.length} pics in ${auditResult?.plantIdsMissingPics.length} plants`
+			: "None",
+	);
 
 	const getAudit = async () => {
 		try {
@@ -56,9 +62,9 @@
 		editPlantId = editPlantId === plantId ? 0 : plantId;
 	};
 
-	const handleSavePicture = (e: CustomEvent<FormData>) => {
+	const handleSavePicture = (form: FormData) => {
 		$ax
-			.post("/api/admin/Pictures/SavePicture", e.detail, {
+			.post("/api/admin/Pictures/SavePicture", form, {
 				headers: {
 					"Content-Type": "multipart/form-data",
 				},
@@ -81,8 +87,7 @@
 			});
 	};
 
-	const handleDeletePicture = (e: CustomEvent<IPlantPicId>) => {
-		let ppid = e.detail;
+	const handleDeletePicture = (ppid: IPlantPicId) => {
 		$ax
 			.post("/api/admin/Pictures/DeletePicture", ppid)
 			.then(() => {
@@ -101,18 +106,19 @@
 			});
 	};
 
-	// *** Reactive ***
-	$: missingMsg = auditResult?.missingPicNames.length
-		? `${auditResult?.missingPicNames.length} pics in ${auditResult?.plantIdsMissingPics.length} plants`
-		: "None";
-
 	// *** Init ***
 	getAudit();
 </script>
 
 {#if auditResult}
 	<div class="section">
-		<a href="/" on:click|preventDefault={getAudit}>Refresh</a>
+		<a
+			href="/"
+			onclick={(e) => {
+				e.preventDefault();
+				getAudit();
+			}}>Refresh</a
+		>
 	</div>
 	<div class="section">
 		<div class="title">
@@ -120,7 +126,13 @@
 		</div>
 		{#if auditResult.orphanPicNames.length}
 			<div class="info">
-				<a href="/" on:click|preventDefault={moveOrphans}>Archive Orphans</a>
+				<a
+					href="/"
+					onclick={(e) => {
+						e.preventDefault();
+						moveOrphans();
+					}}>Archive Orphans</a
+				>
 			</div>
 		{/if}
 	</div>
@@ -131,7 +143,13 @@
 		</div>
 		{#if auditResult.missingPicNames.length && !plants.length}
 			<div class="info">
-				<a href="/" on:click|preventDefault={loadPlants}>Load Plants</a>
+				<a
+					href="/"
+					onclick={(e) => {
+						e.preventDefault();
+						loadPlants();
+					}}>Load Plants</a
+				>
 			</div>
 		{/if}
 		<div class="plants">
@@ -139,17 +157,15 @@
 				<div class="plant" class:active={editPlantId === p.plantId}>
 					<a
 						href="/"
-						on:click|preventDefault={() => toggleGalleryForPlant(p.plantId)}
-						>{p.genus} {p.species}</a
+						onclick={(e) => {
+							e.preventDefault();
+							toggleGalleryForPlant(p.plantId);
+						}}>{p.genus} {p.species}</a
 					>
 				</div>
 				{#if editPlantId === p.plantId}
 					<div transition:slide>
-						<PicGallery
-							plant={p}
-							on:savePic={handleSavePicture}
-							on:deletePic={handleDeletePicture}
-						/>
+						<PicGallery plant={p} {handleSavePicture} {handleDeletePicture} />
 					</div>
 				{/if}
 			{/each}

@@ -1,8 +1,10 @@
+<svelte:options runes={true} />
+
 <script lang="ts">
 	import type { AxiosResponse } from "axios";
 	import { httpClient as ax } from "../stores/httpclient-store";
 
-	let calList: ICalendar[] = [];
+	let calList: ICalendar[] = $state([]);
 
 	$ax
 		.get("/api/Calendar/GetAllFuture")

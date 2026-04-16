@@ -1,8 +1,10 @@
+<svelte:options runes={true} />
+
 <script lang="ts">
 	import type { AxiosResponse } from "axios";
 	import { httpClient as ax } from "../stores/httpclient-store";
 
-	let links: ILink[] = [];
+	let links: ILink[] = $state([]);
 
 	$ax
 		.get("/api/Links/GetAll")

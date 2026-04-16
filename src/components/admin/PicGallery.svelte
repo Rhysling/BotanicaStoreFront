@@ -1,19 +1,21 @@
+<svelte:options runes={true} />
+
 <script lang="ts">
 	import Dropzone from "svelte-file-dropzone";
-	import { createEventDispatcher } from "svelte";
 	import { picPaths } from "../../stores/utils";
 
-	export let plant: IPlant;
+	let {
+		plant,
+		handleSavePicture,
+		handleDeletePicture,
+	}: {
+		plant: IPlant;
+		handleSavePicture: (form: FormData) => void;
+		handleDeletePicture: (ppid: IPlantPicId) => void;
+	} = $props();
 
-	const dispatch = createEventDispatcher();
-
-	let paths: PicPaths;
-	let hasSmallPic = false;
-
-	$: {
-		paths = picPaths(plant.plantId, plant.pics);
-		hasSmallPic = !paths.smPath.endsWith("no-pic.jpg");
-	}
+	let paths: PicPaths = $derived(picPaths(plant.plantId, plant.pics));
+	let hasSmallPic = $derived(!paths.smPath.endsWith("no-pic.jpg"));
 
 	const handlePicDropped = (e: CustomEvent, isSmall: boolean) => {
 		const { acceptedFiles, fileRejections } = e.detail;
@@ -28,7 +30,7 @@
 			formData.append("file", acceptedFiles[0]);
 			formData.append("plantId", plant.plantId.toString());
 			formData.append("type", isSmall ? "sm" : "lg");
-			dispatch("savePic", formData);
+			handleSavePicture(formData);
 		}
 
 		//console.log({ acceptedFiles, fileRejections });
@@ -40,12 +42,13 @@
 	const stopProp = (e: Event) => e.stopPropagation();
 
 	const deletePic = (plantId: number, picId: number) => {
-		dispatch("deletePic", { plantId, picId });
+		handleDeletePicture({ plantId, picId, key: "" });
 	};
 </script>
 
-<!-- svelte-ignore a11y-click-events-have-key-events a11y-no-static-element-interactions -->
-<div class="editor" on:click={(e) => e.stopPropagation()}>
+<!-- svelte-ignore a11y_click_events_have_key_events a11y-no-static-element-interactions -->
+<!-- svelte-ignore a11y_no_noninteractive_element_interactions -->
+<div class="editor" role="form" onclick={(e) => e.stopPropagation()}>
 	<div class="title">Edit Pictures</div>
 	<div class="t1">Plant Id: {plant.plantId}</div>
 	<div class="t2">{plant.genus} {plant.species}</div>
@@ -58,8 +61,10 @@
 				<div>
 					<a
 						href="/"
-						on:click|preventDefault={() => deletePic(plant.plantId, 0)}
-						>Delete</a
+						onclick={(e) => {
+							e.preventDefault();
+							deletePic(plant.plantId, 0);
+						}}>Delete</a
 					>
 				</div>
 			{/if}
@@ -83,8 +88,10 @@
 				<div>
 					<a
 						href="/"
-						on:click|preventDefault={() => deletePic(plant.plantId, bp.picId)}
-						>Delete</a
+						onclick={(e) => {
+							e.preventDefault();
+							deletePic(plant.plantId, bp.picId);
+						}}>Delete</a
 					>
 				</div>
 			</div>
