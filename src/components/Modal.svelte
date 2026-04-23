@@ -1,6 +1,7 @@
 <svelte:options runes={true} />
 
 <script lang="ts">
+	import { onMount } from "svelte";
 	import type { Snippet } from "svelte";
 
 	let {
@@ -12,6 +13,14 @@
 		setModal?: (isOpen: boolean) => void;
 		children: Snippet;
 	} = $props();
+
+	onMount(() => {
+		const handleKeydown = (e: KeyboardEvent) => {
+			if (e.key === "Escape" && isShowModal) setModal(false);
+		};
+		document.addEventListener("keydown", handleKeydown);
+		return () => document.removeEventListener("keydown", handleKeydown);
+	});
 </script>
 
 <!-- svelte-ignore a11y_click_events_have_key_events a11y-no-noninteractive-element-interactions -->
@@ -49,16 +58,16 @@
 
 	.close {
 		position: absolute;
-		top: 1rem;
-		right: 1rem;
-		color: #aaa;
-		font-size: 28px;
+		top: 2rem;
+		right: 2rem;
+		color: c.$text-reverse-color;
+		font-size: 3rem;
 		font-weight: bold;
 		z-index: 110;
 
 		&:hover,
 		&:focus {
-			color: black;
+			color: rgba(255, 255, 255, 1);
 			text-decoration: none;
 			cursor: pointer;
 		}
