@@ -3,28 +3,21 @@
 <script lang="ts">
 	import { routeStore, navTo } from "../stores/route-store.svelte.js";
 
-	let allRoutes: Route[] = $state([
-		{ ...routeStore.routes },
-		...(routeStore.routes.children?.filter((a) => !a.isHidden) || []),
-	]);
-
+	let expandedPath = $state("");
 	let isOpenRoot = $state(false);
 
-	$effect(() => {
-		allRoutes[0].children = [];
+	let allRoutes: Route[] = $derived.by(() => {
+		let root: Route = { ...routeStore.routes, children: [] };
+		return [root, ...(routeStore.routes.children?.filter((a) => !a.isHidden) || [])];
 	});
 
 	let setOpenRoot = (val: boolean) => {
 		isOpenRoot = val;
-		toggleOpenDropdown("");
+		expandedPath = "";
 	};
 
 	let toggleOpenDropdown = (pathName: string) => {
-		// let r = allRoutes.find(a => a.slug == slug);
-		// if (r) r.isExpanded = !r.isExpanded;
-		for (let r of allRoutes) {
-			r.isExpanded = r.path == pathName ? !r.isExpanded : false;
-		}
+		expandedPath = expandedPath === pathName ? "" : pathName;
 	};
 
 	let nav = (e: MouseEvent, path: string) => {
@@ -60,7 +53,7 @@
 						toggleOpenDropdown(r.path);
 					}}
 					class="dropdown"
-					class:open={r.isExpanded ? true : undefined}
+					class:open={expandedPath === r.path ? true : undefined}
 				>
 					<span class="icon">{r.page}</span>
 					<div class="dropdown-content">
