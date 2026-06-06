@@ -4,7 +4,20 @@
 	import type { AxiosResponse } from "axios";
 	import { httpClient as ax } from "../stores/httpclient-store";
 
-	let calList: ICalendar[] = $state([]);
+	let calList: ICalendar[] = $state([
+		{
+			itemId: 0,
+			beginDate: "",
+			endDate: "",
+			eventTime: "",
+			title: "Loading...",
+			location: "",
+			description: "",
+			isSpecial: false,
+			beginDateFormatted: "",
+			endDateFormatted: "",
+		},
+	]);
 
 	$ax
 		.get("/api/Calendar/GetAllFuture")
