@@ -50,6 +50,7 @@
 		text-align: center;
 		width: 100%;
 		margin-top: 1rem;
+		text-wrap: balance;
 	}
 
 	.f2 {

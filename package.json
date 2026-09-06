@@ -25,5 +25,8 @@
 		"dompurify": "^3.3.3",
 		"svelte-file-dropzone": "^2.0.8",
 		"sweetalert2": "^11.4.8"
+	},
+	"allowScripts": {
+		"@parcel/watcher": false
 	}
 }

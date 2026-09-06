@@ -9,7 +9,20 @@
 	import { isShowHowWlWorks } from "../stores/wishlist-store.js";
 	import HomeFeaturedPlant from "../components/HomeFeaturedPlant.svelte";
 
+	type DisplayAnnouncement = "first" | "second" | "none";
+
 	let nextSale: ICalendar | null = $state(null);
+	let displayAnnouncement: DisplayAnnouncement = $derived.by(() => {
+		const tsNow = Math.floor(Date.now() / 1000);
+		const tsUntil = Math.floor(new Date("2027-05-30").getTime() / 1000);
+		if (tsNow > tsUntil) return "none";
+		if (nextSale) return "second";
+		return "first";
+	});
+
+	const dt = new Date();
+	dt.setMonth(dt.getMonth() + 4);
+	const nextYear = dt.getFullYear();
 
 	$ax
 		.get("/api/Calendar/GetNext")
@@ -22,6 +35,15 @@
 		else $isShowHowWlWorks = true;
 	};
 </script>
+
+{#snippet analog()}
+	<img src="/assets/img/analog-header.png" alt="Analog Magazine" />
+	<p class="ask">Read My Story</p>
+	<p class="title">The Enigma of the Lost Ones</p>
+	<p class="author">by Pamela Harlow</p>
+	<p class="issue">Jan/Feb 2027 Issue</p>
+	<p class="available">available December 2026</p>
+{/snippet}
 
 <div class="content">
 	<div class="left">
@@ -40,10 +62,16 @@
 				>
 			</p>
 		</div>
-		<div class="card-oldfriend">
-			<img src="/assets/img/bench-350x230.jpg" alt="Hello, old friend" />
-			<div class="small" style="display:none;">An old friend...</div>
-		</div>
+		{#if displayAnnouncement === "none"}
+			<div class="card-oldfriend">
+				<img src="/assets/img/bench-350x230.jpg" alt="Hello, old friend" />
+				<div class="small" style="display:none;">An old friend...</div>
+			</div>
+		{:else}
+			<div class="card-analog">
+				{@render analog()}
+			</div>
+		{/if}
 		<div class="card-special" style="display:none;">
 			<div class="title" style="display:none;">
 				Now Available at<br />
@@ -108,10 +136,18 @@
 				>
 			{:else}
 				<div class="title">No Events Posted</div>
-				<div>Please check back as plant sale season approaches.</div>
+				<div>Please check back as {nextYear} plant sale season approaches.</div>
 				<div>&nbsp;</div>
 			{/if}
 		</div>
+		{#if displayAnnouncement !== "none"}
+			<div
+				class="card-analog-right"
+				style="order:{displayAnnouncement === 'second' ? 3 : 1};"
+			>
+				{@render analog()}
+			</div>
+		{/if}
 	</div>
 </div>
 
@@ -185,6 +221,32 @@
 		}
 	}
 
+	.card-analog,
+	.card-analog-right {
+		img {
+			display: block;
+			max-width: min(100%, 350px);
+			height: auto;
+			margin: 0 auto;
+		}
+
+		p {
+			margin: 0.2rem 0 0;
+			text-align: center;
+			text-wrap: balance;
+
+			&.ask {
+				font-weight: bold;
+			}
+			&.title {
+				font-size: 1.1rem;
+			}
+			&.author {
+				font-style: italic;
+			}
+		}
+	}
+
 	.card-special {
 		flex: 1 1 auto;
 		border: 1px solid black;
@@ -225,6 +287,7 @@
 		flex: 0 0 auto;
 		border: 1px solid black;
 		padding: 0.4rem;
+		order: 2;
 
 		> a {
 			display: block;
@@ -276,6 +339,10 @@
 		}
 	}
 
+	.card-analog-right {
+		display: none;
+	}
+
 	@media screen and (max-width: c.$bp-small) {
 		.content {
 			display: block;
@@ -292,6 +359,12 @@
 					padding: 0.5rem;
 				}
 			}
+		}
+
+		.card-analog-right {
+			display: block;
+			border: 1px solid black;
+			padding: 0.4rem;
 		}
 	}
 </style>
